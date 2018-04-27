@@ -1,4 +1,4 @@
-package stores;
+package park.stores;
 
 public class CashDesk {
     private double moneyInDesk;

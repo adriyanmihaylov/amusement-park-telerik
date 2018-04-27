@@ -1,12 +1,11 @@
-package stores;
-
-import products.Souvenirs;
-
+package park.stores;
 import java.util.HashSet;
 import java.util.Set;
 
+import park.products.*;
+
 public class SouvenirStore extends Store {
-    Set<Souvenirs> souvenirsInStock;
+    Set<Souvenir> souvenirsInStock;
 
     SouvenirStore(String name, CashDesk desk) {
         super(name, desk);

@@ -1,4 +1,4 @@
-package users;
+package park.users;
 
 public class User {
     private String name;

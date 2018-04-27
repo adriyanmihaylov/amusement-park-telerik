@@ -1,4 +1,4 @@
-package stores;
+package park.stores;
 
 public abstract class Store {
     private String name;

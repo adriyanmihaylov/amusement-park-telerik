@@ -1,4 +1,4 @@
-package interfaces;
+package park.interfaces;
 
 public interface IUsable {
     public void use();
