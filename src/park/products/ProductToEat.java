@@ -1,6 +1,6 @@
 package park.products;
 
-import interfaces.IConsumable;
+import park.interfaces.IConsumable;
 
 public class ProductToEat extends FoodProduct {
     public ProductToEat(String name, double price, String exparationDate) {

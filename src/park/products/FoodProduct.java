@@ -1,6 +1,6 @@
 package park.products;
 
-import interfaces.IConsumable;
+import park.interfaces.IConsumable;
 
 public abstract class FoodProduct extends Product implements IConsumable {
 
