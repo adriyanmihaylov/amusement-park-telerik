@@ -1,6 +1,6 @@
-package products;
+package park.products;
 
-import interfaces.IUsable;
+import park.interfaces.IUsable;
 
 public class Souvenir extends Product implements IUsable{
     public Souvenir(String name, double price) {
