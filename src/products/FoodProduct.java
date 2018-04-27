@@ -1,6 +1,8 @@
 package products;
 
-public abstract class FoodProduct extends Product {
+import interfaces.IConsumable;
+
+public abstract class FoodProduct extends Product implements IConsumable {
 
     String exparationDate;
 
