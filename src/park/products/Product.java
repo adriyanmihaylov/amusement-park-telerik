@@ -1,4 +1,4 @@
-package products;
+package park.products;
 
 public abstract class Product {
     String name;
