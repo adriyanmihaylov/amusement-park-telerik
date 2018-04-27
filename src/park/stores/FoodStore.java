@@ -1,8 +1,7 @@
 package park.stores;
-import park.products.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import park.products.*;
+import java.util.*;
 
 public class FoodStore extends Store {
     Set<FoodProduct> productsInStock;
