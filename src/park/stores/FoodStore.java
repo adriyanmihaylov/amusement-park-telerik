@@ -10,4 +10,9 @@ public class FoodStore extends Store {
         super(name, desk);
         this.productsInStock = new HashSet<>();
     }
+    
+    FoodStore(String name, CashDesk desk,Set<FoodProduct> products) {
+        super(name,desk);
+        this.productsInStock.addAll(products);
+    }
 }
