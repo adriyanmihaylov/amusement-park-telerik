@@ -1,21 +1,22 @@
 import park.Park;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 public class Main {
     public static void main(String[] args) throws IOException {
         //TODO create menu methods for each case
-        mainMenu();
+        Park park = new Park("Disneyland");
+        mainMenu(Park park);
     }
 
-    public static void mainMenu() throws IOException {
+    public static void mainMenu(Park park) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         switch (command) {
             case "1": // ticket menu
                 // TODO call method..
-                ticketMenu();
+                ticketMenu(park);
                 break;
             case "2":
                 // TODO call method..
@@ -29,10 +30,10 @@ public class Main {
                 System.out.println("Not a valid command");
                 break;
         }
-        mainMenu();
+        mainMenu(park);
     }
 
-    public static void ticketMenu() throws IOException {
+    public static void ticketMenu(Park park) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         switch (command) {
