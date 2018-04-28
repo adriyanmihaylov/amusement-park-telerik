@@ -16,7 +16,7 @@ public class Park {
     private Cinema cinema;
     private Set<Attraction> attractions;
 
-    Park(String name) {
+    public Park(String name) {
         setName(name);
         this.stores = new HashSet<>();
         this.users = new ArrayList<>();
