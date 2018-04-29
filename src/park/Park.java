@@ -1,5 +1,6 @@
 package  park;
 
+import park.cinema.Cinema;
 import park.funzone.Attraction;
 import park.stores.Store;
 import park.users.User;
