@@ -1,3 +1,4 @@
+import exceptions.AgeException;
 import exceptions.NameException;
 import park.Park;
 import park.products.tickets.Ticket;
@@ -54,12 +55,10 @@ public class Main {
         List<User> users = new ArrayList<>();
         switch (readCommand()) {
             case "1": // TODO create person and ticket
-                System.out.println("Create person + ticket");
                 users.addAll(createUser(1));
                 break;
             case "2":
                 //TODO create groups and tickets
-                System.out.println("Create persons + tickets");
                 users.addAll(createUser(readNumberOfUsers()));
                 break;
             case "3":  //exit
@@ -145,14 +144,26 @@ public class Main {
         String input = reader.readLine();
         int age;
         try {
-            age = Integer.parseInt(input);
-            System.out.println();
+            age = validateAge(input);
         } catch (Exception e) {
-            // System.out.println(e);
-            System.out.print("Please enter valid age: ");
+            System.out.println(e);
+            System.out.print("Please enter a valid age: ");
             return readAge();
         }
         System.out.println();
+        return age;
+    }
+
+    private static int validateAge(String input) throws AgeException {
+        int age;
+        try {
+            age = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new AgeException("The entered is not a number!");
+        }
+        if (age < 1 || age > 114) {
+            throw new AgeException("Invalid age! Age has to be between 1 and 114");
+        }
         return age;
     }
 
