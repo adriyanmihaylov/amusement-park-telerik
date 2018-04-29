@@ -11,7 +11,7 @@ public class FoodStore extends Store {
         this.productsInStock = new HashSet<>();
     }
 
-    FoodStore(String name, CashDesk desk, Set<FoodProduct> products) {
+    FoodStore(String name, CashDesk desk, List<FoodProduct> products) {
         super(name, desk);
         this.productsInStock.addAll(products);
     }
