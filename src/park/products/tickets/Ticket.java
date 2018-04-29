@@ -27,7 +27,7 @@ public class Ticket extends Product implements IUsable{
     }
 
     public void addCredits() {
-        this.ticketCredits ++;
+        this.ticketCredits += 10;
     }
 
 }
