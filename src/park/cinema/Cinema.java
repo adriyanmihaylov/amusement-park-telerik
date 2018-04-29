@@ -2,6 +2,7 @@ package park.cinema;
 
 import park.products.*;
 import park.stores.CashDesk;
+import park.users.User;
 
 import java.util.*;
 
@@ -19,9 +20,14 @@ public class Cinema {
         this.movies = new HashSet<>();
     }
 
-    public Cinema(String name,CashDesk desk,Map<Product,Integer> productsInStock) {
-        this(name,desk);
+    public Cinema(String name, CashDesk desk, Map<Product, Integer> productsInStock) {
+        this(name, desk);
         this.productsInStock.putAll(productsInStock);
+    }
+
+    public Cinema(String name, CashDesk desk, Set<Movie> movies) {
+        this(name, desk);
+        this.movies.addAll(movies);
     }
 
     public String getName() {
@@ -40,9 +46,8 @@ public class Cinema {
         movies.add(new Movie(name, genre));
     }
 
-    public void watchMovie(String userName, int userAge, String movieName) {
-        //TODO : add checks
-        //TODO : desk.setMoney() according to the ticket price for the given movieName;
+    public void watchMovie(User user, Movie movie) {
+        System.out.println(user.getName() + "is watching " + movie.getName());
     }
 
     public void displayMovies() {
@@ -58,7 +63,7 @@ public class Cinema {
             productsInStock.put(product, 0);
         }
     }
-    
+
     private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
         return productsInStock.containsKey(product);
     }
