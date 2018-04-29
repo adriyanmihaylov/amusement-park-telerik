@@ -1,5 +1,6 @@
 package park.users;
 
+import park.cinema.Movie;
 import park.products.tickets.Ticket;
 import park.products.tickets.TicketType;
 
@@ -27,4 +28,5 @@ public class User {
     public double getBudget() {
         return budget;
     }
+
 }
