@@ -1,22 +1,18 @@
 package park.funzone;
 
-import park.stores.CashDesk;
-
 public class Attraction {
     private String name;
-    private AttractionType type;
-    private CashDesk desk;
+    private AttractionDangerLevel dangerLevel;
     private int availableSeats;
 
-    public Attraction(String name, AttractionType type, int availableSeats, CashDesk desk) {
+    public Attraction(String name, AttractionDangerLevel dangerLevel, int availableSeats) {
         this.name = name;
-        this.type = type;
+        this.dangerLevel = dangerLevel;
         this.availableSeats = availableSeats;
-        this.desk = desk;
     }
 
     public void visitAttraction(String userName, int userAge) {
-        boolean isAllowed = isAttractionAllowed(userAge, type);
+        boolean isAllowed = isAttractionAllowed(userAge, dangerLevel);
         boolean hasEmptySeats = hasEmptySeats(availableSeats);
         if (isAllowed && hasEmptySeats) {
             System.out.println(userName + " has visited the " + name);
@@ -31,16 +27,31 @@ public class Attraction {
         return name;
     }
 
-    public AttractionType getType() {
-        return type;
+    public AttractionDangerLevel getDangerLevel() {
+        return dangerLevel;
     }
 
     public int getAvailableSeats() {
         return availableSeats;
     }
 
-    private boolean isAttractionAllowed(int userAge, AttractionType type) {
-        return (userAge >= 15 && userAge <= 65) || type != AttractionType.DANGER;
+    private boolean isAttractionAllowed(int userAge, AttractionDangerLevel dangerLevel) {
+        boolean isAllowed = false;
+        switch (dangerLevel) {
+            case LOW:
+                isAllowed = true;
+                break;
+
+            case MEDIUM:
+                isAllowed = userAge >= 10;
+                break;
+
+            case HIGH:
+                isAllowed = userAge >= 16 && userAge <= 60;
+                break;
+        }
+
+        return isAllowed;
     }
 
     private boolean hasEmptySeats(int availableSeats) {
