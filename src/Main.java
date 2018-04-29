@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class Main {
-    public static Park park = new Park("Disneyland");
-
+    private static Park park = new Park("Disneyland","123456");
     public static void main(String[] args) throws Exception {
         //TODO create menu methods for each case
         mainMenu();
@@ -24,14 +23,19 @@ public class Main {
         String[] options = { "User menu", "Admin menu", "Exit"};
         printOptions(options);
 
-        switch (readCommand()) {
+        switch (readString()) {
             case "1": // ticket menu
                 // TODO call method..
                 userMenu();
                 break;
             case "2": // Control users menu - use user -> shopping/cinema/funZone
                 // TODO call method..
-                adminMenu();
+                System.out.print("Enter admin password: ");
+                if(park.ckeckPassword(readString())) {
+                    adminMenu();
+                } else {
+                    System.out.println("Username and password doesn't match!");
+                }
                 break;
             case "3": // exit
                 return;
@@ -45,7 +49,7 @@ public class Main {
     public static void userMenu() throws Exception {
         String[] options = {"Buy ticket","Add credits","Go shopping","Watch a movie","Disneyland attractions","Exit"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 buyTicketMenu();
@@ -69,7 +73,7 @@ public class Main {
     private static void adminMenu() throws IOException {
         String[] options = {"Stores","Attractions","Cinema","Exit"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 storesMenu();
@@ -92,7 +96,7 @@ public class Main {
     private static void storesMenu() throws IOException {
         String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 break;
@@ -114,7 +118,7 @@ public class Main {
     private static void attractionsMenu() throws IOException {
         String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Change attraction", "Exit"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 break;
@@ -136,7 +140,7 @@ public class Main {
     private static void cinemaMenu() throws IOException {
         String[] options = {"Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 break;
@@ -159,7 +163,7 @@ public class Main {
         String[] options = {"SingleTicket", "GroupTicket", "Exit"};
         printOptions(options);
         List<User> users = new ArrayList<>();
-        switch (readCommand()) {
+        switch (readString()) {
             case "1": // TODO create person and ticket
                 users.addAll(createUser(1));
                 break;
@@ -311,7 +315,7 @@ public class Main {
     private static TicketType readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(options);
-        String command = readCommand();
+        String command = readString();
         switch (command) {
             case "1":
                 return TicketType.ADULT;
@@ -326,7 +330,7 @@ public class Main {
         }
     }
 
-    private static String readCommand() throws IOException {
+    private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         return command;

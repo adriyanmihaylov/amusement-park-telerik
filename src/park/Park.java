@@ -13,13 +13,15 @@ import java.util.Set;
 
 public class Park {
     private String name;
+    protected String password;
     private Set<Store> stores;
     private List<User> users;
     private Cinema cinema;
     private Set<Attraction> attractions;
 
-    public Park(String name) {
+    public Park(String name,String password) {
         setName(name);
+        this.password = password;
         this.stores = new HashSet<>();
         this.users = new ArrayList<>();
         this.attractions = new HashSet<>();
@@ -58,5 +60,9 @@ public class Park {
 
     public  void deleteUser(User user) {
         this.users.remove(user);
+    }
+
+    public boolean ckeckPassword(String password) {
+        return this.password.equals(password);
     }
 }
