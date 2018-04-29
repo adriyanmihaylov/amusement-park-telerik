@@ -29,4 +29,9 @@ public class User {
         return budget;
     }
 
+    @Override
+    public String toString() {
+        return String.format("User %s\n%d years old\nbudget %.2f$", this.name, this.age,this.budget);
+    }
+
 }
