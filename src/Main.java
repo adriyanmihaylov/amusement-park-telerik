@@ -2,13 +2,13 @@ import exceptions.AgeException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
+import park.products.tickets.Ticket;
 import park.products.tickets.TicketType;
 import park.users.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -121,7 +121,7 @@ public class Main {
 
         return users;
     }
-
+    //TODO make readName and validateName - INTERFACE
     public static String readName() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name = reader.readLine();
@@ -173,6 +173,7 @@ public class Main {
         return age;
     }
 
+    //TODO make readMoney and validateMoney -INTERFACE
     private static double readMoney() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input = reader.readLine();
@@ -191,7 +192,7 @@ public class Main {
         double money;
         try {
             money = Double.parseDouble(input);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new MoneyException("The entered is not a number!");
         }
         if(money < 0) {
