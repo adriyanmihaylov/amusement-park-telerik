@@ -1,4 +1,4 @@
-package park.products.Tickets;
+package park.products.tickets;
 
 public class SingleTicket {
 }
