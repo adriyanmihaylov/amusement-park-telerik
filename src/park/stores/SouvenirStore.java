@@ -17,4 +17,6 @@ public class SouvenirStore extends Store {
         super(name,desk);
         this.souvenirsInStock.addAll(souvenirs);
     }
+    //TODO getSouvenirsInStock
+    //TODO toString souvenirsInStock
 }
