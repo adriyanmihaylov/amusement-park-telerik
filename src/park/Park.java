@@ -49,8 +49,8 @@ public class Park {
         this.attractions.addAll(attractions);
     }
 
-    public void deleteStore(User user) {
-        this.users.remove(user);
+    public void deleteStore(Store store) {
+        this.stores.remove(store);
     }
     public void deleteAttraction(Attraction attraction) {
         this.attractions.remove(attraction);
