@@ -1,14 +1,13 @@
 import exceptions.AgeException;
+import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
-import park.products.tickets.Ticket;
 import park.products.tickets.TicketType;
 import park.users.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -59,7 +58,7 @@ public class Main {
                 break;
             case "2":
                 //TODO create groups and tickets
-                users.addAll(createUser(readNumberOfUsers()));
+                users.addAll(createUser(readSizeOfGroup()));
                 break;
             case "3":  //exit
                 return;
@@ -70,7 +69,8 @@ public class Main {
         park.addUsers(users);
     }
 
-    public static int readNumberOfUsers() throws IOException {
+    //TODO add exception when group is less than 2
+    public static int readSizeOfGroup() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input = reader.readLine();
         int numberOfUsers;
@@ -80,13 +80,15 @@ public class Main {
         } catch (Exception e) {
             // System.out.println(e);
             System.out.print("Please enter a valid number: ");
-            return readNumberOfUsers();
+            return readSizeOfGroup();
         }
         System.out.println();
         return numberOfUsers;
     }
 
     //TODO check if there is such a user already
+    //TODO create tickets for each user
+    //TODO add case when user's age < 14 and it's not in group and when the group doesn't have member older than 14
     public static List<User> createUser(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
         TicketType ticketType = null;
@@ -95,6 +97,7 @@ public class Main {
         } else if (numberOfUsers > 5) {
             ticketType = ticketType.BIGGROUP;
         }
+
         for (int i = 0; i < numberOfUsers; i++) {
 
             System.out.print("Please enter a name: ");
@@ -102,7 +105,8 @@ public class Main {
             System.out.print("Please enter age: ");
             int age = readAge();
             System.out.print("What's the budget of " + name + ": ");
-            double budget = readDouble();
+            double budget = readMoney();
+
             if (ticketType == null) {
                 if (age < 18) {
                     ticketType = ticketType.UNDER18;
@@ -167,19 +171,32 @@ public class Main {
         return age;
     }
 
-    private static double readDouble() throws IOException {
+    private static double readMoney() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input = reader.readLine();
-        double number;
+        double money;
         try {
-            number = Double.parseDouble(input);
-            System.out.println();
+            money = validateMoney(input);
         } catch (Exception e) {
             System.out.println(e);
-            System.out.print("Please enter valid number: ");
-            return readDouble();
+            System.out.print("Please enter again: ");
+            return readMoney();
         }
-        return number;
+        return money;
+    }
+
+    private static double validateMoney(String input) throws MoneyException {
+        double money;
+        try {
+            money = Double.parseDouble(input);
+        } catch (Exception e) {
+            throw new MoneyException("The entered is not a number!");
+        }
+        if(money < 0) {
+            throw new MoneyException("Money can't be less than 0! ");
+        }
+
+        return money;
     }
 
     private static TicketType readTicketType() throws IOException {
