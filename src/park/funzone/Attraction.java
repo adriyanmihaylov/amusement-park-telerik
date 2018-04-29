@@ -11,6 +11,14 @@ public class Attraction {
         this.dangerLevel = dangerLevel;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public AttractionDangerLevel getDangerLevel() {
+        return dangerLevel;
+    }
+
     public void visitAttraction(User user) {
         boolean isAllowed = isAttractionAllowed(user.getAge(), dangerLevel);
         if (isAllowed) {
@@ -20,15 +28,7 @@ public class Attraction {
             System.out.println("We are sorry, but " + name + " is considered dangerous.");
         }
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public AttractionDangerLevel getDangerLevel() {
-        return dangerLevel;
-    }
-
+    
     private boolean isAttractionAllowed(int userAge, AttractionDangerLevel dangerLevel) {
         boolean isAllowed = false;
         switch (dangerLevel) {

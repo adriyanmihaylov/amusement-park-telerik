@@ -2,6 +2,7 @@ package  park;
 
 import park.cinema.Cinema;
 import park.funzone.Attraction;
+import park.funzone.AttractionDangerLevel;
 import park.stores.Store;
 import park.users.User;
 
@@ -38,6 +39,10 @@ public class Park {
 
     public void addUsers(List<User> users) {
         this.users.addAll(users);
+    }
+
+    public void addAttraction(Attraction attraction) {
+        attractions.add(attraction);
     }
 
     public void addAttractions(List<Attraction> attractions) {
