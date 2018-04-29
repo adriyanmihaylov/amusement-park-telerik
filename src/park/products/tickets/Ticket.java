@@ -22,8 +22,8 @@ public class Ticket extends Product implements IUsable{
     }
 
     @Override
-    public void use() {
-        this.ticketCredits --;
+    public void use(int creditsCost) {
+        this.ticketCredits -= creditsCost;
     }
 
     public void addCredits() {
