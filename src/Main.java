@@ -8,6 +8,7 @@ import park.users.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -21,7 +22,7 @@ public class Main {
     }
 
     public static void mainMenu() throws Exception {
-        String[] options = {"Buy ticket", "Find User", "Go shopping", "Watch a movie", "Ride some attraction", "Exit"};
+        String[] options = {"Buy ticket", "User menu", "Go shopping", "Watch a movie", "Ride some attraction", "Exit"};
         printOptions(options);
 
         switch (readCommand()) {
@@ -72,6 +73,7 @@ public class Main {
     //TODO add exception when group is less than 2
     public static int readSizeOfGroup() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Enter number of members: ");
         String input = reader.readLine();
         int numberOfUsers;
         try {
@@ -125,7 +127,7 @@ public class Main {
         String name = reader.readLine();
         try {
             validateName(name);
-        } catch (Exception e) {
+        } catch (NameException e) {
             System.out.println(e);
             System.out.print("Please enter valid name ");
             return readName();
@@ -149,7 +151,7 @@ public class Main {
         int age;
         try {
             age = validateAge(input);
-        } catch (Exception e) {
+        } catch (AgeException e) {
             System.out.println(e);
             System.out.print("Please enter a valid age: ");
             return readAge();
@@ -177,7 +179,7 @@ public class Main {
         double money;
         try {
             money = validateMoney(input);
-        } catch (Exception e) {
+        } catch (MoneyException e) {
             System.out.println(e);
             System.out.print("Please enter again: ");
             return readMoney();
@@ -217,13 +219,13 @@ public class Main {
         }
     }
 
-    public static String readCommand() throws IOException {
+    private static String readCommand() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         return command;
     }
 
-    public static void printOptions(String[] options) {
+    private static void printOptions(String[] options) {
         IntStream.range(0, options.length)
                 .mapToObj(i -> (i + 1) + "." + options[i])
                 .forEach(System.out::println);
