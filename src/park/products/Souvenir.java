@@ -8,7 +8,7 @@ public class Souvenir extends Product implements IUsable{
     }
 
     @Override
-    public void use() {
+    public void use(int creditCost) {
         System.out.printf("%s was used.\n", this);
     }
 }
