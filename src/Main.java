@@ -18,7 +18,11 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         //TODO create menu methods for each case
-        mainMenu();
+
+
+
+
+        //mainMenu();
     }
 
     public static void mainMenu() throws Exception {
