@@ -7,18 +7,21 @@ import java.util.*;
 
 public class Cinema {
     private String name;
-    private int availableSeats;
     private CashDesk desk;
     private Map<Product, Integer> productsInStock;
     private Map<String, Double> movies;
 
 
-    public Cinema(String name, int availableSeats, CashDesk desk) {
+    public Cinema(String name, CashDesk desk) {
         this.name = name;
-        this.availableSeats = availableSeats;
         this.desk = desk;
         this.productsInStock = new HashMap<>();
         this.movies = new HashMap<>();
+    }
+
+    public Cinema(String name,CashDesk desk,Map<Product,Integer> productsInStock) {
+        this(name,desk);
+        this.productsInStock.putAll(productsInStock);
     }
 
     public void watchMovie(String userName, int userAge, String movieName) {
@@ -47,10 +50,6 @@ public class Cinema {
 
     public String getName() {
         return name;
-    }
-
-    public int getAvailableSeats() {
-        return availableSeats;
     }
 
     public CashDesk getDesk() {

@@ -29,10 +29,10 @@ public class Main {
                 // TODO call method..
                 ticketMenu();
                 break;
-            case "2":
+            case "2": // Control users menu - use user -> shopping/cinema/funZone
                 // TODO call method..
                 break;
-            case "3":
+            case "3": // add credits to ticket
                 // TODO call method..
                 break;
             case "4":
@@ -191,7 +191,7 @@ public class Main {
 
     public static String readCommand() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String command = reader.readLine().toLowerCase();
+        String command = reader.readLine();
         return command;
     }
 
