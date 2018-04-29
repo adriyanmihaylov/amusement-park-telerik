@@ -1,7 +1,5 @@
 package park.users;
 
-import park.cinema.Movie;
-import park.products.tickets.Ticket;
 import park.products.tickets.TicketType;
 
 public class User {
@@ -9,14 +7,12 @@ public class User {
     private int age;
     private double budget;
     private TicketType type;
-    private int credits;
 
     public User(String name, int age, double budget, TicketType type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
         this.type = type;
-        this.credits = 10;
     }
 
     public String getName() {
@@ -29,10 +25,6 @@ public class User {
 
     public double getBudget() {
         return budget;
-    }
-
-    public int getCredits() {
-        return credits;
     }
 
     @Override
