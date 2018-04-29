@@ -2,7 +2,6 @@ import exceptions.AgeException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
-import park.products.tickets.Ticket;
 import park.products.tickets.TicketType;
 import park.users.User;
 
@@ -26,25 +25,19 @@ public class Main {
     }
 
     public static void mainMenu() throws Exception {
-        String[] options = {"Buy ticket", "User menu", "Go shopping", "Watch a movie", "Ride some attraction", "Exit"};
+        String[] options = { "User menu", "Admin menu", "Exit"};
         printOptions(options);
 
         switch (readCommand()) {
             case "1": // ticket menu
                 // TODO call method..
-                ticketMenu();
+                userMenu();
                 break;
             case "2": // Control users menu - use user -> shopping/cinema/funZone
                 // TODO call method..
+                adminMenu();
                 break;
-            case "3": // add credits to ticket
-                // TODO call method..
-                break;
-            case "4":
-                break;
-            case "5":
-                break;
-            case "6": // exit
+            case "3": // exit
                 return;
             default:
                 System.out.println("Invalid choice!");
@@ -53,7 +46,120 @@ public class Main {
         mainMenu();
     }
 
-    public static void ticketMenu() throws Exception {
+    public static void userMenu() throws Exception {
+        String[] options = {"Buy ticket","Add credits","Go shopping","Watch a movie","Disneyland attractions","Exit"};
+        printOptions(options);
+        String command = readCommand();
+        switch (command) {
+            case "1":
+                buyTicketMenu();
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                break;
+            case "6":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        userMenu();
+    }
+    private static void adminMenu() throws IOException {
+        String[] options = {"Stores","Attractions","Cinema","Exit"};
+        printOptions(options);
+        String command = readCommand();
+        switch (command) {
+            case "1":
+                storesMenu();
+                break;
+            case "2":
+                attractionsMenu();
+                break;
+            case "3":
+                cinemaMenu();
+                break;
+            case "4":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        adminMenu();
+    }
+
+    private static void storesMenu() throws IOException {
+        String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
+        printOptions(options);
+        String command = readCommand();
+        switch (command) {
+            case "1":
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        storesMenu();
+    }
+
+    private static void attractionsMenu() throws IOException {
+        String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Change attraction", "Exit"};
+        printOptions(options);
+        String command = readCommand();
+        switch (command) {
+            case "1":
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        attractionsMenu();
+    }
+
+    private static void cinemaMenu() throws IOException {
+        String[] options = {"Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
+        printOptions(options);
+        String command = readCommand();
+        switch (command) {
+            case "1":
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        cinemaMenu();
+    }
+
+    public static void buyTicketMenu() throws Exception {
         String[] options = {"SingleTicket", "GroupTicket", "Exit"};
         printOptions(options);
         List<User> users = new ArrayList<>();
