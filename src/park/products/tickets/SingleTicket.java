@@ -6,8 +6,4 @@ public class SingleTicket extends Ticket{
         super(name, price, ticketType);
     }
 
-    @Override
-    public void use() {
-
-    }
 }

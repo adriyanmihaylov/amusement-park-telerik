@@ -9,12 +9,14 @@ public class User {
     private int age;
     private double budget;
     private TicketType type;
+    private int credits;
 
     public User(String name, int age, double budget, TicketType type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
         this.type = type;
+        this.credits = 10;
     }
 
     public String getName() {
@@ -29,9 +31,13 @@ public class User {
         return budget;
     }
 
+    public int getCredits() {
+        return credits;
+    }
+
     @Override
     public String toString() {
-        return String.format("User %s\n%d years old\nbudget %.2f$", this.name, this.age,this.budget);
+        return String.format("User %s\n%d years old\nbudget %.2f$", this.name, this.age, this.budget);
     }
 
 }
