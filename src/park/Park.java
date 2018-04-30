@@ -5,10 +5,7 @@ import park.funzone.Attraction;
 import park.stores.Store;
 import park.users.User;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Park {
@@ -36,6 +33,14 @@ public class Park {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Cinema> getCinemas() {
+        return cinemas;
+    }
+
+    public Set<Attraction> getAttractions() {
+        return attractions;
     }
 
     public int getTicketsCounter() {
@@ -70,19 +75,21 @@ public class Park {
         this.users.addAll(users);
     }
 
-    public void addAttraction(Attraction attraction) {
-        attractions.add(attraction);
-    }
-
     public void addAttractions(List<Attraction> attractions) {
         this.attractions.addAll(attractions);
     }
 
     public void addCinemas(HashSet<String> cinemas) {
         Set<Cinema> cinemasToAdd = cinemas.stream()
-                .map(x -> new Cinema(x))
+                .map(Cinema::new)
                 .collect(Collectors.toSet());
         this.cinemas.addAll(cinemasToAdd);
+    }
+
+    //TODO complete this method
+    public void addMoviesToCinemas(HashMap<String, String> movies) {
+        //this.cinemas.forEach((cinema) -> cinema.);
+        Map<String, String> moviesToAdd;
     }
 
     public void deleteStore(Store store) {
@@ -103,4 +110,5 @@ public class Park {
     public void updateUser(int index,User currentUser) {
         users.set(index,currentUser);
     }
+
 }

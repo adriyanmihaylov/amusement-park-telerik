@@ -3,6 +3,7 @@ import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
 import park.cinema.Cinema;
+import park.cinema.MovieGenre;
 import park.users.UserType;
 import park.users.User;
 
@@ -10,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -203,6 +205,7 @@ public class Main {
                 addNewCinema();
                 break;
             case "2":
+                addMovie();
                 break;
             case "3":
                 break;
@@ -425,14 +428,65 @@ public class Main {
         int numberOfCinemas = Integer.parseInt(readString());
         String cinemaName;
         for (int i = 0; i < numberOfCinemas; i++) {
-            System.out.printf("Please, enter the name of cinema %d: ", i + 1);
+            System.out.printf("Please enter the name of cinema #%d: ", i + 1);
             cinemaName = readName();
             cinemas.add(cinemaName);
         }
 
         park.addCinemas(cinemas);
-
         System.out.println("Done !\n");
+    }
+
+    //TODO create exception method to validate int numberOfCinemas
+    //TODO ! METHOD IS NOT DONE
+    private static void addMovie() throws Exception {
+        boolean hasNoCinema = park.getCinemas().isEmpty();
+        if (hasNoCinema) {
+            System.out.println("There is no cinema in the park to add a movie to.\n");
+            return;
+        }
+
+        System.out.println("How many movies do you want to add to the cinemas ?");
+
+        HashMap<String, String> movies = new HashMap<>();
+        int numberOfMovies = Integer.parseInt(readString());
+        String movieName, movieGenre;
+        for (int i = 0; i < numberOfMovies; i++) {
+            System.out.printf("Please enter the name of movie #%d: ", i + 1);
+            movieName = readName();
+            System.out.println("Please choose one of the following genres:");
+            System.out.println("Animation, Drama, Thriller, Action, Comedy, Musical");
+            movieGenre = readMovieGenre();
+            movies.put(movieName, movieGenre);
+        }
+
+        park.addMoviesToCinemas(movies);
+        System.out.println("Done !\n");
+    }
+
+    //check can be replaced with exception InvalidMovieGenre
+    private static String readMovieGenre() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        String genre = reader.readLine();
+        boolean invalidGenre = isNotValidGenre(genre);
+        if (invalidGenre) {
+            System.out.println("Invalid genre! Please choose one of the following genres:");
+            System.out.println("Animation, Drama, Thriller, Action, Comedy, Musical");
+            return readMovieGenre();
+        }
+
+        return genre;
+    }
+
+    private static boolean isNotValidGenre(String genre) {
+        for (MovieGenre tempGenre : MovieGenre.values()) {
+            if (tempGenre.name().equals(genre.toUpperCase())) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**METHOD FINISHED**/
