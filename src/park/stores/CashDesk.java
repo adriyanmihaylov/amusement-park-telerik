@@ -3,7 +3,7 @@ package park.stores;
 public class CashDesk {
     private double moneyInDesk;
 
-    CashDesk(double money) {
+    public CashDesk(double money) {
         setMoneyInDesk(money);
     }
 

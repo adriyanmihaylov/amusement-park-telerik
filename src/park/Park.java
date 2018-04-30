@@ -2,7 +2,6 @@ package  park;
 
 import park.cinema.Cinema;
 import park.funzone.Attraction;
-import park.funzone.AttractionDangerLevel;
 import park.stores.Store;
 import park.users.User;
 
@@ -10,13 +9,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Park {
     private String name;
     protected String password;
     private Set<Store> stores;
     private List<User> users;
-    private Cinema cinema;
+    private Set<Cinema> cinemas;
     private Set<Attraction> attractions;
     private int ticketsCounter;
 
@@ -25,6 +25,7 @@ public class Park {
         this.password = password;
         this.stores = new HashSet<>();
         this.users = new ArrayList<>();
+        this.cinemas = new HashSet<>();
         this.attractions = new HashSet<>();
         this.ticketsCounter = 1;
     }
@@ -77,6 +78,13 @@ public class Park {
         this.attractions.addAll(attractions);
     }
 
+    public void addCinemas(HashSet<String> cinemas) {
+        Set<Cinema> cinemasToAdd = cinemas.stream()
+                .map(x -> new Cinema(x))
+                .collect(Collectors.toSet());
+        this.cinemas.addAll(cinemasToAdd);
+    }
+
     public void deleteStore(Store store) {
         this.stores.remove(store);
     }
@@ -88,7 +96,7 @@ public class Park {
         this.users.remove(user);
     }
 
-    public boolean ckeckPassword(String password) {
+    public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
 

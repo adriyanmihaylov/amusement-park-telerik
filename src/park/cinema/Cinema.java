@@ -13,20 +13,20 @@ public class Cinema {
     private Set<Movie> movies;
 
 
-    public Cinema(String name, CashDesk desk) {
+    public Cinema(String name) {
         this.name = name;
-        this.desk = desk;
+        this.desk = new CashDesk(500);
         this.productsInStock = new HashMap<>();
         this.movies = new HashSet<>();
     }
 
     public Cinema(String name, CashDesk desk, Map<Product, Integer> productsInStock) {
-        this(name, desk);
+        this(name);
         this.productsInStock.putAll(productsInStock);
     }
 
     public Cinema(String name, CashDesk desk, Set<Movie> movies) {
-        this(name, desk);
+        this(name);
         this.movies.addAll(movies);
     }
 

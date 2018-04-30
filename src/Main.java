@@ -2,6 +2,7 @@ import exceptions.AgeException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
+import park.cinema.Cinema;
 import park.users.UserType;
 import park.users.User;
 
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -29,7 +31,7 @@ public class Main {
                 break;
             case "2":
                 System.out.print("Enter admin password: ");
-                if (park.ckeckPassword(readString())) {
+                if (park.checkPassword(readString())) {
                     adminMenu();
                 } else {
                     System.out.println("Username and password doesn't match!");
@@ -122,7 +124,7 @@ public class Main {
     }
 
     //TODO create Admin functionality - create remove everything they want
-    private static void adminMenu() throws IOException {
+    private static void adminMenu() throws Exception {
         String[] options = {"Stores","Attractions","Cinema","Exit"};
         printOptions(options);
         String command = readString();
@@ -192,12 +194,13 @@ public class Main {
     }
 
     //TODO add functionality
-    private static void cinemaMenu() throws IOException {
-        String[] options = {"Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
+    private static void cinemaMenu() throws Exception {
+        String[] options = {"Add new Cinema", "Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
             case "1":
+                addNewCinema();
                 break;
             case "2":
                 break;
@@ -412,6 +415,24 @@ public class Main {
             park.updateUser(currentUserIndex, currentUser);
             System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
         }
+    }
+
+    //TODO create exception method to validate int - when reading numberOfCinemas
+    private static void addNewCinema() throws Exception {
+        System.out.println("How many cinemas do you want to add to the park ?");
+
+        HashSet<String> cinemas = new HashSet<>();
+        int numberOfCinemas = Integer.parseInt(readString());
+        String cinemaName;
+        for (int i = 0; i < numberOfCinemas; i++) {
+            System.out.printf("Please, enter the name of cinema %d: ", i + 1);
+            cinemaName = readName();
+            cinemas.add(cinemaName);
+        }
+
+        park.addCinemas(cinemas);
+
+        System.out.println("Done !\n");
     }
 
     /**METHOD FINISHED**/
