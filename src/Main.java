@@ -326,7 +326,7 @@ public class Main {
             case "1":
                 return UserTypeOfTicket.ADULT;
             case "2":
-                return UserTypeOfTicket.PENSIONEER;
+                return UserTypeOfTicket.PENSIONER;
             case "3":
                 return UserTypeOfTicket.DISABLED;
             default:
@@ -336,16 +336,20 @@ public class Main {
         }
     }
 
-    //TODO add method readingTicketNumber - throws exception
+    //TODO create method validateInt() - when reading ticketNumber and numberOfTicket
     private static void addCredits() throws Exception {
         System.out.print("Please enter user name: ");
         String name = readName();
         int ticketNumber = Integer.parseInt(readString());
+
         User currentUser =  park.findUser(name,ticketNumber);
+
         if(currentUser == null) {
             System.out.println("There is no such user!");
         } else {
-            
+            int numberOfTickets = Integer.parseInt(readString());
+            if(currentUser.getBudget() < numberOfTickets * 1);
+
         }
     }
 

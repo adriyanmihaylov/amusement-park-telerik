@@ -1,18 +1,19 @@
 package park.users;
 
+import park.products.Ticket;
+
 public class User {
     private String name;
     private int age;
     private double budget;
     private UserTypeOfTicket type;
-    private int ticketNumber;
+    private Ticket ticket;
 
     public User(String name, int age, double budget, UserTypeOfTicket type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
         this.type = type;
-        ticketNumber = 0;
     }
 
     public String getName() {
@@ -28,15 +29,20 @@ public class User {
     }
 
     public boolean getTicketNumber(int ticketNumber) {
-        return this.ticketNumber == ticketNumber;
+        return this.ticket.getTicketNumber() == ticketNumber;
     }
-
-    //TODO complete addTicket - remove else statement
+        // UNDER 18 ,PENSIONER, DISABLED - price 15$
+       // SMALLGROUP - price = 14$
+        // BIGGROUP - price = 13$
     public void addTicket(int ticketNumber) {
-        if(this.ticketNumber == 0) {
-            this.ticketNumber = ticketNumber;
+        if (this.type == UserTypeOfTicket.UNDER18 || this.type == UserTypeOfTicket.PENSIONER || this.type == UserTypeOfTicket.DISABLED) {
+            this.ticket = new Ticket(ticketNumber, 15);
+        } else if (this.type == UserTypeOfTicket.ADULT) {
+            this.ticket = new Ticket(ticketNumber, 20);
+        } else if (this.type == UserTypeOfTicket.SMALLGROUP) {
+            this.ticket = new Ticket(ticketNumber, 14);
         } else {
-            System.out.println("This person already has a ticket!");
+            this.ticket = new Ticket(ticketNumber, 13);
         }
     }
 

@@ -3,7 +3,7 @@ package park.users;
 public enum UserTypeOfTicket {
     UNDER18,
     ADULT,
-    PENSIONEER,
+    PENSIONER,
     DISABLED,
     SMALLGROUP,
     BIGGROUP
