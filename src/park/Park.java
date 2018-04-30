@@ -18,6 +18,7 @@ public class Park {
     private List<User> users;
     private Cinema cinema;
     private Set<Attraction> attractions;
+    private int ticketsCounter;
 
     public Park(String name,String password) {
         setName(name);
@@ -25,6 +26,7 @@ public class Park {
         this.stores = new HashSet<>();
         this.users = new ArrayList<>();
         this.attractions = new HashSet<>();
+        this.ticketsCounter = 1;
     }
 
     public String getName() {
@@ -33,6 +35,14 @@ public class Park {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getTicketsCounter() {
+        return this.ticketsCounter;
+    }
+    public String setTicketsCounter() {
+        this.ticketsCounter++;
+        return "";
     }
 
     //TODO make a stream()
@@ -45,7 +55,7 @@ public class Park {
                 return this.users.indexOf(user);
             }
         }
-        return -1;
+       return -1;
     }
     public User getUserByIndex(int userIndex) {
         return this.users.get(userIndex);

@@ -2,7 +2,7 @@ import exceptions.AgeException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
-import park.users.UserTypeOfTicket;
+import park.users.UserType;
 import park.users.User;
 
 import java.io.BufferedReader;
@@ -13,23 +13,21 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class Main {
-    private static Park park = new Park("Disneyland","123456");
+    private static Park park = new Park("Disneyland", "123456");
+
     public static void main(String[] args) throws Exception {
-        //TODO create menu methods for each case
         mainMenu();
     }
-
+    /**[!] METHOD FINISHED**/
     public static void mainMenu() throws Exception {
         String[] options = {"User menu", "Admin menu", "Exit"};
         printOptions(options);
 
         switch (readString()) {
-            case "1": // ticket menu
-                // TODO call method..
+            case "1":
                 userMenu();
                 break;
-            case "2": // Control users menu - use user -> shopping/cinema/funZone
-                // TODO call method..
+            case "2":
                 System.out.print("Enter admin password: ");
                 if (park.ckeckPassword(readString())) {
                     adminMenu();
@@ -45,9 +43,9 @@ public class Main {
         }
         mainMenu();
     }
-    
+    /**METHOD FINISHED**/
     public static void userMenu() throws Exception {
-        String[] options = {"Buy ticket","Add credits","Go shopping","Watch a movie","Disneyland attractions","Exit"};
+        String[] options = {"Buy ticket", "Enter the park", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -55,15 +53,9 @@ public class Main {
                 buyTicketMenu();
                 break;
             case "2":
-                addCredits();
+                parkMenu(null,-1);
                 break;
             case "3":
-                break;
-            case "4":
-                break;
-            case "5":
-                break;
-            case "6":
                 return;
             default:
                 System.out.println("Invalid choice!");
@@ -72,6 +64,64 @@ public class Main {
         userMenu();
     }
 
+    /**METHOD FINISHED**/
+    public static void buyTicketMenu() throws Exception {
+        String[] options = {"SingleTicket", "GroupTicket", "Exit"};
+        printOptions(options);
+        List<User> users = new ArrayList<>();
+
+        switch (readString()) {
+            case "1":
+                users.addAll(createUser(1));
+                break;
+            case "2":
+                int sizeOfGroup = readSizeOfGroup();
+                if(sizeOfGroup > 0) {
+                    users.addAll(createUser(sizeOfGroup));
+                }break;
+            case "3":  //exit
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        park.addUsers(users);
+    }
+
+    //TODO create methods - goShopping, watchAMovie, goOnAttractions
+    private static void parkMenu(User currentUser, int indexOfUser) throws Exception {
+        if (currentUser == null) {
+            indexOfUser = findUserInPark();
+            if (indexOfUser < 0) {
+                System.out.println("There is no such user!");
+                return;
+            } else {
+                currentUser = park.getUserByIndex(indexOfUser);
+            }
+        }
+        String[] options = {"Add credits", "Go shopping", "Watch a movie", "Disneyland attractions", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                addCredits(indexOfUser, currentUser);
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        parkMenu(currentUser, indexOfUser);
+    }
+
+    //TODO create Admin functionality - create remove everything they want
     private static void adminMenu() throws IOException {
         String[] options = {"Stores","Attractions","Cinema","Exit"};
         printOptions(options);
@@ -95,6 +145,7 @@ public class Main {
         adminMenu();
     }
 
+    //TODO add functionality
     private static void storesMenu() throws IOException {
         String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
         printOptions(options);
@@ -117,6 +168,7 @@ public class Main {
         storesMenu();
     }
 
+    //TODO add functionality
     private static void attractionsMenu() throws IOException {
         String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Change attraction", "Exit"};
         printOptions(options);
@@ -139,6 +191,7 @@ public class Main {
         attractionsMenu();
     }
 
+    //TODO add functionality
     private static void cinemaMenu() throws IOException {
         String[] options = {"Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
         printOptions(options);
@@ -161,29 +214,7 @@ public class Main {
         cinemaMenu();
     }
 
-    //TODO check if the person already exist
-    public static void buyTicketMenu() throws Exception {
-        String[] options = {"SingleTicket", "GroupTicket", "Exit"};
-        printOptions(options);
-        List<User> users = new ArrayList<>();
-        switch (readString()) {
-            case "1": // TODO create person and ticket
-                users.addAll(createUser(1));
-                break;
-            case "2":
-                //TODO create groups and tickets
-                users.addAll(createUser(readSizeOfGroup()));
-                break;
-            case "3":  //exit
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-        park.addUsers(users);
-    }
-
-    //TODO  TEST exception when group is less than 2
+    /**METHOD FINISHED**/
     public static int readSizeOfGroup() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter number of members: ");
@@ -200,26 +231,24 @@ public class Main {
 
         if(numberOfUsers < 2) {
             System.out.println("The group can not have less than 2 members!");
-            return readSizeOfGroup();
+            return -1;
         }
 
         return numberOfUsers;
     }
 
-    //TODO check if there is such a user already
-    //TODO create tickets for each user
-    //TODO add case when user's age < 14 and it's not in group and when the group doesn't have member older than 14
+    /**METHOD FINISHED**/
     public static List<User> createUser(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
-        UserTypeOfTicket userTypeOfTicket = null;
+        UserType userTypeOfTicket = null;
         if (numberOfUsers == 5) {
             userTypeOfTicket = userTypeOfTicket.SMALLGROUP;
         } else if (numberOfUsers > 5) {
             userTypeOfTicket = userTypeOfTicket.BIGGROUP;
         }
+        int maxAge = 1;
 
         for (int i = 0; i < numberOfUsers; i++) {
-
             System.out.print("Please enter a name: ");
             String name = readName();
             System.out.print("Please enter age: ");
@@ -234,11 +263,24 @@ public class Main {
                     userTypeOfTicket = readTicketType();
                 }
             }
+            maxAge = Math.max(maxAge,age);
             users.add(new User(name, age, budget, userTypeOfTicket));
+            System.out.println();
         }
-        return users;
+        if(maxAge < 14) {
+            System.out.println("You can not enter the park because there is no user older than 14 with you!");
+            return new ArrayList<User>();
+        }
+        else { // TODO clear the console here
+            users = buyTickets(users);
+            System.out.println("Successfully added");
+            users.forEach(user -> System.out.println(user.toString()));
+            return users;
+        }
     }
-    //TODO make readName and validateName - INTERFACE
+
+    //TODO think if methods marked with [!] can be Interfaces
+    /**[!] METHOD FINISHED**/
     public static String readName() throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String name = reader.readLine();
@@ -252,6 +294,7 @@ public class Main {
         return name;
     }
 
+    /**[!] METHOD FINISHED**/
     public static String validateName(String name) throws NameException {
         if (name.length() < 3 || name.length() > 35) {
             throw new NameException("The name has to be between 3 and 35 symbols!");
@@ -262,6 +305,7 @@ public class Main {
         }
     }
 
+    /**[!] METHOD FINISHED**/
     private static int readAge() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input = reader.readLine();
@@ -273,10 +317,10 @@ public class Main {
             System.out.print("Please enter a valid age: ");
             return readAge();
         }
-        System.out.println();
         return age;
     }
 
+    /**[!] METHOD FINISHED**/
     private static int validateAge(String input) throws AgeException {
         int age;
         try {
@@ -290,7 +334,7 @@ public class Main {
         return age;
     }
 
-    //TODO make readMoney and validateMoney -INTERFACE
+    /**[!] METHOD FINISHED**/
     private static double readMoney() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String input = reader.readLine();
@@ -305,6 +349,7 @@ public class Main {
         return money;
     }
 
+    /**[!] METHOD FINISHED**/
     private static double validateMoney(String input) throws MoneyException {
         double money;
         try {
@@ -319,17 +364,18 @@ public class Main {
         return money;
     }
 
-    private static UserTypeOfTicket readTicketType() throws IOException {
+    /**METHOD FINISHED**/
+    private static UserType readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(options);
         String command = readString();
         switch (command) {
             case "1":
-                return UserTypeOfTicket.ADULT;
+                return UserType.ADULT;
             case "2":
-                return UserTypeOfTicket.PENSIONER;
+                return UserType.PENSIONER;
             case "3":
-                return UserTypeOfTicket.DISABLED;
+                return UserType.DISABLED;
             default:
                 System.out.println("Not a valid choice!");
                 System.out.println("Please enter your choice again!");
@@ -337,39 +383,45 @@ public class Main {
         }
     }
 
-    //TODO create method validateInt() - when reading  and numberOfTicket
-    private static void addCredits() throws Exception {
+    //TODO create something better - change setTicketsCounter to void and make everything in stream()
+    public static List<User> buyTickets(List<User> users) {
+        users.forEach(user -> user.addTicket(park.getTicketsCounter() + park.setTicketsCounter()));
+        return users;
+    }
+
+    public static  int findUserInPark() throws Exception {
         System.out.print("Please enter user name: ");
         String name = readName();
-        System.out.println("Please enter ticket number");
+        System.out.print("Please enter ticket number: ");
         String ticketNumber = readString();
+        System.out.println();
 
-        int currentUserIndex =  park.findUserIndex(name,ticketNumber);
-        if(currentUserIndex < 0) {
-            System.out.println("There is no such user!");
+        return park.findUserIndex(name, ticketNumber);
+    }
+
+    //TODO create exception method to validate int - when reading numberOfTicket(look method readAge())
+    private static void addCredits(int currentUserIndex,User currentUser) throws Exception {
+        System.out.println("1 ticket = 10 credits");
+        System.out.println("Please enter the number of tickets:  ");
+
+        int numberOfTickets = Integer.parseInt(readString());
+        if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
+            System.out.println("Sorry you don't have enough money!");
         } else {
-            User currentUser = park.getUserByIndex(currentUserIndex);
-            System.out.println("1 ticket = 10 credits");
-            System.out.println("Please enter the number of tickets:  ");
-
-            int numberOfTickets = Integer.parseInt(readString());
-            if(currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
-                System.out.println("Sorry your budget is not enough to a buy " + numberOfTickets + " tickets!");
-            } else {
-                currentUser.addCredits(numberOfTickets);
-                park.updateUser(currentUserIndex,currentUser);
-                System.out.printf("User %s now has %d credits and %.2f budget", currentUser.getName(), currentUser.getUserTicketCredits());
-
-            }
+            currentUser.addCredits(numberOfTickets);
+            park.updateUser(currentUserIndex, currentUser);
+            System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
         }
     }
 
+    /**METHOD FINISHED**/
     private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         return command;
     }
 
+    /**METHOD FINISHED**/
     private static void printOptions(String[] options) {
         IntStream.range(0, options.length)
                 .mapToObj(i -> (i + 1) + "." + options[i])

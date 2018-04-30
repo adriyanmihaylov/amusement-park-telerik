@@ -6,10 +6,10 @@ public class User {
     private String name;
     private int age;
     private double budget;
-    private UserTypeOfTicket type;
+    private UserType type;
     private Ticket ticket;
 
-    public User(String name, int age, double budget, UserTypeOfTicket type) {
+    public User(String name, int age, double budget, UserType type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
@@ -41,11 +41,11 @@ public class User {
        // SMALLGROUP - price = 14$
         // BIGGROUP - price = 13$
     public void addTicket(String ticketNumber) {
-        if (this.type == UserTypeOfTicket.UNDER18 || this.type == UserTypeOfTicket.PENSIONER || this.type == UserTypeOfTicket.DISABLED) {
+        if (this.type == UserType.UNDER18 || this.type == UserType.PENSIONER || this.type == UserType.DISABLED) {
             this.ticket = new Ticket(ticketNumber, 15);
-        } else if (this.type == UserTypeOfTicket.ADULT) {
+        } else if (this.type == UserType.ADULT) {
             this.ticket = new Ticket(ticketNumber, 20);
-        } else if (this.type == UserTypeOfTicket.SMALLGROUP) {
+        } else if (this.type == UserType.SMALLGROUP) {
             this.ticket = new Ticket(ticketNumber, 14);
         } else {
             this.ticket = new Ticket(ticketNumber, 13);
@@ -59,6 +59,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User %s\n%d years old\nbudget %.2f$", this.name, this.age, this.budget);
+        return String.format("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|", this.name, this.age, this.budget,this.ticket.getTicketNumber());
     }
 }
