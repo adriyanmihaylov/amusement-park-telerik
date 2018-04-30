@@ -36,16 +36,19 @@ public class Park {
     }
 
     //TODO make a stream()
-    public User findUser(String name,int ticketNumber) {
+    public int findUserIndex(String name,String ticketNumber) {
         if(this.users.size() < 1) {
-            return null;
+            return -1;
         }
         for (User user: users) {
             if(user.getName().equals(name) && user.getTicketNumber(ticketNumber)) {
-                return user;
+                return this.users.indexOf(user);
             }
         }
-        return null;
+        return -1;
+    }
+    public User getUserByIndex(int userIndex) {
+        return this.users.get(userIndex);
     }
 
     public void addStores(List<Store> stores) {
@@ -77,5 +80,9 @@ public class Park {
 
     public boolean ckeckPassword(String password) {
         return this.password.equals(password);
+    }
+
+    public void updateUser(int index,User currentUser) {
+        users.set(index,currentUser);
     }
 }

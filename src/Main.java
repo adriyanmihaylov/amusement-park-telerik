@@ -55,6 +55,7 @@ public class Main {
                 buyTicketMenu();
                 break;
             case "2":
+                addCredits();
                 break;
             case "3":
                 break;
@@ -336,20 +337,30 @@ public class Main {
         }
     }
 
-    //TODO create method validateInt() - when reading ticketNumber and numberOfTicket
+    //TODO create method validateInt() - when reading  and numberOfTicket
     private static void addCredits() throws Exception {
         System.out.print("Please enter user name: ");
         String name = readName();
-        int ticketNumber = Integer.parseInt(readString());
+        System.out.println("Please enter ticket number");
+        String ticketNumber = readString();
 
-        User currentUser =  park.findUser(name,ticketNumber);
-
-        if(currentUser == null) {
+        int currentUserIndex =  park.findUserIndex(name,ticketNumber);
+        if(currentUserIndex < 0) {
             System.out.println("There is no such user!");
         } else {
-            int numberOfTickets = Integer.parseInt(readString());
-            if(currentUser.getBudget() < numberOfTickets * 1);
+            User currentUser = park.getUserByIndex(currentUserIndex);
+            System.out.println("1 ticket = 10 credits");
+            System.out.println("Please enter the number of tickets:  ");
 
+            int numberOfTickets = Integer.parseInt(readString());
+            if(currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
+                System.out.println("Sorry your budget is not enough to a buy " + numberOfTickets + " tickets!");
+            } else {
+                currentUser.addCredits(numberOfTickets);
+                park.updateUser(currentUserIndex,currentUser);
+                System.out.printf("User %s now has %d credits and %.2f budget", currentUser.getName(), currentUser.getUserTicketCredits());
+
+            }
         }
     }
 
