@@ -1,6 +1,6 @@
-package park.products.tickets;
+package park.users;
 
-public enum TicketType {
+public enum UserTypeOfTicket {
     UNDER18,
     ADULT,
     PENSIONEER,

@@ -2,7 +2,7 @@ import exceptions.AgeException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
-import park.products.tickets.TicketType;
+import park.users.UserTypeOfTicket;
 import park.users.User;
 
 import java.io.BufferedReader;
@@ -20,7 +20,7 @@ public class Main {
     }
 
     public static void mainMenu() throws Exception {
-        String[] options = { "User menu", "Admin menu", "Exit"};
+        String[] options = {"User menu", "Admin menu", "Exit"};
         printOptions(options);
 
         switch (readString()) {
@@ -31,7 +31,7 @@ public class Main {
             case "2": // Control users menu - use user -> shopping/cinema/funZone
                 // TODO call method..
                 System.out.print("Enter admin password: ");
-                if(park.ckeckPassword(readString())) {
+                if (park.ckeckPassword(readString())) {
                     adminMenu();
                 } else {
                     System.out.println("Username and password doesn't match!");
@@ -45,7 +45,7 @@ public class Main {
         }
         mainMenu();
     }
-
+    
     public static void userMenu() throws Exception {
         String[] options = {"Buy ticket","Add credits","Go shopping","Watch a movie","Disneyland attractions","Exit"};
         printOptions(options);
@@ -70,6 +70,7 @@ public class Main {
         }
         userMenu();
     }
+
     private static void adminMenu() throws IOException {
         String[] options = {"Stores","Attractions","Cinema","Exit"};
         printOptions(options);
@@ -159,6 +160,7 @@ public class Main {
         cinemaMenu();
     }
 
+    //TODO check if the person already exist
     public static void buyTicketMenu() throws Exception {
         String[] options = {"SingleTicket", "GroupTicket", "Exit"};
         printOptions(options);
@@ -180,7 +182,7 @@ public class Main {
         park.addUsers(users);
     }
 
-    //TODO add exception when group is less than 2
+    //TODO  TEST exception when group is less than 2
     public static int readSizeOfGroup() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter number of members: ");
@@ -194,7 +196,12 @@ public class Main {
             System.out.print("Please enter a valid number: ");
             return readSizeOfGroup();
         }
-        System.out.println();
+
+        if(numberOfUsers < 2) {
+            System.out.println("The group can not have less than 2 members!");
+            return readSizeOfGroup();
+        }
+
         return numberOfUsers;
     }
 
@@ -203,11 +210,11 @@ public class Main {
     //TODO add case when user's age < 14 and it's not in group and when the group doesn't have member older than 14
     public static List<User> createUser(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
-        TicketType ticketType = null;
+        UserTypeOfTicket userTypeOfTicket = null;
         if (numberOfUsers == 5) {
-            ticketType = ticketType.SMALLGROUP;
+            userTypeOfTicket = userTypeOfTicket.SMALLGROUP;
         } else if (numberOfUsers > 5) {
-            ticketType = ticketType.BIGGROUP;
+            userTypeOfTicket = userTypeOfTicket.BIGGROUP;
         }
 
         for (int i = 0; i < numberOfUsers; i++) {
@@ -219,16 +226,15 @@ public class Main {
             System.out.print("What's the budget of " + name + ": ");
             double budget = readMoney();
 
-            if (ticketType == null) {
+            if (userTypeOfTicket == null) {
                 if (age < 18) {
-                    ticketType = ticketType.UNDER18;
+                    userTypeOfTicket = userTypeOfTicket.UNDER18;
                 } else {
-                    ticketType = readTicketType();
+                    userTypeOfTicket = readTicketType();
                 }
             }
-            users.add(new User(name, age, budget, ticketType));
+            users.add(new User(name, age, budget, userTypeOfTicket));
         }
-
         return users;
     }
     //TODO make readName and validateName - INTERFACE
@@ -312,21 +318,34 @@ public class Main {
         return money;
     }
 
-    private static TicketType readTicketType() throws IOException {
+    private static UserTypeOfTicket readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(options);
         String command = readString();
         switch (command) {
             case "1":
-                return TicketType.ADULT;
+                return UserTypeOfTicket.ADULT;
             case "2":
-                return TicketType.PENSIONEER;
+                return UserTypeOfTicket.PENSIONEER;
             case "3":
-                return TicketType.DISABLED;
+                return UserTypeOfTicket.DISABLED;
             default:
                 System.out.println("Not a valid choice!");
                 System.out.println("Please enter your choice again!");
                 return readTicketType();
+        }
+    }
+
+    //TODO add method readingTicketNumber - throws exception
+    private static void addCredits() throws Exception {
+        System.out.print("Please enter user name: ");
+        String name = readName();
+        int ticketNumber = Integer.parseInt(readString());
+        User currentUser =  park.findUser(name,ticketNumber);
+        if(currentUser == null) {
+            System.out.println("There is no such user!");
+        } else {
+            
         }
     }
 

@@ -35,6 +35,19 @@ public class Park {
         this.name = name;
     }
 
+    //TODO make a stream()
+    public User findUser(String name,int ticketNumber) {
+        if(this.users.size() < 1) {
+            return null;
+        }
+        for (User user: users) {
+            if(user.getName().equals(name) && user.getTicketNumber(ticketNumber)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public void addStores(List<Store> stores) {
         this.stores.addAll(stores);
     }
