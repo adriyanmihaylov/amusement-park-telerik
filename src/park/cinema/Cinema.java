@@ -64,6 +64,11 @@ public class Cinema {
         }
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
         return productsInStock.containsKey(product);
     }
