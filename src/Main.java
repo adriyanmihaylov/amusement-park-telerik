@@ -392,10 +392,13 @@ public class Main {
                 addCredits(indexOfUser, currentUser);
                 break;
             case "2":
+                goShopping(indexOfUser,currentUser);
                 break;
             case "3":
+                watchMovie(indexOfUser,currentUser);
                 break;
             case "4":
+                rideAttractions(indexOfUser,currentUser);
                 break;
             case "5":
                 return;
@@ -406,6 +409,30 @@ public class Main {
         parkMenu(currentUser, indexOfUser);
     }
 
+    //TODO ADD FUNCTIONALITY
+    //TODO create exception method to validate int - when reading numberOfTicket(look method readAge())
+    private static void addCredits(int currentUserIndex,User currentUser) throws Exception {
+        System.out.println("1 ticket = 10 credits");
+        System.out.println("Please enter the number of tickets:  ");
+
+        int numberOfTickets = Integer.parseInt(readString());
+        if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
+            System.out.println("Sorry you don't have enough money!");
+        } else {
+            currentUser.addCredits(numberOfTickets);
+            park.updateUser(currentUserIndex, currentUser);
+            System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
+        }
+    }
+
+    private static void goShopping(int indexOfUser, User currentUser) {
+    }
+
+    private static void watchMovie(int indexOfUser, User currentUser) {
+    }
+
+    public static void rideAttractions(int indexOfUser, User currentUser) {
+    }
 
     /**END OF USER METHODS*/
     /**-----------------------------------------------------------------------------------------*/
@@ -598,21 +625,6 @@ public class Main {
         System.out.println();
 
         return park.findUserIndex(name, ticketNumber);
-    }
-
-    //TODO create exception method to validate int - when reading numberOfTicket(look method readAge())
-    private static void addCredits(int currentUserIndex,User currentUser) throws Exception {
-        System.out.println("1 ticket = 10 credits");
-        System.out.println("Please enter the number of tickets:  ");
-
-        int numberOfTickets = Integer.parseInt(readString());
-        if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
-            System.out.println("Sorry you don't have enough money!");
-        } else {
-            currentUser.addCredits(numberOfTickets);
-            park.updateUser(currentUserIndex, currentUser);
-            System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
-        }
     }
 
     /**METHOD FINISHED**/
