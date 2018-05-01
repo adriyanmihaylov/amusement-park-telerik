@@ -1,4 +1,5 @@
 import exceptions.AgeException;
+import exceptions.IntegerException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
@@ -540,8 +541,8 @@ public class Main {
         int age;
         try {
             age = validateAge(input);
-        } catch (AgeException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.print("Please enter a valid age: ");
             return readAge();
         }
@@ -549,17 +550,44 @@ public class Main {
     }
 
     /**[!] METHOD FINISHED**/
-    private static int validateAge(String input) throws AgeException {
+    private static int validateAge(String input) throws AgeException, IntegerException {
         int age;
         try {
             age = Integer.parseInt(input);
         } catch (Exception e) {
-            throw new AgeException("The entered is not a number!");
+            throw new IntegerException("The entered is not a number!");
         }
         if (age < 1 || age > 114) {
             throw new AgeException("Invalid age! Age has to be between 1 and 114");
         }
         return age;
+    }
+
+    /**[!] METHOD FINISHED**/
+    private static int readInt() throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String input = reader.readLine();
+        int number;
+        try {
+            number = validateInt(input);
+        } catch (IntegerException e) {
+            System.out.println(e);
+            System.out.print("Please enter a valid number: ");
+            return readAge();
+        }
+        return number;
+    }
+
+    /**[!] METHOD FINISHED**/
+    private static int validateInt(String input) throws IntegerException {
+        int number;
+        try {
+            number = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new IntegerException("The entered is not a number!");
+        }
+
+        return number;
     }
 
     /**[!] METHOD FINISHED**/
@@ -611,7 +639,7 @@ public class Main {
         }
     }
 
-    //TODO create something better - change setTicketsCounter to void and make everything in stream()
+    //TODO create something better - change setTicketsCounter to void and make everything stream()
     public static List<User> buyTickets(List<User> users) {
         users.forEach(user -> user.addTicket(park.getTicketsCounter() + park.setTicketsCounter()));
         return users;
