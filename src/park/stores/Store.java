@@ -12,4 +12,9 @@ public abstract class Store {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Store " + this.name + "\tMoney in cash desk = %.2f" + this.desk.getMoneyInDesk());
+    }
 }

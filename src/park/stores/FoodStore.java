@@ -15,4 +15,8 @@ public class FoodStore extends Store {
         super(name, desk);
         this.productsInStock.addAll(products);
     }
+
+    public String getProductsInStock() {
+        return String.join(" ",productsInStock.toString());
+    }
 }

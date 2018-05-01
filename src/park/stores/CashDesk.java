@@ -14,4 +14,8 @@ public class CashDesk {
     public void setMoneyInDesk(double moneyInDesk) {
         this.moneyInDesk = moneyInDesk;
     }
+
+    public  void addMoneyToDesk(double money) {
+        this.moneyInDesk += money;
+    }
 }

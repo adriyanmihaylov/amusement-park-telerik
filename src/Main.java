@@ -386,7 +386,7 @@ public class Main {
         printOptions(options);
         String command = readString();
         switch (command) {
-            case "1":
+            case "1": /**DONE*/
                 addCredits(indexOfUser, currentUser);
                 break;
             case "2":
@@ -423,8 +423,34 @@ public class Main {
     }
 
     //TODO add functionality
-    private static void goShopping(int indexOfUser, User currentUser) {
+    private static void goShopping(int indexOfUser, User currentUser) throws IOException {
+        String[] options = {"Food stores", "Souvenir stores"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                goToFoodStores(indexOfUser,currentUser);
+                break;
+            case "2":
+                goToSouvenirStores(indexOfUser,currentUser);
+                break;
+            case "3":
+                break;
+                default:
+                    System.out.println("Not a valid choice!");
+                    System.out.println("Please try again!");
+                    break;
+        }
+        goShopping(indexOfUser,currentUser);
     }
+    public static void goToFoodStores(int indexOfUser,User currentUser) {
+
+    }
+    
+    public static void goToSouvenirStores(int indexOfUser,User currentUser) {
+
+    }
+
 
     //TODO add functionality
     private static void watchMovie(int indexOfUser, User currentUser) {

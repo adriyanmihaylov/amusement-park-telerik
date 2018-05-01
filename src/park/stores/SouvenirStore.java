@@ -19,4 +19,7 @@ public class SouvenirStore extends Store {
     }
     //TODO getSouvenirsInStock
     //TODO toString souvenirsInStock
+    public String getSouvenirsInStock() {
+        return String.join(souvenirsInStock.toString());
+    }
 }

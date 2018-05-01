@@ -19,6 +19,6 @@ public abstract class Product {
 
     @Override
     public String toString() {
-        return String.format("%s, with the price of: %.2f", name, price);
+        return String.format("Product %s\tPrice %.2f\t", name, price);
     }
 }
