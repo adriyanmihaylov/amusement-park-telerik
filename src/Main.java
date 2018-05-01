@@ -169,7 +169,7 @@ public class Main {
     private static void showAttractions() {
     }
 
-    /**Cinema functions*/
+    /**Cinema functions*/ //TODO KRASIMIR ZAHARIEV
     //TODO add functionality
     private static void cinemaMenu() throws Exception {
         String[] options = {"Add new Cinema", "Edit cinema", "Exit"};
@@ -220,14 +220,15 @@ public class Main {
         options[options.length - 1] = "Exit";
         printOptions(options);
 
-        int command = Integer.parseInt(readString());
+        int command = readInt();
 
-        if (command > options.length) {
+        if (command > options.length || command < 0) {
+            //TODO clear the console
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseCinema();
         }
 
-        return options[command -1];
+        return options[command - 1];
     }
 
     //TODO create exception method to validate int - when reading numberOfCinemas
@@ -286,7 +287,6 @@ public class Main {
         manageCinema(cinemaName);
     }
 
-    //TODO KRASI check if there is no such Cinema here not in Park
     private static void removeCinema(String cinemaName) throws IOException {
         park.removeCinema(cinemaName);
         System.out.println("Done !\n");
@@ -300,13 +300,12 @@ public class Main {
                 .forEach(Cinema::displayMovies);
     }
 
-    //TODO create exception method to validate int numberOfCinemas
     //TODO ! METHOD IS NOT DONE
     private static void addMovie(String cinemaName) throws Exception {
         System.out.println("How many movies do you want to add to the cinema ?");
 
         HashMap<String, String> movies = new HashMap<>();
-        int numberOfMovies = Integer.parseInt(readString());
+        int numberOfMovies = readInt();
         String movieName, movieGenre;
         for (int i = 0; i < numberOfMovies; i++) {
             System.out.printf("Please enter the name of movie #%d: ", i + 1);
@@ -374,7 +373,7 @@ public class Main {
         park.addUsers(users);
     }
 
-    //TODO create methods - goShopping, watchAMovie, goOnAttractions
+    /**METHOD FINISHED**/
     private static void parkMenu(User currentUser, int indexOfUser) throws Exception {
         if (currentUser == null) {
             indexOfUser = findUserInPark();
@@ -385,7 +384,7 @@ public class Main {
                 currentUser = park.getUserByIndex(indexOfUser);
             }
         }
-        String[] options = {"Add credits", "Go shopping", "Watch a movie", "Disneyland attractions", "Exit"};
+        String[] options = {"Add credits", "Go shopping", "Watch a movie", "Ride attractions", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -410,13 +409,12 @@ public class Main {
         parkMenu(currentUser, indexOfUser);
     }
 
-    //TODO ADD FUNCTIONALITY
-    //TODO create exception method to validate int - when reading numberOfTicket(look method readAge())
+    //TODO TEST addCredits with wrong input
     private static void addCredits(int currentUserIndex,User currentUser) throws Exception {
         System.out.println("1 ticket = 10 credits");
         System.out.println("Please enter the number of tickets:  ");
 
-        int numberOfTickets = Integer.parseInt(readString());
+        int numberOfTickets = readInt();
         if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
             System.out.println("Sorry you don't have enough money!");
         } else {
@@ -426,12 +424,15 @@ public class Main {
         }
     }
 
+    //TODO add functionality
     private static void goShopping(int indexOfUser, User currentUser) {
     }
 
+    //TODO add functionality
     private static void watchMovie(int indexOfUser, User currentUser) {
     }
 
+    //TODO add functionality
     public static void rideAttractions(int indexOfUser, User currentUser) {
     }
 
@@ -439,27 +440,18 @@ public class Main {
     /**-----------------------------------------------------------------------------------------*/
 
 
+    /**CREATING USERS AND SELLING TICKETS TO THEM*/
+    /**-----------------------------------------------------------------------------------------*/
+
     /**METHOD FINISHED**/
-    //TODO add method validateInteger when reading sizeOfGroup
     public static int readSizeOfGroup() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter number of members: ");
-        String input = reader.readLine();
-        int numberOfUsers;
-        try {
-            numberOfUsers = Integer.parseInt(input);
-            System.out.println();
-        } catch (Exception e) {
-            // System.out.println(e);
-            System.out.print("Please enter a valid number: ");
-            return readSizeOfGroup();
-        }
+        int numberOfUsers = readInt();
 
         if(numberOfUsers < 2) {
             System.out.println("The group can not have less than 2 members!");
             return -1;
         }
-
         return numberOfUsers;
     }
 
@@ -511,8 +503,7 @@ public class Main {
     //TODO think if methods marked with [!] can be Interfaces
     /**[!] METHOD FINISHED**/
     public static String readName() throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String name = reader.readLine();
+        String name = readString();
         try {
             validateName(name);
         } catch (NameException e) {
@@ -536,8 +527,7 @@ public class Main {
 
     /**[!] METHOD FINISHED**/
     private static int readAge() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String input = reader.readLine();
+        String input = readString();
         int age;
         try {
             age = validateAge(input);
@@ -564,36 +554,8 @@ public class Main {
     }
 
     /**[!] METHOD FINISHED**/
-    private static int readInt() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String input = reader.readLine();
-        int number;
-        try {
-            number = validateInt(input);
-        } catch (IntegerException e) {
-            System.out.println(e);
-            System.out.print("Please enter a valid number: ");
-            return readAge();
-        }
-        return number;
-    }
-
-    /**[!] METHOD FINISHED**/
-    private static int validateInt(String input) throws IntegerException {
-        int number;
-        try {
-            number = Integer.parseInt(input);
-        } catch (Exception e) {
-            throw new IntegerException("The entered is not a number!");
-        }
-
-        return number;
-    }
-
-    /**[!] METHOD FINISHED**/
     private static double readMoney() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String input = reader.readLine();
+        String input = readString();
         double money;
         try {
             money = validateMoney(input);
@@ -643,6 +605,34 @@ public class Main {
     public static List<User> buyTickets(List<User> users) {
         users.forEach(user -> user.addTicket(park.getTicketsCounter() + park.setTicketsCounter()));
         return users;
+    }
+    /**-----------------------------------------------------------------------------------------*/
+
+
+    /**[!] METHOD FINISHED**/
+    private static int readInt() throws IOException {
+        String input = readString();
+        int number;
+        try {
+            number = validateInt(input);
+        } catch (IntegerException e) {
+            System.out.println(e);
+            System.out.print("Please enter a valid number: ");
+            return readAge();
+        }
+        return number;
+    }
+
+    /**[!] METHOD FINISHED**/
+    private static int validateInt(String input) throws IntegerException {
+        int number;
+        try {
+            number = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new IntegerException("The entered is not a number!");
+        }
+
+        return number;
     }
 
     public static  int findUserInPark() throws Exception {
