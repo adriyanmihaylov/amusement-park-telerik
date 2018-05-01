@@ -42,8 +42,8 @@ public class Cinema {
         return movies;
     }
 
-    public void addMovie(String movieName, MovieGenre genre) {
-        movies.add(new Movie(name, genre));
+    public void addMovie(Set<Movie> moviesToAdd) {
+        movies.addAll(moviesToAdd);
     }
 
     public void watchMovie(User user, Movie movie) {
@@ -51,8 +51,9 @@ public class Cinema {
     }
 
     public void displayMovies() {
-        System.out.println("Movies you can watch:\n");
-        movies.forEach(x -> System.out.print(x + ", "));
+        System.out.println("Movies you can watch:");
+        movies.forEach(x -> System.out.print(x + " "));
+        System.out.println();
     }
 
     public void addProduct(Product product) {

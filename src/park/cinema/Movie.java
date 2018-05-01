@@ -27,6 +27,6 @@ public class Movie {
 
     @Override
     public String toString() {
-        return name;
+        return String.format("%s(%s)", name, genre);
     }
 }

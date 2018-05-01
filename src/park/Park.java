@@ -1,6 +1,8 @@
 package  park;
 
 import park.cinema.Cinema;
+import park.cinema.Movie;
+import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.stores.Store;
 import park.users.User;
@@ -86,20 +88,31 @@ public class Park {
         this.cinemas.addAll(cinemasToAdd);
     }
 
-    //TODO complete this method
-    public void addMoviesToCinemas(HashMap<String, String> movies) {
-        //this.cinemas.forEach((cinema) -> cinema.);
-        Map<String, String> moviesToAdd;
+    public void removeCinema(String cinemaName) {
+        cinemas.removeIf(x -> x.getName().equals(cinemaName));
     }
 
-    public void deleteStore(Store store) {
+    //TODO test this
+    public void addMoviesToCinemas(String cinemaName, HashMap<String, String> movies) {
+        Set<Movie> moviesToAdd = movies.entrySet()
+                .stream()
+                .map((x) -> new Movie(x.getKey(), MovieGenre.valueOf(x.getValue().toUpperCase())))
+                .collect(Collectors.toSet());
+
+        cinemas.stream()
+                .filter(x -> x.getName().equals(cinemaName))
+                .forEach(x -> x.addMovie(moviesToAdd));
+    }
+
+    public void removeStore(Store store) {
         this.stores.remove(store);
     }
-    public void deleteAttraction(Attraction attraction) {
+
+    public void removeAttraction(Attraction attraction) {
         this.attractions.remove(attraction);
     }
 
-    public  void deleteUser(User user) {
+    public  void removeUser(User user) {
         this.users.remove(user);
     }
 

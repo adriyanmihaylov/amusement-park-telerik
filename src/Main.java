@@ -10,10 +10,8 @@ import park.users.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -197,7 +195,7 @@ public class Main {
 
     //TODO add functionality
     private static void cinemaMenu() throws Exception {
-        String[] options = {"Add new Cinema", "Add movie", "Remove movie", "Add foods to cinema's store", "Remove foods from cinema store", "Exit"};
+        String[] options = {"Add new Cinema", "Choose Cinema", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -205,19 +203,31 @@ public class Main {
                 addNewCinema();
                 break;
             case "2":
-                addMovie();
+                chooseCinemaMenu();
                 break;
-            case "3":
-                break;
-            case "4":
-                break;
-            case "5":
+            case "3": //Exit
                 return;
             default:
                 System.out.println("Invalid choice!");
                 break;
         }
+
         cinemaMenu();
+    }
+
+    private static void chooseCinemaMenu() throws Exception {
+        if (park.getCinemas().size() < 1) {
+            System.out.println("Sorry the park does not have a cinema yet.\n");
+            return;
+        }
+
+        System.out.println("Choose cinema from the list: ");
+        String chosenOption = chooseCinema();
+        if (chosenOption.equals("Exit")) {
+            return;
+        }
+
+        manageCinema(chosenOption);
     }
 
     /**METHOD FINISHED**/
@@ -430,23 +440,68 @@ public class Main {
         for (int i = 0; i < numberOfCinemas; i++) {
             System.out.printf("Please enter the name of cinema #%d: ", i + 1);
             cinemaName = readName();
-            cinemas.add(cinemaName);
+            if (park.getCinemas().contains(cinemaName)) {
+                System.out.println("This cinema is already in the park !");
+            } else {
+                cinemas.add(cinemaName);
+            }
         }
 
         park.addCinemas(cinemas);
         System.out.println("Done !\n");
     }
 
-    //TODO create exception method to validate int numberOfCinemas
-    //TODO ! METHOD IS NOT DONE
-    private static void addMovie() throws Exception {
-        boolean hasNoCinema = park.getCinemas().isEmpty();
-        if (hasNoCinema) {
-            System.out.println("There is no cinema in the park to add a movie to.\n");
-            return;
+    private static void manageCinema(String cinemaName) throws Exception {
+        System.out.printf("Manage %s cinema:\n", cinemaName);
+        String[] options = {"Remove cinema", "Add movies", "Remove movies", "DisplayMovies", "Add foods to cinema's store",
+                "Remove foods from cinema store", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                removeCinema(cinemaName);
+                return;
+            case "2":
+                addMovie(cinemaName);
+                break;
+            case "3":
+                //removeMovie(cinemaName);
+                break;
+            case "4":
+                displayMovies(cinemaName);
+                break;
+            case "5":
+                //addFoodToCinema();
+                break;
+            case "6":
+                //removeFoodFromCinema();
+                break;
+            case "7": //Exit
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
         }
 
-        System.out.println("How many movies do you want to add to the cinemas ?");
+        manageCinema(cinemaName);
+    }
+
+    private static void removeCinema(String cinemaName) throws IOException {
+        park.removeCinema(cinemaName);
+        System.out.println("Done !\n");
+    }
+
+    private static void displayMovies(String cinemaName) {
+        park.getCinemas()
+                .stream()
+                .filter(x -> x.getName().equals(cinemaName))
+                .forEach(Cinema::displayMovies);
+    }
+
+    //TODO create exception method to validate int numberOfCinemas
+    //TODO ! METHOD IS NOT DONE
+    private static void addMovie(String cinemaName) throws Exception {
+        System.out.println("How many movies do you want to add to the cinema ?");
 
         HashMap<String, String> movies = new HashMap<>();
         int numberOfMovies = Integer.parseInt(readString());
@@ -455,38 +510,58 @@ public class Main {
             System.out.printf("Please enter the name of movie #%d: ", i + 1);
             movieName = readName();
             System.out.println("Please choose one of the following genres:");
-            System.out.println("Animation, Drama, Thriller, Action, Comedy, Musical");
-            movieGenre = readMovieGenre();
+            movieGenre = chooseGenre();
             movies.put(movieName, movieGenre);
         }
 
-        park.addMoviesToCinemas(movies);
+        park.addMoviesToCinemas(cinemaName, movies);
         System.out.println("Done !\n");
     }
 
-    //check can be replaced with exception InvalidMovieGenre
-    private static String readMovieGenre() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    //TODO Exception for command(must be positive number)
+    private static String chooseCinema() throws IOException {
+        Set<Cinema> cinemasInPark = park.getCinemas();
+        String[] options = new String[cinemasInPark.size() + 1];
+        List<String> test = cinemasInPark.stream()
+                .map(Cinema::getName)
+                .collect(Collectors.toList());
+        //change options = cinemasInPark.toArray(options);
+        //to see the error;
+        options = test.toArray(options);
+        options[options.length - 1] = "Exit";
+        printOptions(options);
 
-        String genre = reader.readLine();
-        boolean invalidGenre = isNotValidGenre(genre);
-        if (invalidGenre) {
-            System.out.println("Invalid genre! Please choose one of the following genres:");
-            System.out.println("Animation, Drama, Thriller, Action, Comedy, Musical");
-            return readMovieGenre();
+        int command = Integer.parseInt(readString());
+
+        if (command > options.length) {
+            System.out.println("Invalid choice! Choose one of the following: ");
+            return chooseCinema();
         }
 
-        return genre;
+        return options[command -1];
     }
 
-    private static boolean isNotValidGenre(String genre) {
-        for (MovieGenre tempGenre : MovieGenre.values()) {
-            if (tempGenre.name().equals(genre.toUpperCase())) {
-                return false;
-            }
-        }
+    private static String chooseGenre() throws IOException {
+        String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
+        printOptions(options);
 
-        return true;
+        switch (readString()) {
+            case "1":
+                return options[0];
+            case "2":
+                return options[1];
+            case "3":
+                return options[2];
+            case "4":
+                return options[3];
+            case "5":
+                return options[4];
+            case "6":
+                return options[5];
+            default:
+                System.out.println("Invalid choice! Please choose from the following genres: ");
+                return chooseGenre();
+        }
     }
 
     /**METHOD FINISHED**/
