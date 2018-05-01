@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Park {
     private String name;
     protected String password;
-    private Set<Store> stores;
+    private List<Store> stores;
     private List<User> users;
     private Set<Cinema> cinemas;
     private Set<Attraction> attractions;
@@ -22,7 +22,7 @@ public class Park {
     public Park(String name,String password) {
         setName(name);
         this.password = password;
-        this.stores = new HashSet<>();
+        this.stores = new ArrayList<>();
         this.users = new ArrayList<>();
         this.cinemas = new HashSet<>();
         this.attractions = new HashSet<>();
@@ -52,6 +52,22 @@ public class Park {
         this.ticketsCounter++;
         return "";
     }
+    public String getStores() {
+        return "PARK-> getStores  not COMPLETED !!!!!";
+    }
+    //TODO make it STREAM()
+    public int getStoreIndex(String name) {
+        for (Store store : this.stores) {
+            if (store.getName().equals(name)) {
+                return this.stores.indexOf(store);
+            }
+        }
+        return -1;
+    }
+
+    public  Store getStoreByIndex(int index) {
+        return this.stores.get(index);
+    }
 
     //TODO make a stream()
     public int findUserIndex(String name,String ticketNumber) {
@@ -65,6 +81,7 @@ public class Park {
         }
        return -1;
     }
+
     public User getUserByIndex(int userIndex) {
         return this.users.get(userIndex);
     }
@@ -123,5 +140,4 @@ public class Park {
     public void updateUser(int index,User currentUser) {
         users.set(index,currentUser);
     }
-
 }

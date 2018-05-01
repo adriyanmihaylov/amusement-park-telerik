@@ -2,7 +2,7 @@ package park.products;
 
 import park.interfaces.IConsumable;
 
-public abstract class FoodProduct extends Product implements IConsumable {
+public abstract class FoodProduct extends Product implements IConsumable{
 
     String expirationDate;
 
@@ -19,4 +19,5 @@ public abstract class FoodProduct extends Product implements IConsumable {
     public String toString() {
         return String.format(super.toString() + "Expiration date: " + expirationDate);
     }
+
 }

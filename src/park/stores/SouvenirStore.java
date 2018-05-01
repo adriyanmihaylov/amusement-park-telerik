@@ -1,25 +1,34 @@
 package park.stores;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import park.interfaces.IUsable;
 import park.products.*;
 
-public class SouvenirStore extends Store {
-    Set<Souvenir> souvenirsInStock;
+public class SouvenirStore extends Store implements IUsable {
+    List<Souvenir> productsInStock;
 
     public SouvenirStore(String name, CashDesk desk) {
         super(name, desk);
-        this.souvenirsInStock = new HashSet<>();
+        this.productsInStock = new ArrayList<Souvenir>();
     }
 
     public SouvenirStore(String name, CashDesk desk, List<Souvenir> souvenirs) {
         super(name,desk);
-        this.souvenirsInStock.addAll(souvenirs);
+        this.productsInStock.addAll(souvenirs);
     }
-    //TODO getSouvenirsInStock
-    //TODO toString souvenirsInStock
-    public String getSouvenirsInStock() {
-        return String.join(souvenirsInStock.toString());
+    //TODO getProductsInStock
+    //TODO toString productsInStock
+
+
+    public void addProducts(List<Souvenir> souvenirs) {
+        this.productsInStock.addAll(souvenirs);
+    }
+
+    @Override
+    public void use(int creditsCost) {
+
     }
 }
