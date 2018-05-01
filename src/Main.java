@@ -1,5 +1,5 @@
 import exceptions.AgeException;
-import exceptions.IntegerException;
+import exceptions.PositiveIntegerException;
 import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
@@ -207,7 +207,6 @@ public class Main {
         manageCinema(chosenOption);
     }
 
-    //TODO Exception for command(must be positive number)
     private static String chooseCinema() throws IOException {
         Set<Cinema> cinemasInPark = park.getCinemas();
         String[] options = new String[cinemasInPark.size() + 1];
@@ -220,9 +219,9 @@ public class Main {
         options[options.length - 1] = "Exit";
         printOptions(options);
 
-        int command = readInt();
+        int command = readPositiveInteger();
 
-        if (command > options.length || command < 0) {
+        if (command > options.length) {
             //TODO clear the console
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseCinema();
@@ -231,12 +230,11 @@ public class Main {
         return options[command - 1];
     }
 
-    //TODO create exception method to validate int - when reading numberOfCinemas
     private static void addNewCinema() throws Exception {
         System.out.println("How many cinemas do you want to add to the park ?");
 
         HashSet<String> cinemas = new HashSet<>();
-        int numberOfCinemas = Integer.parseInt(readString());
+        int numberOfCinemas = readPositiveInteger();
         String cinemaName;
         for (int i = 0; i < numberOfCinemas; i++) {
             System.out.printf("Please enter the name of cinema #%d: ", i + 1);
@@ -305,7 +303,7 @@ public class Main {
         System.out.println("How many movies do you want to add to the cinema ?");
 
         HashMap<String, String> movies = new HashMap<>();
-        int numberOfMovies = readInt();
+        int numberOfMovies = readPositiveInteger();
         String movieName, movieGenre;
         for (int i = 0; i < numberOfMovies; i++) {
             System.out.printf("Please enter the name of movie #%d: ", i + 1);
@@ -414,7 +412,7 @@ public class Main {
         System.out.println("1 ticket = 10 credits");
         System.out.println("Please enter the number of tickets:  ");
 
-        int numberOfTickets = readInt();
+        int numberOfTickets = readPositiveInteger();
         if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
             System.out.println("Sorry you don't have enough money!");
         } else {
@@ -446,7 +444,7 @@ public class Main {
     /**METHOD FINISHED**/
     public static int readSizeOfGroup() throws IOException {
         System.out.print("Enter number of members: ");
-        int numberOfUsers = readInt();
+        int numberOfUsers = readPositiveInteger();
 
         if(numberOfUsers < 2) {
             System.out.println("The group can not have less than 2 members!");
@@ -540,12 +538,12 @@ public class Main {
     }
 
     /**[!] METHOD FINISHED**/
-    private static int validateAge(String input) throws AgeException, IntegerException {
+    private static int validateAge(String input) throws AgeException, PositiveIntegerException {
         int age;
         try {
             age = Integer.parseInt(input);
         } catch (Exception e) {
-            throw new IntegerException("The entered is not a number!");
+            throw new PositiveIntegerException("The entered is not a number!");
         }
         if (age < 1 || age > 114) {
             throw new AgeException("Invalid age! Age has to be between 1 and 114");
@@ -610,26 +608,29 @@ public class Main {
 
 
     /**[!] METHOD FINISHED**/
-    private static int readInt() throws IOException {
+    private static int readPositiveInteger() throws IOException {
         String input = readString();
         int number;
         try {
-            number = validateInt(input);
-        } catch (IntegerException e) {
+            number = validatePositiveInteger(input);
+        } catch (PositiveIntegerException e) {
             System.out.println(e);
             System.out.print("Please enter a valid number: ");
-            return readAge();
+            return readPositiveInteger();
         }
         return number;
     }
 
     /**[!] METHOD FINISHED**/
-    private static int validateInt(String input) throws IntegerException {
+    private static int validatePositiveInteger(String input) throws PositiveIntegerException {
         int number;
         try {
             number = Integer.parseInt(input);
         } catch (Exception e) {
-            throw new IntegerException("The entered is not a number!");
+            throw new PositiveIntegerException("The entered is not a number!");
+        }
+        if(number < 0) {
+            throw  new PositiveIntegerException("Please enter positive number!");
         }
 
         return number;
