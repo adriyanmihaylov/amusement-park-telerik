@@ -3,7 +3,6 @@ import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
 import park.cinema.Cinema;
-import park.cinema.MovieGenre;
 import park.users.UserType;
 import park.users.User;
 
@@ -66,6 +65,290 @@ public class Main {
         userMenu();
     }
 
+    //TODO create Admin functionality - create remove everything they want
+    private static void adminMenu() throws Exception {
+        String[] options = {"Stores","Attractions","Cinema","Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                storesMenu();
+                break;
+            case "2":
+                attractionsMenu();
+                break;
+            case "3":
+                cinemaMenu();
+                break;
+            case "4":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        adminMenu();
+    }
+
+   /**-----------------------------------------------------------------------------------------*/
+    /**ADMIN METHODS*/
+
+    /**Stores functions*/
+    //TODO add functionality
+    private static void storesMenu() throws IOException {
+        String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                removeStore();
+                break;
+            case "2":
+                addStore();
+                break;
+            case "3":
+                getProducts();
+                break;
+            case "4":
+                addProductsToStore();
+                break;
+            case "5":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        storesMenu();
+    }
+
+    private static void removeStore() {
+
+    }
+
+    private  static void addStore() {
+
+    }
+
+    private static void getProducts() {
+
+    }
+
+    private  static void addProductsToStore() {
+
+    }
+
+    /**Attractions functions*/
+    //TODO add functionality
+    private static void attractionsMenu() throws IOException {
+        String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                removeAttraction();
+                break;
+            case "2":
+                addNewAttraction();
+                break;
+            case "3":
+                showAttractions();
+                break;
+            case "4":
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+        attractionsMenu();
+    }
+
+    private static void removeAttraction() {
+    }
+    private static void addNewAttraction() {
+    }
+    private static void showAttractions() {
+    }
+
+    /**Cinema functions*/
+    //TODO add functionality
+    private static void cinemaMenu() throws Exception {
+        String[] options = {"Add new Cinema", "Edit cinema", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                addNewCinema();
+                break;
+            case "2":
+                editCinema();
+                break;
+            case "3": //Exit
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+
+        cinemaMenu();
+    }
+
+    private static void editCinema() throws Exception {
+        if (park.getCinemas().size() < 1) {
+            System.out.println("Sorry the park does not have a cinema yet.\n");
+            return;
+        }
+
+        System.out.println("Choose cinema from the list: ");
+        String chosenOption = chooseCinema();
+        if (chosenOption.equals("Exit")) {
+            return;
+        }
+
+        manageCinema(chosenOption);
+    }
+
+    //TODO Exception for command(must be positive number)
+    private static String chooseCinema() throws IOException {
+        Set<Cinema> cinemasInPark = park.getCinemas();
+        String[] options = new String[cinemasInPark.size() + 1];
+        List<String> test = cinemasInPark.stream()
+                .map(Cinema::getName)
+                .collect(Collectors.toList());
+        //change options = cinemasInPark.toArray(options);
+        //to see the error;
+        options = test.toArray(options);
+        options[options.length - 1] = "Exit";
+        printOptions(options);
+
+        int command = Integer.parseInt(readString());
+
+        if (command > options.length) {
+            System.out.println("Invalid choice! Choose one of the following: ");
+            return chooseCinema();
+        }
+
+        return options[command -1];
+    }
+
+    //TODO create exception method to validate int - when reading numberOfCinemas
+    private static void addNewCinema() throws Exception {
+        System.out.println("How many cinemas do you want to add to the park ?");
+
+        HashSet<String> cinemas = new HashSet<>();
+        int numberOfCinemas = Integer.parseInt(readString());
+        String cinemaName;
+        for (int i = 0; i < numberOfCinemas; i++) {
+            System.out.printf("Please enter the name of cinema #%d: ", i + 1);
+            cinemaName = readName();
+            if (park.getCinemas().contains(cinemaName)) {
+                System.out.println("This cinema is already in the park !");
+            } else {
+                cinemas.add(cinemaName);
+            }
+        }
+
+        park.addCinemas(cinemas);
+        System.out.println("Done !\n");
+    }
+
+    private static void manageCinema(String cinemaName) throws Exception {
+        System.out.printf("Manage %s cinema:\n", cinemaName);
+        String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add foods to cinema's store",
+                "Remove foods from cinema store", "Exit"};
+        printOptions(options);
+        String command = readString();
+        switch (command) {
+            case "1":
+                removeCinema(cinemaName);
+                return;
+            case "2":
+                addMovie(cinemaName);
+                break;
+            case "3":
+                //removeMovie(cinemaName);
+                break;
+            case "4":
+                displayMovies(cinemaName);
+                break;
+            case "5":
+                //addFoodToCinema();
+                break;
+            case "6":
+                //removeFoodFromCinema();
+                break;
+            case "7": //Exit
+                return;
+            default:
+                System.out.println("Invalid choice!");
+                break;
+        }
+
+        manageCinema(cinemaName);
+    }
+
+    //TODO KRASI check if there is no such Cinema here not in Park
+    private static void removeCinema(String cinemaName) throws IOException {
+        park.removeCinema(cinemaName);
+        System.out.println("Done !\n");
+    }
+
+    //TODO this method must be in Park which calls method in Cinema
+    private static void displayMovies(String cinemaName) {
+        park.getCinemas()
+                .stream()
+                .filter(x -> x.getName().equals(cinemaName))
+                .forEach(Cinema::displayMovies);
+    }
+
+    //TODO create exception method to validate int numberOfCinemas
+    //TODO ! METHOD IS NOT DONE
+    private static void addMovie(String cinemaName) throws Exception {
+        System.out.println("How many movies do you want to add to the cinema ?");
+
+        HashMap<String, String> movies = new HashMap<>();
+        int numberOfMovies = Integer.parseInt(readString());
+        String movieName, movieGenre;
+        for (int i = 0; i < numberOfMovies; i++) {
+            System.out.printf("Please enter the name of movie #%d: ", i + 1);
+            movieName = readName();
+            System.out.println("Please choose one of the following genres:");
+            movieGenre = chooseGenre();
+            movies.put(movieName, movieGenre);
+        }
+
+        park.addMoviesToCinemas(cinemaName, movies);
+        System.out.println("Done !\n");
+    }
+
+    private static String chooseGenre() throws IOException {
+        String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                return options[0];
+            case "2":
+                return options[1];
+            case "3":
+                return options[2];
+            case "4":
+                return options[3];
+            case "5":
+                return options[4];
+            case "6":
+                return options[5];
+            default:
+                System.out.println("Invalid choice! Please choose from the following genres: ");
+                return chooseGenre();
+        }
+    }
+
+
+    /**END OF ADMIN METHODS*/
+    /**-----------------------------------------------------------------------------------------*/
+
+    /**-----------------------------------------------------------------------------------------*/
+    /**USER METHODS*/
+
     /**METHOD FINISHED**/
     public static void buyTicketMenu() throws Exception {
         String[] options = {"SingleTicket", "GroupTicket", "Exit"};
@@ -123,114 +406,13 @@ public class Main {
         parkMenu(currentUser, indexOfUser);
     }
 
-    //TODO create Admin functionality - create remove everything they want
-    private static void adminMenu() throws Exception {
-        String[] options = {"Stores","Attractions","Cinema","Exit"};
-        printOptions(options);
-        String command = readString();
-        switch (command) {
-            case "1":
-                storesMenu();
-                break;
-            case "2":
-                attractionsMenu();
-                break;
-            case "3":
-                cinemaMenu();
-                break;
-            case "4":
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-        adminMenu();
-    }
 
-    //TODO add functionality
-    private static void storesMenu() throws IOException {
-        String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
-        printOptions(options);
-        String command = readString();
-        switch (command) {
-            case "1":
-                break;
-            case "2":
-                break;
-            case "3":
-                break;
-            case "4":
-                break;
-            case "5":
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-        storesMenu();
-    }
+    /**END OF USER METHODS*/
+    /**-----------------------------------------------------------------------------------------*/
 
-    //TODO add functionality
-    private static void attractionsMenu() throws IOException {
-        String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Change attraction", "Exit"};
-        printOptions(options);
-        String command = readString();
-        switch (command) {
-            case "1":
-                break;
-            case "2":
-                break;
-            case "3":
-                break;
-            case "4":
-                break;
-            case "5":
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-        attractionsMenu();
-    }
-
-    //TODO add functionality
-    private static void cinemaMenu() throws Exception {
-        String[] options = {"Add new Cinema", "Choose Cinema", "Exit"};
-        printOptions(options);
-        String command = readString();
-        switch (command) {
-            case "1":
-                addNewCinema();
-                break;
-            case "2":
-                chooseCinemaMenu();
-                break;
-            case "3": //Exit
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-
-        cinemaMenu();
-    }
-
-    private static void chooseCinemaMenu() throws Exception {
-        if (park.getCinemas().size() < 1) {
-            System.out.println("Sorry the park does not have a cinema yet.\n");
-            return;
-        }
-
-        System.out.println("Choose cinema from the list: ");
-        String chosenOption = chooseCinema();
-        if (chosenOption.equals("Exit")) {
-            return;
-        }
-
-        manageCinema(chosenOption);
-    }
 
     /**METHOD FINISHED**/
+    //TODO add method validateInteger when reading sizeOfGroup
     public static int readSizeOfGroup() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Enter number of members: ");
@@ -254,9 +436,11 @@ public class Main {
     }
 
     /**METHOD FINISHED**/
+    //TODO clear the console
     public static List<User> createUser(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
         UserType userTypeOfTicket = null;
+
         if (numberOfUsers == 5) {
             userTypeOfTicket = userTypeOfTicket.SMALLGROUP;
         } else if (numberOfUsers > 5) {
@@ -279,13 +463,14 @@ public class Main {
                     userTypeOfTicket = readTicketType();
                 }
             }
+
             maxAge = Math.max(maxAge,age);
             users.add(new User(name, age, budget, userTypeOfTicket));
             System.out.println();
         }
         if(maxAge < 14) {
             System.out.println("You can not enter the park because there is no user older than 14 with you!");
-            return new ArrayList<User>();
+            return new ArrayList<>();
         }
         else { // TODO clear the console here
             users = buyTickets(users);
@@ -427,140 +612,6 @@ public class Main {
             currentUser.addCredits(numberOfTickets);
             park.updateUser(currentUserIndex, currentUser);
             System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
-        }
-    }
-
-    //TODO create exception method to validate int - when reading numberOfCinemas
-    private static void addNewCinema() throws Exception {
-        System.out.println("How many cinemas do you want to add to the park ?");
-
-        HashSet<String> cinemas = new HashSet<>();
-        int numberOfCinemas = Integer.parseInt(readString());
-        String cinemaName;
-        for (int i = 0; i < numberOfCinemas; i++) {
-            System.out.printf("Please enter the name of cinema #%d: ", i + 1);
-            cinemaName = readName();
-            if (park.getCinemas().contains(cinemaName)) {
-                System.out.println("This cinema is already in the park !");
-            } else {
-                cinemas.add(cinemaName);
-            }
-        }
-
-        park.addCinemas(cinemas);
-        System.out.println("Done !\n");
-    }
-
-    private static void manageCinema(String cinemaName) throws Exception {
-        System.out.printf("Manage %s cinema:\n", cinemaName);
-        String[] options = {"Remove cinema", "Add movies", "Remove movies", "DisplayMovies", "Add foods to cinema's store",
-                "Remove foods from cinema store", "Exit"};
-        printOptions(options);
-        String command = readString();
-        switch (command) {
-            case "1":
-                removeCinema(cinemaName);
-                return;
-            case "2":
-                addMovie(cinemaName);
-                break;
-            case "3":
-                //removeMovie(cinemaName);
-                break;
-            case "4":
-                displayMovies(cinemaName);
-                break;
-            case "5":
-                //addFoodToCinema();
-                break;
-            case "6":
-                //removeFoodFromCinema();
-                break;
-            case "7": //Exit
-                return;
-            default:
-                System.out.println("Invalid choice!");
-                break;
-        }
-
-        manageCinema(cinemaName);
-    }
-
-    private static void removeCinema(String cinemaName) throws IOException {
-        park.removeCinema(cinemaName);
-        System.out.println("Done !\n");
-    }
-
-    private static void displayMovies(String cinemaName) {
-        park.getCinemas()
-                .stream()
-                .filter(x -> x.getName().equals(cinemaName))
-                .forEach(Cinema::displayMovies);
-    }
-
-    //TODO create exception method to validate int numberOfCinemas
-    //TODO ! METHOD IS NOT DONE
-    private static void addMovie(String cinemaName) throws Exception {
-        System.out.println("How many movies do you want to add to the cinema ?");
-
-        HashMap<String, String> movies = new HashMap<>();
-        int numberOfMovies = Integer.parseInt(readString());
-        String movieName, movieGenre;
-        for (int i = 0; i < numberOfMovies; i++) {
-            System.out.printf("Please enter the name of movie #%d: ", i + 1);
-            movieName = readName();
-            System.out.println("Please choose one of the following genres:");
-            movieGenre = chooseGenre();
-            movies.put(movieName, movieGenre);
-        }
-
-        park.addMoviesToCinemas(cinemaName, movies);
-        System.out.println("Done !\n");
-    }
-
-    //TODO Exception for command(must be positive number)
-    private static String chooseCinema() throws IOException {
-        Set<Cinema> cinemasInPark = park.getCinemas();
-        String[] options = new String[cinemasInPark.size() + 1];
-        List<String> test = cinemasInPark.stream()
-                .map(Cinema::getName)
-                .collect(Collectors.toList());
-        //change options = cinemasInPark.toArray(options);
-        //to see the error;
-        options = test.toArray(options);
-        options[options.length - 1] = "Exit";
-        printOptions(options);
-
-        int command = Integer.parseInt(readString());
-
-        if (command > options.length) {
-            System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseCinema();
-        }
-
-        return options[command -1];
-    }
-
-    private static String chooseGenre() throws IOException {
-        String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
-        printOptions(options);
-
-        switch (readString()) {
-            case "1":
-                return options[0];
-            case "2":
-                return options[1];
-            case "3":
-                return options[2];
-            case "4":
-                return options[3];
-            case "5":
-                return options[4];
-            case "6":
-                return options[5];
-            default:
-                System.out.println("Invalid choice! Please choose from the following genres: ");
-                return chooseGenre();
         }
     }
 
