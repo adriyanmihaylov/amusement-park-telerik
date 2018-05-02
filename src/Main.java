@@ -14,7 +14,6 @@ import park.users.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -100,7 +99,7 @@ public class Main {
     /**Stores functions*/
     //TODO add functionality
     private static void storesMenu() throws Exception {
-        String[] options = {"Remove store", "Add new store", "Get store products ", "Add products to store", "Exit"};
+        String[] options = {"Remove store", "Add new store", "Get store products ", "Add/Remove products", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -111,10 +110,11 @@ public class Main {
                 addStore();
                 break;
             case "3":
-                getProducts();
+                printProductsInStore();
                 break;
             case "4":
-                addProductsToStore();
+                System.out.print("Please enter store name: ");
+                addRemoveProducts(getStore());
                 break;
             case "5":
                 return;
@@ -125,7 +125,8 @@ public class Main {
         storesMenu();
     }
 
-    private static Store getStore(String name) {
+    private static Store getStore() throws Exception {
+        String name = readName();
         int index = park.getStoreIndex(name);
         if(index < 0) {
             return null;
@@ -136,33 +137,72 @@ public class Main {
     private static void removeStore() throws Exception {
         showStores();
         System.out.println("Which store do you want to remove: ");
-        String name = readName();
-        Store storeToRemove = getStore(name);
+        Store storeToRemove = getStore();
         if(storeToRemove == null) {
             System.out.println("There is no such store");
         } else {
             park.removeStore(storeToRemove);
-            System.out.println(storeToRemove.toString() + "was successfully removed!");
+            System.out.println(storeToRemove + " was successfully removed!");
         }
     }
+
+    //TODO !!!!!!!! complete park.getStores()
+    private  static void showStores() throws IOException {
+        System.out.println("Do you want to see the stores: ");
+        String[] options = {"Yes", "No"};
+        printOptions(options);
+        String command = readString();
+
+        switch (command) {
+            case "1":
+                park.printAllStores();
+                break;
+            case "2":
+                return;
+            default:
+                System.out.println("Invalid command!");
+                showStores();
+                break;
+        }
+    }
+
     //TODO test the method
+    //TODO this method must be in park
     private  static void addStore() throws Exception {
         System.out.print("How many stores do you want to add: ");
         int numberOfStores = readPositiveInteger();
+        List<Store> stores = readStoresFromConsole(numberOfStores);
+        if (stores.size() > 0) {
+            park.addStores(stores);
+            System.out.println("Stores were successfully added!");
+        } else {
+            System.out.println("No stores were added!");
+        }
+    }
+
+    public static List<Store> readStoresFromConsole(int numberOfStores) throws Exception {
         List<Store> stores = new ArrayList<>();
+        int flag = 0;
 
         for (int i = 0; i < numberOfStores; i++) {
             System.out.print("Enter the name of store " + (i + 1) + ": ");
             String name = readName();
-            if (getStore(name) == null) {
+            if (!park.isThereStore(name)) {
                 for (Store store : stores) {
                     if (store.getName().equals(name)) {
                         System.out.println("There is such a store already!");
-                        continue;
+                        flag = 1;
+                        break;
                     }
                 }
+                if (flag == 1) {
+                    flag = 0;
+                    continue;
+                }
+
                 System.out.print("What's the budget of store " + name + ": ");
                 Double budgetMoney = readMoney();
+
                 System.out.println("What kind of store is " + name + "");
                 int storeType = selectStoreType();
 
@@ -178,8 +218,7 @@ public class Main {
                 System.out.println("There is such a store already!");
             }
         }
-        park.addStores(stores);
-        System.out.println("Stores successfully added!");
+        return stores;
     }
 
     public static int selectStoreType() throws IOException {
@@ -197,19 +236,42 @@ public class Main {
         }
     }
 
-    private static void getProducts() throws Exception {
+    private static void printProductsInStore() throws Exception {
         showStores();
         System.out.println("Please enter the name of the store: ");
-        Store store = getStore(readName());
-        if(store.equals(null)) {
+        Store store = getStore();
+
+        if (store.equals(null)) {
             System.out.println("There is no such store!");
         } else {
-            System.out.println(store.getProductsInStock());
+            store.showProductsInStock();
         }
     }
 
-    private  static void addProductsToStore() {
+    private  static void addRemoveProducts(Store store) throws Exception {
+        if (store == null) {
+            System.out.println("There is no such store");
+            return;
+        }
 
+        String[] options = {"Add products", "Remove products", "Exit"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                park.addProductsToStore(store);
+                break;
+            case "2":
+                park.removeProductsFromStore(store);
+                break;
+            case "3":
+                return;
+            default:
+                System.out.println("Invalid command!");
+                System.out.println("Please try again!");
+                break;
+        }
+        addRemoveProducts(store);
     }
 
     /**Attractions functions*/
@@ -680,26 +742,6 @@ public class Main {
         return users;
     }
     /**-----------------------------------------------------------------------------------------*/
-
-    //TODO !!!!!!!! complete park.getStores()
-    private  static void showStores() throws IOException {
-        System.out.println("Do you want to see the stores: ");
-        String[] options = {"Yes", "No"};
-        printOptions(options);
-        String command = readString();
-
-        switch (command) {
-            case "1":
-                System.out.println(park.getStores());
-                break;
-            case "2":
-                return;
-            default:
-                System.out.println("Invalid command!");
-                showStores();
-                break;
-        }
-    }
 
     /**[!] METHOD FINISHED**/
     private static int readPositiveInteger() throws IOException {

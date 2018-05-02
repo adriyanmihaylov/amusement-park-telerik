@@ -16,19 +16,19 @@ public class SouvenirStore extends Store implements IUsable {
     }
 
     public SouvenirStore(String name, CashDesk desk, List<Souvenir> souvenirs) {
-        super(name,desk);
+        super(name, desk);
         this.productsInStock.addAll(souvenirs);
     }
     //TODO getProductsInStock
     //TODO toString productsInStock
 
-
-    public void addProducts(List<Souvenir> souvenirs) {
-        this.productsInStock.addAll(souvenirs);
-    }
-
     @Override
     public void use(int creditsCost) {
 
+    }
+
+    @Override
+    public String toString() {
+        return String.format(super.getName() + "\t| sells souvenirs");
     }
 }

@@ -48,13 +48,19 @@ public class Park {
     public int getTicketsCounter() {
         return this.ticketsCounter;
     }
+
     public String setTicketsCounter() {
         this.ticketsCounter++;
         return "";
     }
-    public String getStores() {
-        return "PARK-> getStores  not COMPLETED !!!!!";
+    public void printAllStores() {
+        stores
+                .stream()
+                .map(Store::toString)
+                .forEach(System.out::println);
+
     }
+
     //TODO make it STREAM()
     public int getStoreIndex(String name) {
         for (Store store : this.stores) {
@@ -139,5 +145,22 @@ public class Park {
 
     public void updateUser(int index,User currentUser) {
         users.set(index,currentUser);
+    }
+
+    public void addProductsToStore(Store store) {
+
+    }
+
+    public boolean isThereStore(String name) {
+        for (Store store: this.stores) {
+            if(store.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeProductsFromStore(Store store) {
+
     }
 }

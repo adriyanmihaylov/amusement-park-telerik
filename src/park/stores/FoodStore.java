@@ -17,12 +17,14 @@ public class FoodStore extends Store implements IConsumable {
         this.productsInStock.addAll(products);
     }
 
-    public void addProducts(List<FoodProduct> products) {
-        this.productsInStock.addAll(products);
-    }
-
     @Override
     public void consume() {
 
     }
+
+    @Override
+    public String toString() {
+        return String.format(super.getName() + "\t| sells foods");
+    }
+
 }

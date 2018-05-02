@@ -18,19 +18,31 @@ public abstract class Store {
     public void setName(String name) {
         this.name = name;
     }
+
     public  String getName() {
         return this.name;
     }
 
-
     // TODO test if it's working
-    public String getProductsInStock() {
-        return "Store -> getProductsInStock - NOT COMPLETED!!!!11";
+    // TODO not finished
+    public void showProductsInStock() {
+        System.out.println("STORE -> showProductsInStock() NOT FINISHED!");
+
+        if (productsInStock.size() < 1) {
+            System.out.println("There is no products in store " + this.name);
+        } else {
+            productsInStock.stream().map(Product::toString).forEach(System.out::println);
+        }
+    }
+
+
+    public void addProducts(List<Product> productsToAdd) {
+        this.productsInStock.addAll(productsToAdd);
     }
 
     //TODO complete toString method
     @Override
     public String toString() {
-        return String.format(this.name + " ");
+        return String.format("Store " + this.name + "Budget %.2f ",this.desk );
     }
 }
