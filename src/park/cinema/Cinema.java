@@ -66,7 +66,12 @@ public class Cinema {
         System.out.println();
     }
 
-    public void addProduct(Product product) {
+    //TODO !!!!! FINISH THIS LATER
+    public void addProducts(HashMap<Product, Integer> products) {
+
+    }
+
+    public void addSingleProduct(Product product) {
         boolean isContained = isFoodContained(productsInStock, product);
         if (isContained) {
             productsInStock.computeIfPresent(product, (k, v) -> v + 1); //TODO : test this

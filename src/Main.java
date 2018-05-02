@@ -1,11 +1,10 @@
-import exceptions.AgeException;
-import exceptions.PositiveIntegerException;
-import exceptions.MoneyException;
-import exceptions.NameException;
+import exceptions.*;
 import park.Park;
 import park.cinema.Cinema;
 import park.cinema.Movie;
 import park.cinema.MovieGenre;
+import park.products.Product;
+import park.products.ProductToEat;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
 import park.stores.SouvenirStore;
@@ -379,7 +378,7 @@ public class Main {
         for (int i = 0; i < numberOfCinemas; i++) {
             System.out.printf("Please enter the name of cinema #%d: ", i + 1);
             cinemaName = readName();
-            //TODO this is not okay- remove it, or replace it with Map<cinemaName, cinemaObject>
+            //TODO this works but... maybe remove it, or replace it with Map<cinemaName, cinemaObject>
             if (park.getCinemas().contains(cinemaName)) {
                 System.out.println("This cinema is already in the park !");
             } else {
@@ -395,8 +394,8 @@ public class Main {
 
     private static void manageCinema(String cinemaName) throws Exception {
         System.out.printf("Manage %s cinema:\n", cinemaName);
-        String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add foods to cinema's store",
-                "Remove foods from cinema store", "Exit"};
+        String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add consumables",
+                "Remove consumables", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -413,10 +412,10 @@ public class Main {
                 displayMovies(cinemaName);
                 break;
             case "5":
-                //addFoodToCinema();
+                addConsumablesToCinema(cinemaName);
                 break;
             case "6":
-                //removeFoodFromCinema();
+                //removeConsumablesFromCinema();
                 break;
             case "7": //Exit
                 return;
@@ -488,6 +487,62 @@ public class Main {
 
     private static void displayMovies(String cinemaName) {
         park.displayMoviesInCinema(cinemaName);
+    }
+
+    private static void addConsumablesToCinema(String cinemaName) throws Exception {
+        String command = chooseConsumableType();
+        if (command.equals("Exit")) {
+            return;
+        }
+
+        String consumableType = command;
+
+        System.out.println("How many products do you want to add to the cinema ?");
+
+        //Product and quantity
+        HashMap<Product, Integer> products = new HashMap<>();
+        int numberOfProducts = readPositiveInteger();
+        String productName;
+        double productPrice;
+        int productQuantity;
+        String expirationDate;
+        for (int i = 0; i < numberOfProducts; i++) {
+            System.out.printf("Please enter the product #%d: ", i + 1);
+            productName = readName();
+
+            System.out.println("Please enter the product's price: ");
+            productPrice = readPositiveDouble();
+
+            System.out.println("Please enter expiration date: ");
+            expirationDate = readString();
+
+            System.out.println("Please enter product quantity: ");
+            productQuantity = readPositiveInteger();
+
+            if (consumableType.equals("Food")) {
+                products.put(new ProductToEat(productName, productPrice, expirationDate), productQuantity);
+            }
+        }
+
+        park.addFoodToCinema(cinemaName, products);
+        System.out.println("Done !\n");
+    }
+
+    private static String chooseConsumableType() throws IOException {
+        String[] options = {"Add food", "Add drinks", "Exit"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                return "Food";
+            case "2":
+                return "Drink";
+            case "3":
+                return "Exit";
+            default:
+                System.out.println("Invalid choice! Please choose from the following:\n");
+                return chooseConsumableType();
+        }
     }
 
     private static MovieGenre chooseGenre() throws IOException {
@@ -779,6 +834,8 @@ public class Main {
     }
     /**-----------------------------------------------------------------------------------------*/
 
+    //TODO Maybe replace validatePositiveInteger/Double with just validatePositiveNumber
+
     /**[!] METHOD FINISHED**/
     private static int readPositiveInteger() throws IOException {
         String input = readString();
@@ -803,6 +860,33 @@ public class Main {
         }
         if(number < 0) {
             throw  new PositiveIntegerException("Please enter positive number!");
+        }
+
+        return number;
+    }
+
+    private static double readPositiveDouble() throws IOException {
+        String input = readString();
+        double number;
+        try {
+            number = validatePositiveDouble(input);
+        } catch (PositiveDoubleException e) {
+            System.out.println(e);
+            System.out.print("Please enter a valid number: ");
+            return readPositiveDouble();
+        }
+        return number;
+    }
+
+    private static double validatePositiveDouble(String input) throws PositiveDoubleException {
+        double number;
+        try {
+            number = Double.parseDouble(input);
+        } catch (Exception e) {
+            throw new PositiveDoubleException("The entered is not a number!");
+        }
+        if(number < 0) {
+            throw  new PositiveDoubleException("Please enter positive number!");
         }
 
         return number;

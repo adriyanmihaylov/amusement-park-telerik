@@ -5,8 +5,8 @@ import park.interfaces.IConsumable;
 import java.util.List;
 
 public class ProductToEat extends FoodProduct {
-    public ProductToEat(String name, double price, String exparationDate) {
-        super(name, price, exparationDate);
+    public ProductToEat(String name, double price, String expirationDate) {
+        super(name, price, expirationDate);
     }
 
     @Override

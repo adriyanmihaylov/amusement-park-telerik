@@ -4,6 +4,7 @@ import park.cinema.Cinema;
 import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
+import park.products.Product;
 import park.stores.Store;
 import park.users.User;
 
@@ -114,7 +115,7 @@ public class Park {
     public void removeCinema(String cinemaName) {
         cinemas.removeIf(x -> x.getName().equals(cinemaName));
     }
-    
+
     public void addMoviesToCinemas(String cinemaName, HashMap<String, MovieGenre> movies) {
         Set<Movie> moviesToAdd = movies.entrySet()
                 .stream()
@@ -124,6 +125,10 @@ public class Park {
         cinemas.stream()
                 .filter(x -> x.getName().equals(cinemaName))
                 .forEach(x -> x.addMovie(moviesToAdd));
+    }
+    public Set<Movie> getMoviesFromCinema(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        return cinema.getMovies();
     }
 
     public void removeMovieFromCinema(String cinemaName, String movieName) {
@@ -137,9 +142,10 @@ public class Park {
         System.out.println();
     }
 
-    public Set<Movie> getMoviesFromCinema(String cinemaName) {
+    //TODO : addproducts in cinema is not finished !
+    public void addFoodToCinema(String cinemaName, HashMap<Product, Integer> products) {
         Cinema cinema = getCinemaByName(cinemaName);
-        return cinema.getMovies();
+        cinema.addProducts(products);
     }
 
     public Cinema getCinemaByName(String cinemaName) {
