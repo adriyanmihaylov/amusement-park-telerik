@@ -57,38 +57,47 @@ public class Park {
     }
 
     public void printAllStores() {
-        stores
-                .stream()
-                .map(Store::toString)
-                .forEach(System.out::println);
-
+        stores.forEach(System.out::println);
     }
 
     //TODO make it STREAM()
     public int getStoreIndex(String name) {
-        for (Store store : this.stores) {
-            if (store.getName().equals(name)) {
-                return this.stores.indexOf(store);
-            }
-        }
-        return -1;
+//        for (Store store : this.stores) {
+//            if (store.getName().equals(name)) {
+//                return this.stores.indexOf(store);
+//            }
+//        }
+//        return -1;
+
+        return stores.stream()
+                .filter(x -> x.getName().equals(name))
+                .findFirst()
+                .map(x -> stores.indexOf(x))
+                .orElse(-1);
     }
 
     public  Store getStoreByIndex(int index) {
         return this.stores.get(index);
     }
 
-    //TODO make a stream()
     public int findUserIndex(String name,String ticketNumber) {
         if(this.users.size() < 1) {
             return -1;
         }
-        for (User user: users) {
-            if(user.getName().equals(name) && user.getTicketNumber(ticketNumber)) {
-                return this.users.indexOf(user);
-            }
-        }
-       return -1;
+
+//        for (User user: users) {
+//            if(user.getName().equals(name) && user.getTicketNumber(ticketNumber)) {
+//                return this.users.indexOf(user);
+//            }
+//        }
+//        return -1;
+
+        return users.stream()
+                .filter(x -> x.getName().equals(name))
+                .filter(x -> x.getTicketNumber(ticketNumber))
+                .findFirst()
+                .map(x -> users.indexOf(x))
+                .orElse(-1);
     }
 
     public User getUserByIndex(int userIndex) {
@@ -192,12 +201,16 @@ public class Park {
     }
 
     public boolean isThereStore(String name) {
-        for (Store store: this.stores) {
-            if(store.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+//        for (Store store: this.stores) {
+//            if(store.getName().equals(name)) {
+//                return true;
+//            }
+//        }
+//        return false;
+
+        //this one is not tested
+        return stores.stream()
+                .anyMatch(x -> x.getName().equals(name));
     }
 
     public void removeProductsFromStore(Store store) {
