@@ -4,6 +4,7 @@ import park.cinema.Cinema;
 import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
+import park.funzone.AttractionDangerLevel;
 import park.products.Product;
 import park.stores.Store;
 import park.users.User;
@@ -54,6 +55,7 @@ public class Park {
         this.ticketsCounter++;
         return "";
     }
+
     public void printAllStores() {
         stores
                 .stream()
@@ -101,8 +103,22 @@ public class Park {
         this.users.addAll(users);
     }
 
-    public void addAttractions(List<Attraction> attractions) {
-        this.attractions.addAll(attractions);
+    public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
+        attractions.forEach((x,v) -> this.attractions.add(new Attraction(x, v)));
+    }
+
+    public void removeAttraction(String attractionName) {
+        attractions.removeIf(x -> x.getName().equals(attractionName));
+    }
+
+    public void displayAttractions() {
+        if (attractions.size() == 0) {
+            System.out.println("Sorry the park does not have attractions yet.\n");
+            return;
+        }
+
+        attractions.forEach(System.out::println);
+        System.out.println();
     }
 
     public void addCinemas(HashSet<String> cinemas) {
@@ -122,10 +138,10 @@ public class Park {
                 .map((x) -> new Movie(x.getKey(), x.getValue()))
                 .collect(Collectors.toSet());
 
-        cinemas.stream()
-                .filter(x -> x.getName().equals(cinemaName))
-                .forEach(x -> x.addMovie(moviesToAdd));
+        Cinema cinema = getCinemaByName(cinemaName);
+        cinema.addMovie(moviesToAdd);
     }
+
     public Set<Movie> getMoviesFromCinema(String cinemaName) {
         Cinema cinema = getCinemaByName(cinemaName);
         return cinema.getMovies();
@@ -148,7 +164,7 @@ public class Park {
         cinema.addProducts(products);
     }
 
-    public Cinema getCinemaByName(String cinemaName) {
+    private Cinema getCinemaByName(String cinemaName) {
         return cinemas.stream()
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
@@ -157,10 +173,6 @@ public class Park {
 
     public void removeStore(Store store) {
         this.stores.remove(store);
-    }
-
-    public void removeAttraction(Attraction attraction) {
-        this.attractions.remove(attraction);
     }
 
     public  void removeUser(User user) {

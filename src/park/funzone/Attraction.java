@@ -23,7 +23,7 @@ public class Attraction {
         boolean isAllowed = isAttractionAllowed(user.getAge(), dangerLevel);
         if (isAllowed) {
             System.out.println(user.getName() + " has visited the " + name);
-            // TODO : check ticket(subtract credits)
+            user.getUserTicket().use(2);
         } else {
             System.out.println("We are sorry, but " + name + " is considered dangerous.");
         }
@@ -48,4 +48,8 @@ public class Attraction {
         return isAllowed;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Attraction \"%s\", Danger Level- %s", name, dangerLevel);
+    }
 }

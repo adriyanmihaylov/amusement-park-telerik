@@ -52,6 +52,10 @@ public class User {
         }
     }
 
+    public Ticket getUserTicket() {
+        return ticket;
+    }
+
     public void addCredits(int numberOfTickets) {
         this.ticket.addCredits(numberOfTickets);
         this.budget -= numberOfTickets * this.getTicketPrice();

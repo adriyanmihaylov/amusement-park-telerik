@@ -1,8 +1,11 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
 import exceptions.*;
 import park.Park;
 import park.cinema.Cinema;
 import park.cinema.Movie;
 import park.cinema.MovieGenre;
+import park.funzone.Attraction;
+import park.funzone.AttractionDangerLevel;
 import park.products.Product;
 import park.products.ProductToEat;
 import park.stores.CashDesk;
@@ -275,18 +278,17 @@ public class Main {
         addRemoveProducts(store);
     }
 
-    /**Attractions functions*/
-    //TODO add functionality
-    private static void attractionsMenu() throws IOException {
-        String[] options = {"Remove attraction", "Add new attraction", "Show all attractions ", "Exit"};
+    /**Attractions functions - DONE !*/
+    private static void attractionsMenu() throws Exception {
+        String[] options = {"Add new attraction", "Remove attraction", "Show all attractions ", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
             case "1":
-                removeAttraction();
+                addNewAttraction();
                 break;
             case "2":
-                addNewAttraction();
+                removeAttraction();
                 break;
             case "3":
                 showAttractions();
@@ -300,11 +302,82 @@ public class Main {
         attractionsMenu();
     }
 
-    private static void removeAttraction() {
+    private static void addNewAttraction() throws Exception {
+        System.out.println("How many attraction do you want to add to the park ? ");
+
+        int attractionsCount = readPositiveInteger();
+
+        HashMap<String, AttractionDangerLevel> attractions = new HashMap<>();
+        String attractionName;
+        AttractionDangerLevel dangerLevel;
+        for (int i = 0; i < attractionsCount; i++) {
+            System.out.printf("Please enter attraction name #%d: ", i + 1);
+            attractionName = readName();
+            System.out.println("Choose attraction danger level: ");
+            dangerLevel = chooseDangerLevel();
+            attractions.put(attractionName, dangerLevel);
+        }
+
+        park.addAttractions(attractions);
+        System.out.println("Done!\n");
     }
-    private static void addNewAttraction() {
+
+    private static AttractionDangerLevel chooseDangerLevel() throws IOException {
+        String[] options = {"Low", "Medium", "High"};
+        printOptions(options);
+
+        String command = readString();
+        switch (command) {
+            case "1":
+                return AttractionDangerLevel.LOW;
+            case "2":
+                return AttractionDangerLevel.MEDIUM;
+            case "3":
+                return AttractionDangerLevel.HIGH;
+            default:
+                System.out.println("Invalid choice! Please choose one of the following: ");
+                return chooseDangerLevel();
+        }
     }
+
+    private static void removeAttraction() throws IOException {
+        if (park.getAttractions().size() == 0) {
+            System.out.println("Sorry the park does not have an attraction yet.\n\n");
+            return;
+        }
+
+        System.out.println("Choose attraction from the list: ");
+        String chosenOption = chooseAttraction();
+        if (chosenOption.equals("Exit")) {
+            return;
+        }
+
+        park.removeAttraction(chosenOption);
+        System.out.println("Done!\n");
+    }
+
+    private static String chooseAttraction() throws IOException {
+        Set<Attraction> attractionsInPark = park.getAttractions();
+        String[] options = new String[attractionsInPark.size() + 1];
+        List<String> test = attractionsInPark.stream()
+                .map(Attraction::getName)
+                .collect(Collectors.toList());
+
+        options = test.toArray(options);
+        options[options.length - 1] = "Exit";
+        printOptions(options);
+
+        int command = readPositiveInteger();
+        if (command > options.length) {
+            System.out.println("Invalid choice! Choose one of the following: ");
+            return chooseAttraction();
+        }
+
+        return options[command - 1];
+    }
+
     private static void showAttractions() {
+        park.displayAttractions();
     }
 
     /**Cinema functions*/ //TODO KRASIMIR ZAHARIEV
@@ -345,8 +418,6 @@ public class Main {
         manageCinema(chosenOption);
     }
 
-    // To think- to make this function more abstract so it can be used on several places
-    // or make it interface
     private static String chooseCinema() throws IOException {
         Set<Cinema> cinemasInPark = park.getCinemas();
         String[] options = new String[cinemasInPark.size() + 1];
@@ -359,9 +430,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        //TODO CHECK the exit option
         if (command > options.length) {
-            //TODO clear the console
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseCinema();
         }
@@ -378,7 +447,6 @@ public class Main {
         for (int i = 0; i < numberOfCinemas; i++) {
             System.out.printf("Please enter the name of cinema #%d: ", i + 1);
             cinemaName = readName();
-            //TODO this works but... maybe remove it, or replace it with Map<cinemaName, cinemaObject>
             if (park.getCinemas().contains(cinemaName)) {
                 System.out.println("This cinema is already in the park !");
             } else {
@@ -489,6 +557,7 @@ public class Main {
         park.displayMoviesInCinema(cinemaName);
     }
 
+    //TODO Adding in the park is not finished yet
     private static void addConsumablesToCinema(String cinemaName) throws Exception {
         String command = chooseConsumableType();
         if (command.equals("Exit")) {
