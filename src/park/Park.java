@@ -114,12 +114,11 @@ public class Park {
     public void removeCinema(String cinemaName) {
         cinemas.removeIf(x -> x.getName().equals(cinemaName));
     }
-
-    //TODO test this
-    public void addMoviesToCinemas(String cinemaName, HashMap<String, String> movies) {
+    
+    public void addMoviesToCinemas(String cinemaName, HashMap<String, MovieGenre> movies) {
         Set<Movie> moviesToAdd = movies.entrySet()
                 .stream()
-                .map((x) -> new Movie(x.getKey(), MovieGenre.valueOf(x.getValue().toUpperCase())))
+                .map((x) -> new Movie(x.getKey(), x.getValue()))
                 .collect(Collectors.toSet());
 
         cinemas.stream()

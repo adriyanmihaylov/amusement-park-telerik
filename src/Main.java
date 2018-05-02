@@ -5,6 +5,7 @@ import exceptions.NameException;
 import park.Park;
 import park.cinema.Cinema;
 import park.cinema.Movie;
+import park.cinema.MovieGenre;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
 import park.stores.SouvenirStore;
@@ -435,9 +436,10 @@ public class Main {
     private static void addMovie(String cinemaName) throws Exception {
         System.out.println("How many movies do you want to add to the cinema ?");
 
-        HashMap<String, String> movies = new HashMap<>();
+        HashMap<String, MovieGenre> movies = new HashMap<>();
         int numberOfMovies = readPositiveInteger();
-        String movieName, movieGenre;
+        String movieName;
+        MovieGenre movieGenre;
         for (int i = 0; i < numberOfMovies; i++) {
             System.out.printf("Please enter the name of movie #%d: ", i + 1);
             movieName = readName();
@@ -488,23 +490,23 @@ public class Main {
         park.displayMoviesInCinema(cinemaName);
     }
 
-    private static String chooseGenre() throws IOException {
+    private static MovieGenre chooseGenre() throws IOException {
         String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
         printOptions(options);
 
         switch (readString()) {
             case "1":
-                return options[0];
+                return MovieGenre.ACTION;
             case "2":
-                return options[1];
+                return MovieGenre.DRAMA;
             case "3":
-                return options[2];
+                return MovieGenre.THRILLER;
             case "4":
-                return options[3];
+                return MovieGenre.ACTION;
             case "5":
-                return options[4];
+                return MovieGenre.COMEDY;
             case "6":
-                return options[5];
+                return MovieGenre.MUSICAL;
             default:
                 System.out.println("Invalid choice! Please choose from the following genres: ");
                 return chooseGenre();
