@@ -4,6 +4,7 @@ import exceptions.MoneyException;
 import exceptions.NameException;
 import park.Park;
 import park.cinema.Cinema;
+import park.cinema.Movie;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
 import park.stores.SouvenirStore;
@@ -344,20 +345,21 @@ public class Main {
         manageCinema(chosenOption);
     }
 
+    // To think- to make this function more abstract so it can be used on several places
+    // or make it interface
     private static String chooseCinema() throws IOException {
         Set<Cinema> cinemasInPark = park.getCinemas();
         String[] options = new String[cinemasInPark.size() + 1];
         List<String> test = cinemasInPark.stream()
                 .map(Cinema::getName)
                 .collect(Collectors.toList());
-        //change options = cinemasInPark.toArray(options);
-        //to see the error;
+
         options = test.toArray(options);
         options[options.length - 1] = "Exit";
         printOptions(options);
 
         int command = readPositiveInteger();
-
+        //TODO CHECK the exit option
         if (command > options.length) {
             //TODO clear the console
             System.out.println("Invalid choice! Choose one of the following: ");
@@ -376,16 +378,19 @@ public class Main {
         for (int i = 0; i < numberOfCinemas; i++) {
             System.out.printf("Please enter the name of cinema #%d: ", i + 1);
             cinemaName = readName();
+            //TODO this is not okay- remove it, or replace it with Map<cinemaName, cinemaObject>
             if (park.getCinemas().contains(cinemaName)) {
                 System.out.println("This cinema is already in the park !");
             } else {
                 cinemas.add(cinemaName);
             }
+
         }
 
         park.addCinemas(cinemas);
         System.out.println("Done !\n");
     }
+
 
     private static void manageCinema(String cinemaName) throws Exception {
         System.out.printf("Manage %s cinema:\n", cinemaName);
@@ -401,7 +406,7 @@ public class Main {
                 addMovie(cinemaName);
                 break;
             case "3":
-                //removeMovie(cinemaName);
+                removeMovie(cinemaName);
                 break;
             case "4":
                 displayMovies(cinemaName);
@@ -427,15 +432,6 @@ public class Main {
         System.out.println("Done !\n");
     }
 
-    //TODO this method must be in Park which calls method in Cinema
-    private static void displayMovies(String cinemaName) {
-        park.getCinemas()
-                .stream()
-                .filter(x -> x.getName().equals(cinemaName))
-                .forEach(Cinema::displayMovies);
-    }
-
-    //TODO ! METHOD IS NOT DONE
     private static void addMovie(String cinemaName) throws Exception {
         System.out.println("How many movies do you want to add to the cinema ?");
 
@@ -452,6 +448,44 @@ public class Main {
 
         park.addMoviesToCinemas(cinemaName, movies);
         System.out.println("Done !\n");
+    }
+
+    private static void removeMovie(String cinemaName) throws IOException {
+        Set<Movie> moviesInCinema = park.getMoviesFromCinema(cinemaName);
+        if (moviesInCinema.size() == 0) {
+            System.out.println("Sorry,  there are no movies in the cinema.\n");
+            return;
+        }
+
+        System.out.println("Which of the following movies you want to remove ?\n");
+
+        String[] options = new String[moviesInCinema.size() + 1];
+        List<String> test = moviesInCinema.stream()
+                .map(Movie::getName)
+                .collect(Collectors.toList());
+
+        options = test.toArray(options);
+        options[options.length - 1] = "Exit";
+        printOptions(options);
+
+        int command = readPositiveInteger() - 1;
+
+        if (command < 0 || command >= options.length) {
+            System.out.println("Invalid choice !");
+            return;
+        }
+
+        if (options[command].equals("Exit")) {
+            return;
+        }
+
+        String movieName = options[command];
+
+        park.removeMovieFromCinema(cinemaName, movieName);
+    }
+
+    private static void displayMovies(String cinemaName) {
+        park.displayMoviesInCinema(cinemaName);
     }
 
     private static String chooseGenre() throws IOException {

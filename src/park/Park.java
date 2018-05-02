@@ -127,6 +127,29 @@ public class Park {
                 .forEach(x -> x.addMovie(moviesToAdd));
     }
 
+    public void removeMovieFromCinema(String cinemaName, String movieName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        cinema.removeMovie(movieName);
+    }
+
+    public void displayMoviesInCinema(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        cinema.displayMovies();
+        System.out.println();
+    }
+
+    public Set<Movie> getMoviesFromCinema(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        return cinema.getMovies();
+    }
+
+    public Cinema getCinemaByName(String cinemaName) {
+        return cinemas.stream()
+                .filter(x -> x.getName().equals(cinemaName))
+                .findFirst()
+                .get();
+    }
+
     public void removeStore(Store store) {
         this.stores.remove(store);
     }

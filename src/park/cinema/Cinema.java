@@ -38,7 +38,7 @@ public class Cinema {
         return desk;
     }
 
-    public Set getMovies() {
+    public Set<Movie> getMovies() {
         return movies;
     }
 
@@ -46,11 +46,21 @@ public class Cinema {
         movies.addAll(moviesToAdd);
     }
 
+    public void removeMovie(String movieName) {
+        movies.removeIf(x -> x.getName().equals(movieName));
+        System.out.println("Done!\n");
+    }
+
     public void watchMovie(User user, Movie movie) {
         System.out.println(user.getName() + "is watching " + movie.getName());
     }
 
     public void displayMovies() {
+        if (movies.size() == 0) {
+            System.out.println("Sorry, there are no movies in the cinema.");
+            return;
+        }
+
         System.out.println("Movies you can watch:");
         movies.forEach(x -> System.out.print(x + " "));
         System.out.println();
