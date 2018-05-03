@@ -5,8 +5,7 @@ import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.funzone.AttractionDangerLevel;
-import park.products.Product;
-import park.products.ProductToEat;
+import park.products.*;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
 import park.stores.SouvenirStore;
@@ -99,12 +98,11 @@ public class Main {
         adminMenu();
     }
 
-   /**-----------------------------------------------------------------------------------------*/
-    /**ADMIN METHODS*/
+   /**------------------------------------ADMIN functions-----------------------------------------------------*/
 
-    /**----------------STORES functions--------------------*/
+   /**ALL METHODS ARE FINISHED**/
+   /**------------------------------STORES functions---------------------------------*/
 
-    /**METHOD FINISHED**/
     private static void storesMenu() throws Exception {
         String[] options = {"Remove store", "Add new store", "Get store products ", "Add/Remove products", "Exit"};
         printOptions(options);
@@ -132,30 +130,6 @@ public class Main {
         storesMenu();
     }
 
-    /**METHOD FINISHED**/
-    private static Store getStore() throws Exception {
-        String name = readName();
-        int index = park.getStoreIndex(name);
-        if(index < 0) {
-            return null;
-        }
-        return park.getStoreByIndex(index);
-    }
-
-    /**METHOD FINISHED**/
-    private static void removeStore() throws Exception {
-        printingStoresMenu();
-        System.out.println("Which store do you want to remove: ");
-        Store storeToRemove = getStore();
-        if(storeToRemove == null) {
-            System.out.println("There is no such store");
-        } else {
-            park.removeStore(storeToRemove);
-            System.out.println(storeToRemove + " was successfully removed!");
-        }
-    }
-
-    /**METHOD FINISHED**/
     private  static void printingStoresMenu() throws IOException {
         System.out.println("Do you want to see the stores: ");
         String[] options = {"Yes", "No"};
@@ -175,8 +149,27 @@ public class Main {
         }
     }
 
-    /**METHOD FINISHED**/
-    //TODO this method must be in park
+    private static Store getStore() throws Exception {
+        String name = readName();
+        int index = park.getStoreIndex(name);
+        if(index < 0) {
+            return null;
+        }
+        return park.getStoreByIndex(index);
+    }
+
+    private static void removeStore() throws Exception {
+        printingStoresMenu();
+        System.out.println("Which store do you want to remove: ");
+        Store storeToRemove = getStore();
+        if(storeToRemove == null) {
+            System.out.println("There is no such store");
+        } else {
+            park.removeStore(storeToRemove);
+            System.out.println(storeToRemove + " was successfully removed!");
+        }
+    }
+
     private  static void addStore() throws Exception {
         System.out.print("How many stores do you want to add: ");
         int numberOfStores = readPositiveInteger();
@@ -190,7 +183,6 @@ public class Main {
         }
     }
 
-    /**METHOD FINISHED**/
     public static List<Store> createStore(int numberOfStores) throws Exception {
         List<Store> stores = new ArrayList<>();
         int flag = 0;
@@ -232,7 +224,6 @@ public class Main {
         return stores;
     }
 
-    /**METHOD FINISHED**/
     public static int storeTypeMenu() throws IOException {
         String[] options = {"Food store", "Souvenir store"};
         printOptions(options);
@@ -248,20 +239,7 @@ public class Main {
         }
     }
 
-    /**METHOD FINISHED**/
-    private static void printProductsInStore() throws Exception {
-        printingStoresMenu();
-        System.out.println("Please enter the name of the store: ");
-        Store store = getStore();
-
-        if (store.equals(null)) {
-            System.out.println("There is no such store!");
-        } else {
-            store.showProductsInStock();
-        }
-    }
-
-    /**--------------------------------------------------------------------*/
+    /**-------------------------------------------------------------------------------*/
 
     /**------------------------------PRODUCTS functions-------------------------------*/
 
@@ -276,7 +254,7 @@ public class Main {
 
         switch (readString()) {
             case "1":
-                park.addProductsToStore(store);
+              //  park.addProductsToStore(store);
                 break;
             case "2":
                 park.removeProductsFromStore(store);
@@ -291,7 +269,94 @@ public class Main {
         addRemoveProducts(store);
     }
 
-    /**Attractions functions - DONE !*/
+    private static void printProductsInStore() throws Exception {
+        printingStoresMenu();
+        System.out.println("Please enter the name of the store: ");
+        Store store = getStore();
+
+        if (store.equals(null)) {
+            System.out.println("There is no such store!");
+        } else {
+            store.showProductsInStock();
+        }
+    }
+
+    private static HashMap<FoodProduct,Integer> createFoodProduct() throws Exception {
+        System.out.print("Enter number of products to add: ");
+        int numberOfProducts = readPositiveInteger();
+
+        HashMap<FoodProduct, Integer> products = new HashMap<>();
+
+        String expirationDate;
+        for (int i = 0; i < numberOfProducts; i++) {
+            System.out.printf("Product #%d name: ", i + 1);
+            String productName = readName();
+            //TODO - see if this product exist and stop if exist
+
+            System.out.printf("Enter price of product %s: ",productName);
+            double productPrice = readMoney();
+
+            //TODO throws exception
+            System.out.println("Please enter expiration date: ");
+            expirationDate = readString();
+
+            System.out.println("Please enter product quantity: ");
+            int productQuantity = readPositiveInteger();
+
+            System.out.println("Please choose one of the following");
+            int command = chooseFoodProductType();
+            switch(command) {
+                case 1:
+                    products.put(new ProductToEat(productName, productPrice, expirationDate), productQuantity);
+                    break;
+                case 2:
+                    products.put(new ProductToDrink(productName, productPrice, expirationDate), productQuantity);
+                    break;
+            }
+        }
+        return products;
+    }
+
+    private static HashMap<Souvenir,Integer> createSouvenirProduct() throws Exception {
+        System.out.print("Enter number of products to add: ");
+        int numberOfProducts = readPositiveInteger();
+
+        HashMap<Souvenir, Integer> products = new HashMap<>();
+
+        String expirationDate;
+        for (int i = 0; i < numberOfProducts; i++) {
+            System.out.printf("Product #%d name: ", i + 1);
+            String productName = readName();
+            //TODO - see if this product exist and stop if exist
+
+            System.out.printf("Enter price of product %s: " + productName);
+            double productPrice = readMoney();
+
+            System.out.println("Please enter product quantity: ");
+            int productQuantity = readPositiveInteger();
+            products.put(new Souvenir(productName,productPrice),productQuantity);
+        }
+     return products;
+    }
+
+    private static int chooseFoodProductType() throws IOException {
+        String[] options = {"The product is for eating", "The product is for drinking"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                return 1;
+            case "2":
+                return 2;
+            default:
+                System.out.println("Invalid choice! Please choose from the following:\n");
+                return chooseFoodProductType();
+        }
+    }
+
+
+    /**------------------------------ATTRACTIONS functions-------------------------------*/
+
     private static void attractionsMenu() throws Exception {
         String[] options = {"Add new attraction", "Remove attraction", "Show all attractions ", "Exit"};
         printOptions(options);
@@ -314,9 +379,6 @@ public class Main {
         }
         attractionsMenu();
     }
-
-
-    /**------------------------------ATTRACTIONS functions-------------------------------*/
 
     private static void addNewAttraction() throws Exception {
         System.out.println("How many attraction do you want to add to the park ? ");
@@ -421,7 +483,7 @@ public class Main {
     private static void addNewCinema() throws Exception {
         System.out.println("How many cinemas do you want to add to the park ?");
 
-        HashSet<String> cinemas = new HashSet<>();
+        Set<String> cinemas = new HashSet<>();
         int numberOfCinemas = readPositiveInteger();
         String cinemaName;
         for (int i = 0; i < numberOfCinemas; i++) {
@@ -445,75 +507,93 @@ public class Main {
             return;
         }
 
-        System.out.println("Choose cinema from the list: ");
-        String chosenOption = chooseCinema();
-        if (chosenOption.equals("Exit")) {
+        Cinema currentCinema = selectCinema();
+
+        if (currentCinema == null) {
+            System.out.println("There is no such cinema in the park!");
             return;
         }
 
-        manageCinema(chosenOption);
+        manageCinema(currentCinema);
     }
 
-    private static String chooseCinema() throws IOException {
-        Set<Cinema> cinemasInPark = park.getCinemas();
-        String[] options = new String[cinemasInPark.size() + 1];
-        List<String> test = cinemasInPark.stream()
-                .map(Cinema::getName)
-                .collect(Collectors.toList());
+    private  static Cinema selectCinema() throws Exception {
+        System.out.println("Do you want to see the cinemas in the park: ");
+        printCinemas();
+        System.out.print("Please enter cinema name: ");
+        String name = readName();
 
-        options = test.toArray(options);
-        options[options.length - 1] = "Exit";
+        return(park.getCinemaByName(name));
+    }
+
+    private static void printCinemas() throws IOException {
+        String[] options = {"Yes","No"};
         printOptions(options);
-
-        int command = readPositiveInteger();
-        if (command > options.length) {
-            System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseCinema();
+        switch (readString()) {
+            case "1":
+                park.getCinemas().forEach(cinema -> System.out.println(cinema.toString()));
+                break;
+            case "2":
+                break;
+            default:
+                System.out.println("Invalid input!");
+                System.out.println("Please select one of the following");
+                printCinemas();
+                break;
         }
-
-        return options[command - 1];
     }
 
-    private static void manageCinema(String cinemaName) throws Exception {
-        System.out.printf("Manage %s cinema:\n", cinemaName);
-        String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add consumables",
-                "Remove consumables", "Exit"};
+    private static Cinema updateCinema(String name) {
+        return park.getCinemaByName(name);
+    }
+    private static void manageCinema(Cinema cinema) throws Exception {
+        //TODO clear the console
+        System.out.printf("Manage %s cinema:\n", cinema.getName());
+        String[] options = {"Add movies", "Remove movies", "Display movies", "Add foods","Show cinema's store foods",
+                "Remove foods","Delete cinema", "Exit"};
         printOptions(options);
+
         String command = readString();
         switch (command) {
             case "1":
-                removeCinema(cinemaName);
-                return;
+                addMovie(cinema.getName());
+                break;
             case "2":
-                addMovie(cinemaName);
+                removeMovie(cinema.getName());
                 break;
             case "3":
-                removeMovie(cinemaName);
+                displayMovies(cinema.getName());
                 break;
             case "4":
-                displayMovies(cinemaName);
+               park.addProductsToCinemaStore(cinema,createFoodProduct());
+               cinema = updateCinema(cinema.getName());
                 break;
             case "5":
-                addFoodProductsToCinema(cinemaName);
+                park.getCinemaStoreProducts(cinema);
                 break;
             case "6":
                 //removeConsumablesFromCinema();
                 break;
-            case "7": //Exit
+            case "7":
+                deleteCinema(cinema.getName());
+                return;
+            case "8": //EXIT
+                return;
+            case "9":
                 return;
             default:
                 System.out.println("Invalid choice!");
                 break;
         }
-
-        manageCinema(cinemaName);
+        manageCinema(cinema);
     }
 
-    private static void removeCinema(String cinemaName) throws IOException {
-        park.removeCinema(cinemaName);
+    private static void deleteCinema(String name) {
+        park.removeCinema(name);
         System.out.println("Done !\n");
     }
 
+    //TODO NOT FINISHED
     private static void addMovie(String cinemaName) throws Exception {
         System.out.println("How many movies do you want to add to the cinema ?");
 
@@ -594,65 +674,9 @@ public class Main {
         }
     }
 
-    //TODO Adding in the park is not finished yet
-    private static void addFoodProductsToCinema(String cinemaName) throws Exception {
-        String command = chooseConsumableType();
-        if (command.equals("Exit")) {
-            return;
-        }
-
-        System.out.println("How many products do you want to add to the cinema ?");
-
-        HashMap<Product, Integer> products = new HashMap<>();
-        int numberOfProducts = readPositiveInteger();
-        String productName;
-        double productPrice;
-        int productQuantity;
-        String expirationDate;
-        for (int i = 0; i < numberOfProducts; i++) {
-            System.out.printf("Please enter the product #%d: ", i + 1);
-            productName = readName();
-
-            System.out.println("Please enter the product's price: ");
-            productPrice = readMoney();
-
-            System.out.println("Please enter expiration date: ");
-            expirationDate = readString();
-
-            System.out.println("Please enter product quantity: ");
-            productQuantity = readPositiveInteger();
-
-            if (command.equals("Food")) {
-                products.put(new ProductToEat(productName, productPrice, expirationDate), productQuantity);
-            }
-        }
-
-        park.addFoodToCinema(cinemaName, products);
-        System.out.println("Done !\n");
-    }
-
     /**-------------------------------END OF CINEMA functions-------------------------------*/
 
-
-    private static String chooseConsumableType() throws IOException {
-        String[] options = {"Add food", "Add drinks", "Exit"};
-        printOptions(options);
-
-        switch (readString()) {
-            case "1":
-                return "Food";
-            case "2":
-                return "Drink";
-            case "3":
-                return "Exit";
-            default:
-                System.out.println("Invalid choice! Please choose from the following:\n");
-                return chooseConsumableType();
-        }
-    }
-
-
-    /**-------------------------------PRINTING STATISTICS functions-------------------------------*/
+    /**-------------------------------PRINTING STATISTICS functions-------------------------*/
 
     private static void parkStatistics() throws IOException {
         String[] options = {"User Statistics", "Attraction Statistics",
@@ -697,11 +721,11 @@ public class Main {
         park.showStoreStatistics();
     }
 
-    /**-------------------------------END OF PRINTING STATISTICS functions------------------------------*/
+    /**---------------------------END OF PRINTING STATISTICS functions----------------------*/
 
-    /**--------------------------------------END OF ADMIN functions-------------------------------------*/
+    /**--------------------------------------END OF ADMIN functions-----------------------------------------*/
 
-    /**---------------------------------------USER functions--------------------------------------------*/
+    /**---------------------------------------USER functions------------------------------------------------*/
 
     /**METHOD FINISHED**/
     public static void buyTicketMenu() throws Exception {
@@ -790,7 +814,7 @@ public class Main {
     public static void rideAttractions(int indexOfUser, User currentUser) {
     }
 
-    /**------------------------------------END OF USER functions-----------------------------------------------------*/
+    /**------------------------------------END OF USER functions----------------------------------------------*/
 
 
     /**CREATING USERS AND SELLING TICKETS TO THEM*/

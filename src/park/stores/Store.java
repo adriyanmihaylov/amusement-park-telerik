@@ -1,18 +1,20 @@
 package park.stores;
+import park.products.FoodProduct;
 import park.products.Product;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class Store {
     private String name;
     private CashDesk desk;
-    private List<Product> productsInStock;
+    private HashMap<Product,Integer> productsInStock;
 
     Store(String name, CashDesk desk) {
         setName(name);
         this.desk = desk;
-        this.productsInStock = new ArrayList<>();
+        productsInStock = new HashMap<>();
     }
 
     public void setName(String name) {
@@ -26,18 +28,18 @@ public abstract class Store {
     // TODO test if it's working
     // TODO not finished
     public void showProductsInStock() {
-        System.out.println("STORE -> showProductsInStock() NOT FINISHED!");
-
         if (productsInStock.size() < 1) {
             System.out.println("There is no products in store " + this.name);
         } else {
-            productsInStock.stream().map(Product::toString).forEach(System.out::println);
+           productsInStock
+                   .forEach((product,quantity) ->
+                           System.out.println("Product: " + product.getName() + " Quantity: " + quantity));
         }
     }
 
 
-    public void addProducts(List<Product> productsToAdd) {
-        this.productsInStock.addAll(productsToAdd);
+    public void addProducts(HashMap<FoodProduct, Integer> productsToAdd) {
+        this.productsInStock.putAll(productsToAdd);
     }
 
     //TODO complete toString method

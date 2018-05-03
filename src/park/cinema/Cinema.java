@@ -2,6 +2,7 @@ package park.cinema;
 
 import park.products.*;
 import park.stores.CashDesk;
+import park.stores.FoodStore;
 import park.users.User;
 
 import java.util.*;
@@ -9,15 +10,15 @@ import java.util.*;
 public class Cinema {
     private String name;
     private CashDesk desk;
-    private Map<Product, Integer> productsInStock;
     private Set<Movie> movies;
+    private FoodStore cinemaStore;
 
 
     public Cinema(String name) {
         this.name = name;
         this.desk = new CashDesk(500);
-        this.productsInStock = new HashMap<>();
         this.movies = new HashSet<>();
+        setCinemaStore();
     }
 
     public String getName() {
@@ -26,6 +27,17 @@ public class Cinema {
 
     public CashDesk getDesk() {
         return desk;
+    }
+
+    private void setCinemaStore() {
+        String name = "'" +this.name + " cinema store'";
+        cinemaStore = new FoodStore(name,new CashDesk(0));
+    }
+    public FoodStore getCinemaStore() {
+        return this.cinemaStore;
+    }
+    public  void updateCinemaStore(HashMap<FoodProduct,Integer> foodsToAdd) {
+        this.cinemaStore.addProducts(foodsToAdd);
     }
 
     public void addMovie(Set<Movie> moviesToAdd) {
@@ -59,7 +71,7 @@ public class Cinema {
             return;
         }
 
-        user.getUserTicket().use(2);
+        user.getUserTicket().use();
         System.out.println(user.getName() + "is watching " + movie.getName());
     }
 
@@ -71,18 +83,9 @@ public class Cinema {
                 (userAge >= 18 || genre != MovieGenre.THRILLER);
     }
 
-    //TODO !!!!! FINISH THIS LATER
-    public void addProducts(HashMap<Product, Integer> products) {
 
-    }
-
-    public void addSingleProduct(Product product) {
-        boolean isContained = isFoodContained(productsInStock, product);
-        if (isContained) {
-            productsInStock.computeIfPresent(product, (k, v) -> v + 1); //TODO : test this
-        } else {
-            productsInStock.put(product, 0);
-        }
+    public void addProductsToStore(HashMap<FoodProduct,Integer> productsToAdd) {
+        this.cinemaStore.addProducts(productsToAdd);
     }
 
     private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {

@@ -5,16 +5,16 @@ import park.products.*;
 import java.util.*;
 
 public class FoodStore extends Store implements IConsumable {
-    List<FoodProduct> productsInStock;
+    HashMap<FoodProduct,Integer> productsInStock;
 
     public FoodStore(String name, CashDesk desk) {
         super(name, desk);
-        this.productsInStock = new ArrayList<FoodProduct>();
+        this.productsInStock = new HashMap<>();
     }
 
-    public FoodStore(String name, CashDesk desk, List<FoodProduct> products) {
+    public FoodStore(String name, CashDesk desk, HashMap<FoodProduct,Integer> products) {
         super(name, desk);
-        this.productsInStock.addAll(products);
+        this.productsInStock.putAll(products);
     }
 
     @Override

@@ -5,6 +5,7 @@ import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.funzone.AttractionDangerLevel;
+import park.products.FoodProduct;
 import park.products.Product;
 import park.stores.Store;
 import park.users.User;
@@ -17,7 +18,7 @@ public class Park {
     protected String password;
     private List<Store> stores;
     private List<User> users;
-    private Set<Cinema> cinemas;
+    private List<Cinema> cinemas;
     private Set<Attraction> attractions;
     private int ticketsCounter;
 
@@ -26,7 +27,7 @@ public class Park {
         this.password = password;
         this.stores = new ArrayList<>();
         this.users = new ArrayList<>();
-        this.cinemas = new HashSet<>();
+        this.cinemas = new ArrayList<>();
         this.attractions = new HashSet<>();
         this.ticketsCounter = 1;
     }
@@ -39,7 +40,9 @@ public class Park {
         this.name = name;
     }
 
-    public Set<Cinema> getCinemas() {
+
+
+    public List<Cinema> getCinemas() {
         return cinemas;
     }
 
@@ -111,7 +114,7 @@ public class Park {
         System.out.println();
     }
 
-    public void addCinemas(HashSet<String> cinemas) {
+    public void addCinemas(Set<String> cinemas) {
         Set<Cinema> cinemasToAdd = cinemas.stream()
                 .map(Cinema::new)
                 .collect(Collectors.toSet());
@@ -148,13 +151,7 @@ public class Park {
         System.out.println();
     }
 
-    //TODO : addproducts in cinema is not finished !
-    public void addFoodToCinema(String cinemaName, HashMap<Product, Integer> products) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        cinema.addProducts(products);
-    }
-
-    private Cinema getCinemaByName(String cinemaName) {
+    public Cinema getCinemaByName(String cinemaName) {
         return cinemas.stream()
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
@@ -177,8 +174,19 @@ public class Park {
         users.set(index,currentUser);
     }
 
-    public void addProductsToStore(Store store) {
+    public void addProductsToStore(HashMap<Product,Integer> productsToAdd) {
+    }
 
+    public void addProductsToCinemaStore(Cinema cinema, HashMap<FoodProduct,Integer> productsToAdd) {
+        int index = this.cinemas.indexOf(cinema);
+
+        this.cinemas.get(index).updateCinemaStore(productsToAdd);
+    }
+
+    public void getCinemaStoreProducts(Cinema cinema) {
+        int index = this.cinemas.indexOf(cinema);
+        cinema = this.cinemas.get(index);
+        cinema.getCinemaStore().showProductsInStock();
     }
 
     public boolean isThereStore(String name) {
@@ -187,7 +195,6 @@ public class Park {
     }
 
     public void removeProductsFromStore(Store store) {
-
     }
 
     public void showUserStatistics() {

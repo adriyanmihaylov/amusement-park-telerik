@@ -23,7 +23,7 @@ public class Attraction {
         boolean isAllowed = isAttractionAllowed(user.getAge(), dangerLevel);
         if (isAllowed) {
             System.out.println(user.getName() + " has visited the " + name);
-            user.getUserTicket().use(1);
+            user.getUserTicket().use();
         } else {
             System.out.println("We are sorry, but " + name + " is considered dangerous.");
         }
