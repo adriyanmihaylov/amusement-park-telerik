@@ -60,15 +60,7 @@ public class Park {
         stores.forEach(System.out::println);
     }
 
-    //TODO make it STREAM()
     public int getStoreIndex(String name) {
-//        for (Store store : this.stores) {
-//            if (store.getName().equals(name)) {
-//                return this.stores.indexOf(store);
-//            }
-//        }
-//        return -1;
-
         return stores.stream()
                 .filter(x -> x.getName().equals(name))
                 .findFirst()
@@ -81,17 +73,6 @@ public class Park {
     }
 
     public int findUserIndex(String name,String ticketNumber) {
-        if(this.users.size() < 1) {
-            return -1;
-        }
-
-//        for (User user: users) {
-//            if(user.getName().equals(name) && user.getTicketNumber(ticketNumber)) {
-//                return this.users.indexOf(user);
-//            }
-//        }
-//        return -1;
-
         return users.stream()
                 .filter(x -> x.getName().equals(name))
                 .filter(x -> x.getTicketNumber(ticketNumber))
@@ -201,14 +182,6 @@ public class Park {
     }
 
     public boolean isThereStore(String name) {
-//        for (Store store: this.stores) {
-//            if(store.getName().equals(name)) {
-//                return true;
-//            }
-//        }
-//        return false;
-
-        //this one is not tested
         return stores.stream()
                 .anyMatch(x -> x.getName().equals(name));
     }
