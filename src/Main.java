@@ -1,4 +1,3 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
 import exceptions.*;
 import park.Park;
 import park.cinema.Cinema;
@@ -579,7 +578,7 @@ public class Main {
             productName = readName();
 
             System.out.println("Please enter the product's price: ");
-            productPrice = readPositiveDouble();
+            productPrice = readMoney();
 
             System.out.println("Please enter expiration date: ");
             expirationDate = readString();
@@ -970,33 +969,6 @@ public class Main {
         }
         if(number < 0) {
             throw  new PositiveIntegerException("Please enter positive number!");
-        }
-
-        return number;
-    }
-
-    private static double readPositiveDouble() throws IOException {
-        String input = readString();
-        double number;
-        try {
-            number = validatePositiveDouble(input);
-        } catch (PositiveDoubleException e) {
-            System.out.println(e);
-            System.out.print("Please enter a valid number: ");
-            return readPositiveDouble();
-        }
-        return number;
-    }
-
-    private static double validatePositiveDouble(String input) throws PositiveDoubleException {
-        double number;
-        try {
-            number = Double.parseDouble(input);
-        } catch (Exception e) {
-            throw new PositiveDoubleException("The entered is not a number!");
-        }
-        if(number < 0) {
-            throw  new PositiveDoubleException("Please enter positive number!");
         }
 
         return number;
