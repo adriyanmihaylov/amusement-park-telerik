@@ -20,26 +20,12 @@ public class Cinema {
         this.movies = new HashSet<>();
     }
 
-    public Cinema(String name, CashDesk desk, Map<Product, Integer> productsInStock) {
-        this(name);
-        this.productsInStock.putAll(productsInStock);
-    }
-
-    public Cinema(String name, CashDesk desk, Set<Movie> movies) {
-        this(name);
-        this.movies.addAll(movies);
-    }
-
     public String getName() {
         return name;
     }
 
     public CashDesk getDesk() {
         return desk;
-    }
-
-    public Set<Movie> getMovies() {
-        return movies;
     }
 
     public void addMovie(Set<Movie> moviesToAdd) {
@@ -51,8 +37,8 @@ public class Cinema {
         System.out.println("Done!\n");
     }
 
-    public void watchMovie(User user, Movie movie) {
-        System.out.println(user.getName() + "is watching " + movie.getName());
+    public Set<Movie> getMovies() {
+        return movies;
     }
 
     public void displayMovies() {
@@ -64,6 +50,11 @@ public class Cinema {
         System.out.println("Movies you can watch:");
         movies.forEach(x -> System.out.print(x + " "));
         System.out.println();
+    }
+
+    //TODO make some restrictions here; add money to cashDesk; check user ticket
+    public void watchMovie(User user, Movie movie) {
+        System.out.println(user.getName() + "is watching " + movie.getName());
     }
 
     //TODO !!!!! FINISH THIS LATER
@@ -80,12 +71,13 @@ public class Cinema {
         }
     }
 
+    private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
+        return productsInStock.containsKey(product);
+    }
+
     @Override
     public String toString() {
         return this.name;
     }
 
-    private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
-        return productsInStock.containsKey(product);
-    }
 }
