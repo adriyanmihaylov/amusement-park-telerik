@@ -72,7 +72,7 @@ public class Main {
         userMenu();
     }
 
-    //TODO create Admin functionality - create remove everything they want
+    /**METHOD FINISHED**/
     private static void adminMenu() throws Exception {
         String[] options = {"Stores","Attractions","Cinema", "Park Statistics", "Exit"};
         printOptions(options);
@@ -102,8 +102,9 @@ public class Main {
    /**-----------------------------------------------------------------------------------------*/
     /**ADMIN METHODS*/
 
-    /**Stores functions*/
-    //TODO add functionality
+    /**----------------STORES functions--------------------*/
+
+    /**METHOD FINISHED**/
     private static void storesMenu() throws Exception {
         String[] options = {"Remove store", "Add new store", "Get store products ", "Add/Remove products", "Exit"};
         printOptions(options);
@@ -131,6 +132,7 @@ public class Main {
         storesMenu();
     }
 
+    /**METHOD FINISHED**/
     private static Store getStore() throws Exception {
         String name = readName();
         int index = park.getStoreIndex(name);
@@ -140,8 +142,9 @@ public class Main {
         return park.getStoreByIndex(index);
     }
 
+    /**METHOD FINISHED**/
     private static void removeStore() throws Exception {
-        showStores();
+        printingStoresMenu();
         System.out.println("Which store do you want to remove: ");
         Store storeToRemove = getStore();
         if(storeToRemove == null) {
@@ -152,8 +155,8 @@ public class Main {
         }
     }
 
-    //TODO !!!!!!!! complete park.getStores()
-    private  static void showStores() throws IOException {
+    /**METHOD FINISHED**/
+    private  static void printingStoresMenu() throws IOException {
         System.out.println("Do you want to see the stores: ");
         String[] options = {"Yes", "No"};
         printOptions(options);
@@ -167,17 +170,18 @@ public class Main {
                 return;
             default:
                 System.out.println("Invalid command!");
-                showStores();
+                printingStoresMenu();
                 break;
         }
     }
 
-    //TODO test the method
+    /**METHOD FINISHED**/
     //TODO this method must be in park
     private  static void addStore() throws Exception {
         System.out.print("How many stores do you want to add: ");
         int numberOfStores = readPositiveInteger();
-        List<Store> stores = readStoresFromConsole(numberOfStores);
+        List<Store> stores = createStore(numberOfStores);
+
         if (stores.size() > 0) {
             park.addStores(stores);
             System.out.println("Stores were successfully added!");
@@ -186,7 +190,8 @@ public class Main {
         }
     }
 
-    public static List<Store> readStoresFromConsole(int numberOfStores) throws Exception {
+    /**METHOD FINISHED**/
+    public static List<Store> createStore(int numberOfStores) throws Exception {
         List<Store> stores = new ArrayList<>();
         int flag = 0;
 
@@ -210,7 +215,7 @@ public class Main {
                 Double budgetMoney = readMoney();
 
                 System.out.println("What kind of store is " + name + "");
-                int storeType = selectStoreType();
+                int storeType = storeTypeMenu();
 
                 switch (storeType) {
                     case 1:
@@ -227,7 +232,8 @@ public class Main {
         return stores;
     }
 
-    public static int selectStoreType() throws IOException {
+    /**METHOD FINISHED**/
+    public static int storeTypeMenu() throws IOException {
         String[] options = {"Food store", "Souvenir store"};
         printOptions(options);
         switch (readString()) {
@@ -238,12 +244,13 @@ public class Main {
             default:
                 System.out.println("Invalid choice!");
                 System.out.println("Please try again!");
-               return selectStoreType();
+               return storeTypeMenu();
         }
     }
 
+    /**METHOD FINISHED**/
     private static void printProductsInStore() throws Exception {
-        showStores();
+        printingStoresMenu();
         System.out.println("Please enter the name of the store: ");
         Store store = getStore();
 
@@ -253,6 +260,10 @@ public class Main {
             store.showProductsInStock();
         }
     }
+
+    /**--------------------------------------------------------------------*/
+
+    /**------------------------------PRODUCTS functions-------------------------------*/
 
     private  static void addRemoveProducts(Store store) throws Exception {
         if (store == null) {
@@ -303,6 +314,9 @@ public class Main {
         }
         attractionsMenu();
     }
+
+
+    /**------------------------------ATTRACTIONS functions-------------------------------*/
 
     private static void addNewAttraction() throws Exception {
         System.out.println("How many attraction do you want to add to the park ? ");
@@ -382,8 +396,7 @@ public class Main {
         park.displayAttractions();
     }
 
-    /**Cinema functions*/ //TODO KRASIMIR ZAHARIEV
-    //TODO add functionality
+    /**------------------------------ CINEMA functions-------------------------------*/
     private static void cinemaMenu() throws Exception {
         String[] options = {"Add new Cinema", "Edit cinema", "Exit"};
         printOptions(options);
@@ -481,7 +494,7 @@ public class Main {
                 displayMovies(cinemaName);
                 break;
             case "5":
-                addConsumablesToCinema(cinemaName);
+                addFoodProductsToCinema(cinemaName);
                 break;
             case "6":
                 //removeConsumablesFromCinema();
@@ -558,8 +571,31 @@ public class Main {
         park.displayMoviesInCinema(cinemaName);
     }
 
+    private static MovieGenre chooseGenre() throws IOException {
+        String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                return MovieGenre.ACTION;
+            case "2":
+                return MovieGenre.DRAMA;
+            case "3":
+                return MovieGenre.THRILLER;
+            case "4":
+                return MovieGenre.ACTION;
+            case "5":
+                return MovieGenre.COMEDY;
+            case "6":
+                return MovieGenre.MUSICAL;
+            default:
+                System.out.println("Invalid choice! Please choose from the following genres: ");
+                return chooseGenre();
+        }
+    }
+
     //TODO Adding in the park is not finished yet
-    private static void addConsumablesToCinema(String cinemaName) throws Exception {
+    private static void addFoodProductsToCinema(String cinemaName) throws Exception {
         String command = chooseConsumableType();
         if (command.equals("Exit")) {
             return;
@@ -595,6 +631,9 @@ public class Main {
         System.out.println("Done !\n");
     }
 
+    /**-------------------------------END OF CINEMA functions-------------------------------*/
+
+
     private static String chooseConsumableType() throws IOException {
         String[] options = {"Add food", "Add drinks", "Exit"};
         printOptions(options);
@@ -612,28 +651,8 @@ public class Main {
         }
     }
 
-    private static MovieGenre chooseGenre() throws IOException {
-        String[] options = {"Animation", "Drama", "Thriller", "Action", "Comedy", "Musical"};
-        printOptions(options);
 
-        switch (readString()) {
-            case "1":
-                return MovieGenre.ACTION;
-            case "2":
-                return MovieGenre.DRAMA;
-            case "3":
-                return MovieGenre.THRILLER;
-            case "4":
-                return MovieGenre.ACTION;
-            case "5":
-                return MovieGenre.COMEDY;
-            case "6":
-                return MovieGenre.MUSICAL;
-            default:
-                System.out.println("Invalid choice! Please choose from the following genres: ");
-                return chooseGenre();
-        }
-    }
+    /**-------------------------------PRINTING STATISTICS functions-------------------------------*/
 
     private static void parkStatistics() throws IOException {
         String[] options = {"User Statistics", "Attraction Statistics",
@@ -678,11 +697,11 @@ public class Main {
         park.showStoreStatistics();
     }
 
-    /**END OF ADMIN METHODS*/
-    /**-----------------------------------------------------------------------------------------*/
+    /**-------------------------------END OF PRINTING STATISTICS functions------------------------------*/
 
-    /**-----------------------------------------------------------------------------------------*/
-    /**USER METHODS*/
+    /**--------------------------------------END OF ADMIN functions-------------------------------------*/
+
+    /**---------------------------------------USER functions--------------------------------------------*/
 
     /**METHOD FINISHED**/
     public static void buyTicketMenu() throws Exception {
@@ -771,8 +790,7 @@ public class Main {
     public static void rideAttractions(int indexOfUser, User currentUser) {
     }
 
-    /**END OF USER METHODS*/
-    /**-----------------------------------------------------------------------------------------*/
+    /**------------------------------------END OF USER functions-----------------------------------------------------*/
 
 
     /**CREATING USERS AND SELLING TICKETS TO THEM*/
@@ -942,8 +960,6 @@ public class Main {
         return users;
     }
     /**-----------------------------------------------------------------------------------------*/
-
-    //TODO Maybe replace validatePositiveInteger/Double with just validatePositiveNumber
 
     /**[!] METHOD FINISHED**/
     private static int readPositiveInteger() throws IOException {
