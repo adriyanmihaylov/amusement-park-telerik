@@ -543,9 +543,6 @@ public class Main {
         }
     }
 
-    private static Cinema updateCinema(String name) {
-        return park.getCinemaByName(name);
-    }
     private static void manageCinema(Cinema cinema) throws Exception {
         //TODO clear the console
         System.out.printf("Manage %s cinema:\n", cinema.getName());
@@ -566,7 +563,6 @@ public class Main {
                 break;
             case "4":
                park.addProductsToCinemaStore(cinema,createFoodProduct());
-               cinema = updateCinema(cinema.getName());
                 break;
             case "5":
                 park.getCinemaStoreProducts(cinema);
