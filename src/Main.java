@@ -458,7 +458,7 @@ public class Main {
 
         return options[command - 1];
     }
-    
+
     private static void manageCinema(String cinemaName) throws Exception {
         System.out.printf("Manage %s cinema:\n", cinemaName);
         String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add consumables",

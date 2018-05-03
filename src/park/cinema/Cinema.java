@@ -52,9 +52,23 @@ public class Cinema {
         System.out.println();
     }
 
-    //TODO make some restrictions here; add money to cashDesk; check user ticket
     public void watchMovie(User user, Movie movie) {
+        boolean notAllowed = isMovieAllowed(user, movie);
+        if (notAllowed) {
+            System.out.printf("Sorry \"%s\" is not allowed for users at this age.", movie.getName());
+            return;
+        }
+
+        user.getUserTicket().use(2);
         System.out.println(user.getName() + "is watching " + movie.getName());
+    }
+
+    private boolean isMovieAllowed(User user, Movie movie) {
+        int userAge = user.getAge();
+        MovieGenre genre = movie.getGenre();
+
+        return (userAge >= 10 || genre == MovieGenre.ANIMATION) &&
+                (userAge >= 18 || genre != MovieGenre.THRILLER);
     }
 
     //TODO !!!!! FINISH THIS LATER
