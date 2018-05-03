@@ -403,6 +403,27 @@ public class Main {
         cinemaMenu();
     }
 
+    private static void addNewCinema() throws Exception {
+        System.out.println("How many cinemas do you want to add to the park ?");
+
+        HashSet<String> cinemas = new HashSet<>();
+        int numberOfCinemas = readPositiveInteger();
+        String cinemaName;
+        for (int i = 0; i < numberOfCinemas; i++) {
+            System.out.printf("Please enter the name of cinema #%d: ", i + 1);
+            cinemaName = readName();
+            if (park.getCinemas().contains(cinemaName)) {
+                System.out.println("This cinema is already in the park !");
+            } else {
+                cinemas.add(cinemaName);
+            }
+
+        }
+
+        park.addCinemas(cinemas);
+        System.out.println("Done !\n");
+    }
+
     private static void editCinema() throws Exception {
         if (park.getCinemas().size() < 1) {
             System.out.println("Sorry the park does not have a cinema yet.\n");
@@ -437,29 +458,7 @@ public class Main {
 
         return options[command - 1];
     }
-
-    private static void addNewCinema() throws Exception {
-        System.out.println("How many cinemas do you want to add to the park ?");
-
-        HashSet<String> cinemas = new HashSet<>();
-        int numberOfCinemas = readPositiveInteger();
-        String cinemaName;
-        for (int i = 0; i < numberOfCinemas; i++) {
-            System.out.printf("Please enter the name of cinema #%d: ", i + 1);
-            cinemaName = readName();
-            if (park.getCinemas().contains(cinemaName)) {
-                System.out.println("This cinema is already in the park !");
-            } else {
-                cinemas.add(cinemaName);
-            }
-
-        }
-
-        park.addCinemas(cinemas);
-        System.out.println("Done !\n");
-    }
-
-
+    
     private static void manageCinema(String cinemaName) throws Exception {
         System.out.printf("Manage %s cinema:\n", cinemaName);
         String[] options = {"Remove cinema", "Add movies", "Remove movies", "Display movies", "Add consumables",
