@@ -189,4 +189,44 @@ public class Park {
     public void removeProductsFromStore(Store store) {
 
     }
+
+    public void showUserStatistics() {
+        if (users.size() == 0) {
+            System.out.println("Sorry there are no users in the park yet.");
+            return;
+        }
+
+        System.out.println("\n----------USER STATISTICS ----------\n");
+        System.out.println("Currently the park has " + users.size() + " users.");
+
+        //print the stats
+        users.forEach(x -> System.out.println());
+    }
+
+    public void showAttractionStatistics() {
+        if (attractions.size() == 0) {
+            System.out.println("Sorry there are no attractions in the park yet.");
+            return;
+        }
+
+        System.out.println("---------- ATTRACTION STATISTICS ----------");
+    }
+
+    public void showCinemaStatistics() {
+        if (cinemas.size() == 0) {
+            System.out.println("Sorry there are no cinemas in the park yet.");
+            return;
+        }
+
+        System.out.println("---------- CINEMA STATISTICS ----------");
+    }
+
+    public void showStoreStatistics() {
+        if (stores.size() == 0) {
+            System.out.println("Sorry there are no stores in the park yet.");
+            return;
+        }
+
+        System.out.println("---------- STORE STATISTICS----------");
+    }
 }

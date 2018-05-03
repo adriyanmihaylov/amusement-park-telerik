@@ -75,7 +75,7 @@ public class Main {
 
     //TODO create Admin functionality - create remove everything they want
     private static void adminMenu() throws Exception {
-        String[] options = {"Stores","Attractions","Cinema","Exit"};
+        String[] options = {"Stores","Attractions","Cinema", "Park Statistics", "Exit"};
         printOptions(options);
         String command = readString();
         switch (command) {
@@ -89,6 +89,9 @@ public class Main {
                 cinemaMenu();
                 break;
             case "4":
+                parkStatistics();
+                break;
+            case "5":
                 return;
             default:
                 System.out.println("Invalid choice!");
@@ -563,11 +566,8 @@ public class Main {
             return;
         }
 
-        String consumableType = command;
-
         System.out.println("How many products do you want to add to the cinema ?");
 
-        //Product and quantity
         HashMap<Product, Integer> products = new HashMap<>();
         int numberOfProducts = readPositiveInteger();
         String productName;
@@ -587,7 +587,7 @@ public class Main {
             System.out.println("Please enter product quantity: ");
             productQuantity = readPositiveInteger();
 
-            if (consumableType.equals("Food")) {
+            if (command.equals("Food")) {
                 products.put(new ProductToEat(productName, productPrice, expirationDate), productQuantity);
             }
         }
@@ -636,6 +636,48 @@ public class Main {
         }
     }
 
+    private static void parkStatistics() throws IOException {
+        String[] options = {"User Statistics", "Attraction Statistics",
+                "Cinema Statistics", "Store Statistics", "Exit"};
+        printOptions(options);
+
+        switch (readString()) {
+            case "1":
+                userStatistics();
+                break;
+            case "2":
+                attractionStatistics();
+                break;
+            case "3":
+                cinemaStatistics();
+                break;
+            case "4":
+                storeStatistics();
+                break;
+            case "5":
+                //EXIT
+                return;
+            default:
+                System.out.println("Invalid choice! Please choose from the following: ");
+                parkStatistics();
+        }
+    }
+
+    private static void userStatistics() {
+        park.showUserStatistics();
+    }
+
+    private static void attractionStatistics() {
+        park.showAttractionStatistics();
+    }
+
+    private static void cinemaStatistics() {
+        park.showCinemaStatistics();
+    }
+
+    private static void storeStatistics() {
+        park.showStoreStatistics();
+    }
 
     /**END OF ADMIN METHODS*/
     /**-----------------------------------------------------------------------------------------*/
