@@ -174,10 +174,13 @@ public class Park {
         users.set(index,currentUser);
     }
 
-    public void addProductsToStore(HashMap<Product,Integer> productsToAdd) {
+    public void addProductsToStore(Store store,HashMap<Product,Integer> productsToAdd) {
+        int index = this.stores.indexOf(store);
+
+        this.stores.get(index).addProducts(productsToAdd);
     }
 
-    public void addProductsToCinemaStore(Cinema cinema, HashMap<FoodProduct,Integer> productsToAdd) {
+    public void addProductsToCinemaStore(Cinema cinema, HashMap<Product,Integer> productsToAdd) {
         int index = this.cinemas.indexOf(cinema);
 
         this.cinemas.get(index).updateCinemaStore(productsToAdd);
@@ -194,7 +197,14 @@ public class Park {
                 .anyMatch(x -> x.getName().equals(name));
     }
 
-    public void removeProductsFromStore(Store store) {
+    public void removeProductsFromStore(Store store,String foodName) {
+        int index = this.stores.indexOf(store);
+        Product product = this.stores.get(index).getProductByName(foodName);
+        if (product == null) {
+            System.out.println("There is no such product!");
+        } else {
+            this.stores.get(index).removeProduct(product);
+        }
     }
 
     public void showUserStatistics() {

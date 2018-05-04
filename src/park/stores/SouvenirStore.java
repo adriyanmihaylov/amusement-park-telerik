@@ -5,16 +5,12 @@ import park.interfaces.IUsable;
 import park.products.*;
 
 public class SouvenirStore extends Store implements IUsable {
-    HashMap<Souvenir,Integer> productsInStock;
-
     public SouvenirStore(String name, CashDesk desk) {
         super(name, desk);
-        this.productsInStock = new HashMap<>();
     }
 
-    public SouvenirStore(String name, CashDesk desk, HashMap<Souvenir,Integer> souvenirs) {
-        super(name, desk);
-        this.productsInStock.putAll(souvenirs);
+    public SouvenirStore(String name, CashDesk desk, HashMap<Product,Integer> souvenirs) {
+        super(name, desk, souvenirs);
     }
     //TODO getProductsInStock
     //TODO toString productsInStock
@@ -28,4 +24,5 @@ public class SouvenirStore extends Store implements IUsable {
     public String toString() {
         return String.format(super.getName() + "\t| sells souvenirs");
     }
+
 }

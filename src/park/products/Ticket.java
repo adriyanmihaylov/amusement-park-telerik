@@ -10,10 +10,10 @@ public class Ticket extends Product implements IUsable{
         this.ticketCredits = 10;
     }
     public String getTicketNumber() {
-        return this.name;
+        return this.getName();
     }
     public double getTicketPrice() {
-        return this.price;
+        return this.getPrice();
     }
     public int getTicketCredits() {
         return ticketCredits;

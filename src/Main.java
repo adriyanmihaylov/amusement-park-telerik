@@ -119,7 +119,7 @@ public class Main {
                 break;
             case "4":
                 System.out.print("Please enter store name: ");
-                addRemoveProducts(getStore());
+                addRemoveProductsMenu(getStore());
                 break;
             case "5":
                 return;
@@ -243,7 +243,7 @@ public class Main {
 
     /**------------------------------PRODUCTS functions-------------------------------*/
 
-    private  static void addRemoveProducts(Store store) throws Exception {
+    private static void addRemoveProductsMenu(Store store) throws Exception {
         if (store == null) {
             System.out.println("There is no such store");
             return;
@@ -251,13 +251,19 @@ public class Main {
 
         String[] options = {"Add products", "Remove products", "Exit"};
         printOptions(options);
-
         switch (readString()) {
             case "1":
-              //  park.addProductsToStore(store);
+                if(store.getClass().equals(FoodStore.class)) {
+                    park.addProductsToStore(store,createFoodProduct());
+                } else if(store.getClass().equals(SouvenirStore.class)) {
+                    park.addProductsToStore(store,createSouvenirProduct());
+                }
                 break;
+                //TODO check if there is no such product before removing
             case "2":
-                park.removeProductsFromStore(store);
+                System.out.print("Please enter product name: ");
+                String name = readName();
+                park.removeProductsFromStore(store,name);
                 break;
             case "3":
                 return;
@@ -266,7 +272,7 @@ public class Main {
                 System.out.println("Please try again!");
                 break;
         }
-        addRemoveProducts(store);
+        addRemoveProductsMenu(store);
     }
 
     private static void printProductsInStore() throws Exception {
@@ -274,18 +280,18 @@ public class Main {
         System.out.println("Please enter the name of the store: ");
         Store store = getStore();
 
-        if (store.equals(null)) {
+        if (store == null) {
             System.out.println("There is no such store!");
         } else {
             store.showProductsInStock();
         }
     }
 
-    private static HashMap<FoodProduct,Integer> createFoodProduct() throws Exception {
+    private static HashMap<Product,Integer> createFoodProduct() throws Exception {
         System.out.print("Enter number of products to add: ");
         int numberOfProducts = readPositiveInteger();
 
-        HashMap<FoodProduct, Integer> products = new HashMap<>();
+        HashMap<Product, Integer> products = new HashMap<>();
 
         String expirationDate;
         for (int i = 0; i < numberOfProducts; i++) {
@@ -317,19 +323,18 @@ public class Main {
         return products;
     }
 
-    private static HashMap<Souvenir,Integer> createSouvenirProduct() throws Exception {
+    private static HashMap<Product,Integer> createSouvenirProduct() throws Exception {
         System.out.print("Enter number of products to add: ");
         int numberOfProducts = readPositiveInteger();
 
-        HashMap<Souvenir, Integer> products = new HashMap<>();
+        HashMap<Product, Integer> products = new HashMap<>();
 
-        String expirationDate;
         for (int i = 0; i < numberOfProducts; i++) {
             System.out.printf("Product #%d name: ", i + 1);
             String productName = readName();
             //TODO - see if this product exist and stop if exist
 
-            System.out.printf("Enter price of product %s: " + productName);
+            System.out.printf("Enter price of product %s: ", productName);
             double productPrice = readMoney();
 
             System.out.println("Please enter product quantity: ");
@@ -353,7 +358,6 @@ public class Main {
                 return chooseFoodProductType();
         }
     }
-
 
     /**------------------------------ATTRACTIONS functions-------------------------------*/
 
@@ -514,7 +518,7 @@ public class Main {
             return;
         }
 
-        manageCinema(currentCinema);
+        manageCinema(currentCinema.getName());
     }
 
     private  static Cinema selectCinema() throws Exception {
@@ -543,9 +547,9 @@ public class Main {
         }
     }
 
-    private static void manageCinema(Cinema cinema) throws Exception {
+    private static void manageCinema(String cinemaName) throws Exception {
         //TODO clear the console
-        System.out.printf("Manage %s cinema:\n", cinema.getName());
+        System.out.printf("Manage %s cinema:\n", cinemaName);
         String[] options = {"Add movies", "Remove movies", "Display movies", "Add foods","Show cinema's store foods",
                 "Remove foods","Delete cinema", "Exit"};
         printOptions(options);
@@ -553,25 +557,24 @@ public class Main {
         String command = readString();
         switch (command) {
             case "1":
-                addMovie(cinema.getName());
+                addMovie(cinemaName);
                 break;
             case "2":
-                removeMovie(cinema.getName());
+                removeMovie(cinemaName);
                 break;
             case "3":
-                displayMovies(cinema.getName());
+                displayMovies(cinemaName);
                 break;
             case "4":
-               park.addProductsToCinemaStore(cinema,createFoodProduct());
+               park.getCinemaByName(cinemaName).addProductsToStore(createFoodProduct());
                 break;
             case "5":
-                park.getCinemaStoreProducts(cinema);
                 break;
             case "6":
-                //removeConsumablesFromCinema();
+               // park.removeProductsFromStore();
                 break;
             case "7":
-                deleteCinema(cinema.getName());
+                deleteCinema(cinemaName);
                 return;
             case "8": //EXIT
                 return;
@@ -581,7 +584,7 @@ public class Main {
                 System.out.println("Invalid choice!");
                 break;
         }
-        manageCinema(cinema);
+        manageCinema(cinemaName);
     }
 
     private static void deleteCinema(String name) {

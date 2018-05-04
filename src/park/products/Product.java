@@ -1,8 +1,8 @@
 package park.products;
 
 public abstract class Product {
-    String name;
-    double price;
+    private String name;
+   private double price;
 
     public Product (String name, double price) {
         this.name = name;
@@ -15,6 +15,13 @@ public abstract class Product {
 
     public double getPrice() {
         return price;
+    }
+
+    public Product getProductByName(String name) {
+        if (this.name.equals(name)) {
+            return this;
+        }
+        return null;
     }
 
     @Override

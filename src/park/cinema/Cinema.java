@@ -36,7 +36,8 @@ public class Cinema {
     public FoodStore getCinemaStore() {
         return this.cinemaStore;
     }
-    public  void updateCinemaStore(HashMap<FoodProduct,Integer> foodsToAdd) {
+
+    public  void updateCinemaStore(HashMap<Product,Integer> foodsToAdd) {
         this.cinemaStore.addProducts(foodsToAdd);
     }
 
@@ -84,8 +85,12 @@ public class Cinema {
     }
 
 
-    public void addProductsToStore(HashMap<FoodProduct,Integer> productsToAdd) {
+    public void addProductsToStore(HashMap<Product,Integer> productsToAdd) {
         this.cinemaStore.addProducts(productsToAdd);
+    }
+
+    public void removeProduct(Product product) {
+        this.cinemaStore.removeProduct(product);
     }
 
     private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
