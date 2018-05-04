@@ -242,6 +242,7 @@ public class Main {
     /**------------------------------PRODUCTS functions-------------------------------*/
 
     private static String chooseProduct(String storeName) throws Exception {
+        System.out.println("Please choose a product: ");
         List<String> options = park.getStoreAllProductsNames(storeName);
 
         if(options.size() == 0) {
@@ -315,13 +316,13 @@ public class Main {
             double productPrice = readMoney();
 
             //TODO throws exception
-            System.out.println("Please enter expiration date: ");
+            System.out.print("Please enter expiration date: ");
             expirationDate = readString();
 
-            System.out.println("Please enter product quantity: ");
+            System.out.print("Please enter product quantity: ");
             int productQuantity = readPositiveInteger();
 
-            System.out.println("Please choose one of the following");
+            System.out.println("Please choose one of the following: ");
             int command = chooseFoodProductType();
             switch(command) {
                 case 1:
@@ -768,6 +769,7 @@ public class Main {
     }
 
     /**METHOD FINISHED**/
+    // TODO - ADD CONSUME PRODUCTS/LIST PRODUCTS
     private static void parkMenu(User currentUser, int indexOfUser) throws Exception {
         if (currentUser == null) {
             indexOfUser = findUserInPark();
@@ -786,7 +788,7 @@ public class Main {
                 addCredits(indexOfUser, currentUser);
                 break;
             case "2":
-                goShopping(indexOfUser,currentUser);
+                goShopping(indexOfUser, currentUser);
                 break;
             case "3":
                 watchMovie(indexOfUser,currentUser);
@@ -818,10 +820,52 @@ public class Main {
         }
     }
 
-    //TODO add functionality
-    private static void goShopping(int indexOfUser, User currentUser) throws IOException {
+    private static void goShopping(int indexOfUser, User currentUser) throws Exception {
+        System.out.println("Please choose a shop: ");
+        String shopName = chooseShop();
+        if (shopName.equals("Exit") || shopName.isEmpty()) {
+            return;
+        }
+
+        Store currentShop = park.getStoreByName(shopName);
+        String productName = chooseProduct(shopName);
+        Product product = currentShop.getProductByName(productName);
+
+        //TODO test if the logic is working
+
+        if (product == null) {
+            return;
+        }
+
+        if (product.getPrice() > currentUser.getBudget()) {
+            System.out.println("Sorry you don't have enough money to buy this product!");
+            return;
+        }
+       
+        currentShop.removeOneProduct(product);
+        currentUser.addBoughtProduct(product);
+        currentShop.addMoney(product.getPrice());
+        System.out.println("You successfully bought: " + product + " and you have " + currentUser.getBudget() + " money left!g");
     }
 
+    private static String chooseShop() throws Exception {
+        List<String> options = park.getStoresNames();
+
+        if(options.size() == 0) {
+            System.out.println("Sorry there are no shops in the park!");
+            return "";
+        }
+        options.add("Exit");
+
+        printOptions(options);
+
+        int command = readPositiveInteger();
+        if (command > options.size()) {
+            System.out.println("Invalid choice! Choose one of the following: ");
+            return chooseShop();
+        }
+        return options.get(command - 1);
+    }
     //TODO add functionality
     private static void watchMovie(int indexOfUser, User currentUser) {
     }

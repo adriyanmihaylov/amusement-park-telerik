@@ -14,4 +14,9 @@ public class ProductToDrink extends FoodProduct {
         System.out.printf("%s was drank.\n", this);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s: drink", super.toString());
+    }
+
 }

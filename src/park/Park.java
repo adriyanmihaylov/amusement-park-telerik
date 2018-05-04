@@ -150,7 +150,7 @@ public class Park {
                 .get();
     }
 
-    private Store getStoreByName(String storeName) {
+    public Store getStoreByName(String storeName) {
         return stores.stream()
                 .filter(st -> st.getName().equals(storeName))
                 .findFirst()

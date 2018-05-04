@@ -1,6 +1,9 @@
 package park.users;
 
+import park.products.Product;
 import park.products.Ticket;
+
+import java.util.ArrayList;
 
 public class User {
     private String name;
@@ -8,12 +11,14 @@ public class User {
     private double budget;
     private UserType type;
     private Ticket ticket;
+    private ArrayList<Product> boughtProducts;
 
     public User(String name, int age, double budget, UserType type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
         this.type = type;
+        this.boughtProducts = new ArrayList<>();
     }
 
     public String getName() {
@@ -59,6 +64,17 @@ public class User {
     public void addCredits(int numberOfTickets) {
         this.ticket.addCredits(numberOfTickets);
         this.budget -= numberOfTickets * this.getTicketPrice();
+    }
+
+    public void addBoughtProduct(Product product) {
+        this.boughtProducts.add(product);
+        this.budget -= product.getPrice();
+    }
+
+    public void sayAllProducts() {
+        for (Product product : boughtProducts) {
+            System.out.println(product);
+        }
     }
 
     @Override

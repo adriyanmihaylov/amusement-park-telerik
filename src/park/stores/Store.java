@@ -70,9 +70,26 @@ public abstract class Store {
         }
     }
 
+    public void addMoney(double productPrice) {
+        this.desk.addMoneyToDesk(productPrice);
+    }
+
     public void removeProduct(Product productToRemove) {
         this.productsInStock.remove(productToRemove);
-    };
+    }
+
+    public void removeOneProduct(Product productToRemove) {
+        Integer productQuantity = productsInStock.get(productToRemove);
+
+        productQuantity = productQuantity - 1;
+
+        if (productQuantity == 0) {
+            removeProduct(productToRemove);
+            return;
+        }
+
+        productsInStock.put(productToRemove, productQuantity);
+    }
 
     //TODO complete toString method
     @Override
