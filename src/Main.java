@@ -820,6 +820,7 @@ public class Main {
         }
     }
 
+    //TODO maybe change the products in the user to hashmap
     private static void goShopping(int indexOfUser, User currentUser) throws Exception {
         System.out.println("Please choose a shop: ");
         String shopName = chooseShop();
