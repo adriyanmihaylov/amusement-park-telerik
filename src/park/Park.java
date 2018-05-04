@@ -226,11 +226,10 @@ public class Park {
             return;
         }
 
-        System.out.println("\n----------USER STATISTICS ----------\n");
-        System.out.println("Currently the park has " + users.size() + " users.");
-
-        //print the stats
-        users.forEach(x -> System.out.println());
+        System.out.println("\n\t\t\t\t---------- USER STATISTICS ----------\n");
+        System.out.println("\t\t\t\t\t" + users.size() + " users in the park\n");
+        users.forEach(System.out::println);
+        System.out.println("\n\t\t\t\t-------------------------------------\n");
     }
 
     public void showAttractionStatistics() {
@@ -239,7 +238,9 @@ public class Park {
             return;
         }
 
-        System.out.println("---------- ATTRACTION STATISTICS ----------");
+        System.out.println("\n\t\t\t\t---------- ATTRACTION STATISTICS ----------\n");
+        attractions.forEach(System.out::println);
+        System.out.println("\n\t\t\t\t-------------------------------------------\n");
     }
 
     public void showCinemaStatistics() {
@@ -248,7 +249,14 @@ public class Park {
             return;
         }
 
-        System.out.println("---------- CINEMA STATISTICS ----------");
+        System.out.println("\n\t\t\t\t---------- CINEMA STATISTICS ----------\n");
+        for (Cinema cinema : cinemas) {
+            System.out.printf("Cinema \"%s\"\n\n", cinema);
+            cinema.displayMovies();
+            System.out.println();
+            cinema.displayCinemaProducts();
+        }
+        System.out.println("\n\t\t\t\t---------------------------------------\n");
     }
 
     public void showStoreStatistics() {
@@ -257,7 +265,12 @@ public class Park {
             return;
         }
 
-        System.out.println("---------- STORE STATISTICS----------");
+        System.out.println("\n\t\t\t\t---------- STORE STATISTICS----------\n");
+        for (Store store : stores) {
+            System.out.println(store + "\n");
+            store.showProductsInStock();
+        }
+        System.out.println("\n\t\t\t\t-------------------------------------\n");
     }
 
     public void showStoreProducts(String storeName) {

@@ -720,6 +720,8 @@ public class Main {
                 System.out.println("Invalid choice! Please choose from the following: ");
                 parkStatistics();
         }
+
+        parkStatistics();
     }
 
     private static void userStatistics() {

@@ -98,11 +98,6 @@ public class Cinema {
         return productsInStock.containsKey(product);
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
     public List<String> getAllMoviesNames() {
         return this.movies.stream()
                 .map(Movie::getName)
@@ -111,5 +106,15 @@ public class Cinema {
 
     public List<String> getProductsNamesInCinema() {
         return this.cinemaStore.getAllProductsNames();
+    }
+
+    public void displayCinemaProducts() {
+        System.out.println("Products in cinema:");
+        cinemaStore.showProductsInStock();
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
