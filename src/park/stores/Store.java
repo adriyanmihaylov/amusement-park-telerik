@@ -47,6 +47,13 @@ public abstract class Store {
     public void addProducts(HashMap<Product, Integer> productsToAdd) {
         this.productsInStock.putAll(productsToAdd);
     }
+    public List<String> getAllProductsNames() {
+        return this.productsInStock.entrySet()
+                .stream()
+                .map(product-> product.getKey().getName())
+                .collect(Collectors.toList());
+
+    }
 
     public Product getProductByName(String foodName) {
         List<Product> product = this.productsInStock

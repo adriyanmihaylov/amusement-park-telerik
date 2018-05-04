@@ -5,8 +5,8 @@ import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.funzone.AttractionDangerLevel;
-import park.products.FoodProduct;
 import park.products.Product;
+import park.stores.FoodStore;
 import park.stores.Store;
 import park.users.User;
 
@@ -42,7 +42,7 @@ public class Park {
 
 
 
-    public List<Cinema> getCinemas() {
+    private List<Cinema> getCinemas() {
         return cinemas;
     }
 
@@ -71,9 +71,6 @@ public class Park {
                 .orElse(-1);
     }
 
-    public  Store getStoreByIndex(int index) {
-        return this.stores.get(index);
-    }
 
     public int findUserIndex(String name,String ticketNumber) {
         return users.stream()
@@ -135,11 +132,6 @@ public class Park {
         cinema.addMovie(moviesToAdd);
     }
 
-    public Set<Movie> getMoviesFromCinema(String cinemaName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        return cinema.getMovies();
-    }
-
     public void removeMovieFromCinema(String cinemaName, String movieName) {
         Cinema cinema = getCinemaByName(cinemaName);
         cinema.removeMovie(movieName);
@@ -158,8 +150,15 @@ public class Park {
                 .get();
     }
 
-    public void removeStore(Store store) {
-        this.stores.remove(store);
+    private Store getStoreByName(String storeName) {
+        return stores.stream()
+                .filter(st -> st.getName().equals(storeName))
+                .findFirst()
+                .get();
+    }
+
+    public void removeStore(String storeName) {
+        this.stores.remove(getStoreByName(storeName));
     }
 
     public  void removeUser(User user) {
@@ -174,9 +173,8 @@ public class Park {
         users.set(index,currentUser);
     }
 
-    public void addProductsToStore(Store store,HashMap<Product,Integer> productsToAdd) {
-        int index = this.stores.indexOf(store);
-
+    public void addProductsToStore(String storeName, HashMap<Product,Integer> productsToAdd) {
+        int index = stores.indexOf(getStoreByName(storeName));
         this.stores.get(index).addProducts(productsToAdd);
     }
 
@@ -187,6 +185,14 @@ public class Park {
         this.cinemas.get(index).updateCinemaStore(productsToAdd);
     }
 
+    public String getStoreType(String storeName) {
+        Store store = getStoreByName(storeName);
+
+        if (store.getClass().equals(FoodStore.class)) {
+            return "FoodStore";
+        }
+        return "SouvenirStore";
+    }
 
     public void showStoreCinemaProducts(String cinemaName) {
         Cinema cinema = getCinemaByName(cinemaName);
@@ -199,15 +205,12 @@ public class Park {
                 .anyMatch(x -> x.getName().equals(name));
     }
 
-    public void removeProductsFromStore(Store store,String foodName) {
+    public void removeProductsFromStore(String storeName,String foodName) {
+        Store store = getStoreByName(storeName);
+
         int index = this.stores.indexOf(store);
         Product product = this.stores.get(index).getProductByName(foodName);
-        if (product == null) {
-            System.out.println("There is no such product!");
-        } else {
-            this.stores.get(index).removeProduct(product);
-            System.out.println("Product " + product.getName() + " successfully removed!");
-        }
+        this.stores.get(index).removeProduct(product);
     }
     public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
         Cinema cinema = getCinemaByName(cinemaName);
@@ -258,5 +261,46 @@ public class Park {
         }
 
         System.out.println("---------- STORE STATISTICS----------");
+    }
+
+    public void showStoreProducts(String storeName) {
+        Store store = getStoreByName(storeName);
+        store.showProductsInStock();
+    }
+
+    public List<String> getStoreAllProductsNames(String storeName) {
+        Store store = getStoreByName(storeName);
+
+        return store.getAllProductsNames();
+    }
+
+    public List<String> getAllCinemasNames() {
+        return this.cinemas.stream()
+                .map(Cinema::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getMoviesFromCinema(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+
+        return  cinema.getAllMoviesNames();
+    }
+
+    public List<String> getAttractionsNames() {
+        return this.attractions.stream()
+                .map(Attraction::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getStoresNames() {
+        return this.stores.stream()
+                .map(Store::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getProductsNamesInCinemaStore(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+
+        return cinema.getProductsNamesInCinema();
     }
 }

@@ -6,6 +6,7 @@ import park.stores.FoodStore;
 import park.users.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Cinema {
     private String name;
@@ -102,4 +103,13 @@ public class Cinema {
         return this.name;
     }
 
+    public List<String> getAllMoviesNames() {
+        return this.movies.stream()
+                .map(Movie::getName)
+                .collect(Collectors.toList());
+    }
+
+    public List<String> getProductsNamesInCinema() {
+        return this.cinemaStore.getAllProductsNames();
+    }
 }
