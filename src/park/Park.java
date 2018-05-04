@@ -180,15 +180,17 @@ public class Park {
         this.stores.get(index).addProducts(productsToAdd);
     }
 
-    public void addProductsToCinemaStore(Cinema cinema, HashMap<Product,Integer> productsToAdd) {
+    public void addProductsToCinemaStore(String cinemaName, HashMap<Product,Integer> productsToAdd) {
+        Cinema cinema = getCinemaByName(cinemaName);
         int index = this.cinemas.indexOf(cinema);
 
         this.cinemas.get(index).updateCinemaStore(productsToAdd);
     }
 
-    public void getCinemaStoreProducts(Cinema cinema) {
-        int index = this.cinemas.indexOf(cinema);
-        cinema = this.cinemas.get(index);
+
+    public void showStoreCinemaProducts(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+
         cinema.getCinemaStore().showProductsInStock();
     }
 
@@ -204,6 +206,17 @@ public class Park {
             System.out.println("There is no such product!");
         } else {
             this.stores.get(index).removeProduct(product);
+            System.out.println("Product " + product.getName() + " successfully removed!");
+        }
+    }
+    public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        Product product = cinema.getCinemaStore().getProductByName(foodName);
+        if(product == null) {
+            System.out.println("There is no such product!");
+        } else {
+            this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
+            System.out.println("Product " + product.getName() + " successfully removed!");
         }
     }
 

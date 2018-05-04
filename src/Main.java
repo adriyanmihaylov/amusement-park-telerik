@@ -550,8 +550,8 @@ public class Main {
     private static void manageCinema(String cinemaName) throws Exception {
         //TODO clear the console
         System.out.printf("Manage %s cinema:\n", cinemaName);
-        String[] options = {"Add movies", "Remove movies", "Display movies", "Add foods","Show cinema's store foods",
-                "Remove foods","Delete cinema", "Exit"};
+        String[] options = {"Add movies", "Remove movies", "Display movies", "Add foods", "Show cinema's store foods",
+                "Remove foods", "Delete cinema", "Exit"};
         printOptions(options);
 
         String command = readString();
@@ -566,12 +566,15 @@ public class Main {
                 displayMovies(cinemaName);
                 break;
             case "4":
-               park.getCinemaByName(cinemaName).addProductsToStore(createFoodProduct());
+                park.addProductsToCinemaStore(cinemaName, createFoodProduct());
                 break;
             case "5":
+                park.showStoreCinemaProducts(cinemaName);
                 break;
             case "6":
-               // park.removeProductsFromStore();
+                System.out.print("Please enter product name: ");
+                String productName = readName();
+                park.removeProductsFromCinemaStore(cinemaName, productName);
                 break;
             case "7":
                 deleteCinema(cinemaName);
