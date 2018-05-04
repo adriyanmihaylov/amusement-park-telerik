@@ -174,15 +174,14 @@ public class Park {
     }
 
     public void addProductsToStore(String storeName, HashMap<Product,Integer> productsToAdd) {
-        int index = stores.indexOf(getStoreByName(storeName));
-        this.stores.get(index).addProducts(productsToAdd);
+        Store store = getStoreByName(storeName);
+        store.addProducts(productsToAdd);
     }
 
     public void addProductsToCinemaStore(String cinemaName, HashMap<Product,Integer> productsToAdd) {
         Cinema cinema = getCinemaByName(cinemaName);
-        int index = this.cinemas.indexOf(cinema);
 
-        this.cinemas.get(index).updateCinemaStore(productsToAdd);
+        cinema.updateCinemaStore(productsToAdd);
     }
 
     public String getStoreType(String storeName) {
@@ -207,11 +206,9 @@ public class Park {
 
     public void removeProductsFromStore(String storeName,String foodName) {
         Store store = getStoreByName(storeName);
-
-        int index = this.stores.indexOf(store);
-        Product product = this.stores.get(index).getProductByName(foodName);
-        this.stores.get(index).removeProduct(product);
+        store.removeProduct(store.getProductByName(foodName));
     }
+
     public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
         Cinema cinema = getCinemaByName(cinemaName);
         Product product = cinema.getCinemaStore().getProductByName(foodName);
@@ -222,7 +219,7 @@ public class Park {
             System.out.println("Product " + product.getName() + " successfully removed!");
         }
     }
-
+    /**-------------------------------GetNames functions- NOT FINISHED----------------------------------*/
     public void showUserStatistics() {
         if (users.size() == 0) {
             System.out.println("Sorry there are no users in the park yet.");
@@ -267,6 +264,7 @@ public class Park {
         Store store = getStoreByName(storeName);
         store.showProductsInStock();
     }
+     /**-------------------------------GetNames functions- FINISHED----------------------------------*/
 
     public List<String> getStoreAllProductsNames(String storeName) {
         Store store = getStoreByName(storeName);
