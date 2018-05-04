@@ -149,7 +149,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseStore();
         }
@@ -254,7 +254,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size()  || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseProduct(storeName);
         }
@@ -404,7 +404,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size()  || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseAttraction();
         }
@@ -505,7 +505,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseProductInCinemaStore(cinemaName);
         }
@@ -524,7 +524,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseCinema();
         }
@@ -628,7 +628,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size()  || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseProduct(cinemaName);
         }
@@ -863,7 +863,7 @@ public class Main {
         printOptions(options);
 
         int command = readPositiveInteger();
-        if (command > options.size()) {
+        if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
             return chooseShop();
         }
