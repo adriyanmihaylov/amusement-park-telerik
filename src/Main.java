@@ -58,7 +58,7 @@ public class Main {
                 break;
             case "2":
                 int userIndex = findUserInPark();
-                if(userIndex < 0) {
+                if (userIndex < 0) {
                     System.out.println("There is no such user!");
                 } else {
                     parkMenu(userIndex);
@@ -247,11 +247,11 @@ public class Main {
      * ------------------------------PRODUCTS functions-------------------------------
      */
 
-    private static String chooseProduct(String storeName,int currentUserIndex) throws Exception {
+    private static String chooseProduct(String storeName, int currentUserIndex) throws Exception {
         List<String> options = new ArrayList<>();
         if (!storeName.isEmpty()) {
             options = park.getStoreAllProductsNames(storeName);
-        } else if(currentUserIndex >= 0) {
+        } else if (currentUserIndex >= 0) {
             options = park.getUserAllProductsNames(currentUserIndex);
         }
 
@@ -302,7 +302,7 @@ public class Main {
     }
 
     private static void removeProductFromStore(String storeName) throws Exception {
-        String productName = chooseProduct(storeName,-1);
+        String productName = chooseProduct(storeName, -1);
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
@@ -643,7 +643,7 @@ public class Main {
         int command = readPositiveInteger();
         if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseProduct(cinemaName,-1);
+            return chooseProduct(cinemaName, -1);
         }
         return options.get(command - 1);
     }
@@ -755,7 +755,9 @@ public class Main {
 
     /**--------------------------------------END OF ADMIN functions-----------------------------------------*/
 
-    /**---------------------------------------USER functions------------------------------------------------*/
+    /**
+     * ---------------------------------------USER functions------------------------------------------------
+     */
 
     public static void buyTicketMenu() throws Exception {
         String[] options = {"See ticket prices", "SingleTicket", "GroupTicket", "Exit"};
@@ -823,8 +825,8 @@ public class Main {
         parkMenu(indexOfUser);
     }
 
-    private static void consumeProduct(int userIndex) throws Exception{
-        String productName = chooseProduct("",userIndex);
+    private static void consumeProduct(int userIndex) throws Exception {
+        String productName = chooseProduct("", userIndex);
 
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
@@ -835,7 +837,7 @@ public class Main {
 
     private static void addCredits(int userIndex) throws Exception {
         System.out.printf("Your budget is %.2f$\n", park.getUserBudget(userIndex));
-        System.out.printf("Price for 1 ticket is %.2f$\n",park.getUserTicketPrice(userIndex));
+        System.out.printf("Price for 1 ticket is %.2f$\n", park.getUserTicketPrice(userIndex));
         System.out.println("1 ticket has 10 credits");
         System.out.println("Please enter the number of tickets:  ");
 
@@ -850,7 +852,7 @@ public class Main {
             return;
         }
 
-        String productName = chooseProduct(storeName,-1);
+        String productName = chooseProduct(storeName, -1);
 
         //TODO test if the logic is working
         park.goShopping(storeName, productName, userIndex);
@@ -866,7 +868,9 @@ public class Main {
 
     /**------------------------------------END OF USER functions----------------------------------------------*/
 
-    /**-----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------*/
+    /**
+     * -----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------
+     */
 
     public static int readSizeOfGroup() throws IOException {
         System.out.print("Enter number of members: ");
@@ -897,7 +901,7 @@ public class Main {
             int age = readAge();
             System.out.print("What's the budget of " + name + ": ");
             double budget = readMoney();
-            if(userTicketType != userTicketType.SMALLGROUP && userTicketType != userTicketType.BIGGROUP) {
+            if (userTicketType != userTicketType.SMALLGROUP && userTicketType != userTicketType.BIGGROUP) {
                 if (age < 18) {
                     userTicketType = userTicketType.UNDER18;
                 } else {
@@ -906,7 +910,7 @@ public class Main {
             }
 
             maxAge = Math.max(maxAge, age);
-            users.add(new User(name, age, budget,userTicketType));
+            users.add(new User(name, age, budget, userTicketType));
             System.out.println();
         }
         if (maxAge < 14) {
@@ -943,13 +947,20 @@ public class Main {
         return users;
     }
 
-    /**------------------------------------Exception methods -----------------------------------------------------*/
-    public static String readName() throws Exception {
-        String name = readString();
+    /**
+     * ------------------------------------Exception methods -----------------------------------------------------
+     */
+    public static String readName() {
+        String name;
         try {
+            name = readString();
             validateName(name);
         } catch (NameException e) {
             System.out.println(e.getMessage());
+            System.out.print("Please enter valid name ");
+            return readName();
+        } catch (IOException e) {
+            System.out.println("Error when reading name!");
             System.out.print("Please enter valid name ");
             return readName();
         }
@@ -966,10 +977,11 @@ public class Main {
         }
     }
 
-    private static int readAge() throws IOException {
-        String input = readString();
+    private static int readAge() {
+        String input;
         int age;
         try {
+            input = readString();
             age = validateAge(input);
         } catch (AgeException e) {
             System.out.println(e.getMessage());
@@ -977,6 +989,10 @@ public class Main {
             return readAge();
         } catch (PositiveIntegerException e) {
             System.out.println(e.getMessage());
+            System.out.print("Please enter a valid age: ");
+            return readAge();
+        } catch (IOException e) {
+            System.out.println("Error when reading age!");
             System.out.print("Please enter a valid age: ");
             return readAge();
         }
@@ -996,13 +1012,18 @@ public class Main {
         return age;
     }
 
-    private static double readMoney() throws IOException {
-        String input = readString();
+    private static double readMoney() {
+        String input;
         double money;
         try {
+            input = readString();
             money = validateMoney(input);
         } catch (MoneyException e) {
             System.out.println(e.getMessage());
+            System.out.print("Please enter again: ");
+            return readMoney();
+        } catch (IOException e) {
+            System.out.println("Error when reading money!");
             System.out.print("Please enter again: ");
             return readMoney();
         }
@@ -1023,12 +1044,17 @@ public class Main {
         return money;
     }
 
-    private static int readPositiveInteger() throws IOException {
-        String input = readString();
+    private static int readPositiveInteger() {
+        String input;
         int number;
         try {
+            input = readString();
             number = validatePositiveInteger(input);
         } catch (PositiveIntegerException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter a valid number: ");
+            return readPositiveInteger();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.print("Please enter a valid number: ");
             return readPositiveInteger();
@@ -1049,7 +1075,10 @@ public class Main {
 
         return number;
     }
-    /**---------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * ---------------------------------------------------------------------------------------------------------
+     */
 
     private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

@@ -22,10 +22,10 @@ public class Park {
     private List<User> users;
     private List<Cinema> cinemas;
     private Set<Attraction> attractions;
-    private EnumMap<UserTicketPrice,Double> ticketsPrices;
+    private EnumMap<UserTicketPrice, Double> ticketsPrices;
     private int ticketsCounter;
 
-    public Park(String name,String password) {
+    public Park(String name, String password) {
         setName(name);
         this.password = password;
         this.stores = new ArrayList<>();
@@ -35,10 +35,14 @@ public class Park {
         setTicketsPrice();
         this.ticketsCounter = 1;
     }
-    /**---------------------------------Getters and setters-------------------------------------*/
+
+    /**
+     * ---------------------------------Getters and setters-------------------------------------
+     */
     public String getName() {
         return name;
     }
+
     private void setTicketsPrice() {
         this.ticketsPrices = new EnumMap<>(UserTicketPrice.class);
         ticketsPrices.put(UserTicketPrice.UNDER18, (double) 15);
@@ -66,9 +70,11 @@ public class Park {
         return this.password.equals(password);
     }
 
-    /**---------------------------------USER functions-------------------------------------*/
+    /**
+     * ---------------------------------USER functions-------------------------------------
+     */
 
-    public int findUserIndex(String name,String ticketNumber) {
+    public int findUserIndex(String name, String ticketNumber) {
         return users.stream()
                 .filter(x -> x.getName().equals(name))
                 .filter(x -> x.getTicketNumber(ticketNumber))
@@ -120,7 +126,9 @@ public class Park {
         this.users.remove(user);
     }
 
-    /**----------------------------------------CINEMAS----------------------------------------------*/
+    /**
+     * ----------------------------------------CINEMAS----------------------------------------------
+     */
 
     public void addCinemas(Set<String> cinemas) {
         Set<Cinema> cinemasToAdd = cinemas.stream()
@@ -154,10 +162,10 @@ public class Park {
         System.out.println();
     }
 
-    public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
+    public void removeProductsFromCinemaStore(String cinemaName, String foodName) {
         Cinema cinema = getCinemaByName(cinemaName);
         Product product = cinema.getCinemaStore().getProductByName(foodName);
-        if(product == null) {
+        if (product == null) {
             System.out.println("There is no such product!");
         } else {
             this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
@@ -177,7 +185,10 @@ public class Park {
                 .findFirst()
                 .get();
     }
-    /**----------------------------------------STORES----------------------------------------------*/
+
+    /**
+     * ----------------------------------------STORES----------------------------------------------
+     */
 
     public void addStores(List<Store> stores) {
         this.stores.addAll(stores);
@@ -187,12 +198,12 @@ public class Park {
         this.stores.remove(getStoreByName(storeName));
     }
 
-    public void addProductsToStore(String storeName, HashMap<Product,Integer> productsToAdd) {
+    public void addProductsToStore(String storeName, HashMap<Product, Integer> productsToAdd) {
         Store store = getStoreByName(storeName);
         store.addProducts(productsToAdd);
     }
 
-    public void addProductsToCinemaStore(String cinemaName, HashMap<Product,Integer> productsToAdd) {
+    public void addProductsToCinemaStore(String cinemaName, HashMap<Product, Integer> productsToAdd) {
         Cinema cinema = getCinemaByName(cinemaName);
 
         cinema.updateCinemaStore(productsToAdd);
@@ -212,7 +223,7 @@ public class Park {
                 .anyMatch(x -> x.getName().equals(name));
     }
 
-    public void removeProductsFromStore(String storeName,String foodName) {
+    public void removeProductsFromStore(String storeName, String foodName) {
         Store store = getStoreByName(storeName);
         store.removeProduct(store.getProductByName(foodName));
     }
@@ -245,10 +256,12 @@ public class Park {
                 .get();
     }
 
-    /**----------------------------------------ATTRACTIONS----------------------------------------------*/
+    /**
+     * ----------------------------------------ATTRACTIONS----------------------------------------------
+     */
 
     public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
-        attractions.forEach((x,v) -> this.attractions.add(new Attraction(x, v)));
+        attractions.forEach((x, v) -> this.attractions.add(new Attraction(x, v)));
     }
 
     public void removeAttraction(String attractionName) {
@@ -264,7 +277,9 @@ public class Park {
         attractions.forEach(System.out::println);
     }
 
-    /**-------------------------------Show Statistics functions- NOT FINISHED----------------------------------*/
+    /**
+     * -------------------------------Show Statistics functions- NOT FINISHED----------------------------------
+     */
     public void showUserStatistics() {
         if (users.size() == 0) {
             System.out.println("Sorry there are no users in the park yet.");
@@ -322,7 +337,10 @@ public class Park {
         Store store = getStoreByName(storeName);
         store.showProductsInStock();
     }
-     /**-------------------------------GetNames functions- FINISHED----------------------------------*/
+
+    /**
+     * -------------------------------GetNames functions- FINISHED----------------------------------
+     */
 
     public List<String> getStoreAllProductsNames(String storeName) {
         Store store = getStoreByName(storeName);
@@ -345,7 +363,7 @@ public class Park {
     public List<String> getMoviesFromCinema(String cinemaName) {
         Cinema cinema = getCinemaByName(cinemaName);
 
-        return  cinema.getAllMoviesNames();
+        return cinema.getAllMoviesNames();
     }
 
     public List<String> getAttractionsNames() {

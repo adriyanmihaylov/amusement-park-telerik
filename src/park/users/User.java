@@ -32,9 +32,11 @@ public class User {
     public int getAge() {
         return age;
     }
+
     public UserTicketPrice getUserType() {
         return this.userType;
     }
+
     public double getBudget() {
         return budget;
     }
@@ -42,16 +44,16 @@ public class User {
     public boolean getTicketNumber(String ticketNumber) {
         return this.ticket.getTicketNumber().equals(ticketNumber);
     }
+
     public double getTicketPrice() {
         return this.ticket.getTicketPrice();
     }
+
     public int getUserTicketCredits() {
         return ticket.getTicketCredits();
     }
-        // UNDER 18 ,PENSIONER, DISABLED - price 15$
-       // SMALLGROUP - price = 14$
-        // BIGGROUP - price = 13$
-    public void addTicket(String ticketNumber,double price) {
+
+    public void addTicket(String ticketNumber, double price) {
         this.ticket = new Ticket(ticketNumber, price);
     }
 
@@ -67,12 +69,6 @@ public class User {
     public void addBoughtProduct(Product product) {
         this.boughtProducts.add(product);
         this.budget -= product.getPrice();
-    }
-
-    public void sayAllProducts() {
-        for (Product product : boughtProducts) {
-            System.out.println(product);
-        }
     }
 
     public List<String> getAllProductsNames() {
@@ -114,6 +110,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|", this.name, this.age, this.budget,this.ticket.getTicketNumber());
+        return String.format("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|", this.name, this.age, this.budget, this.ticket.getTicketNumber());
     }
 }
