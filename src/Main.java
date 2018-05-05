@@ -828,25 +828,10 @@ public class Main {
             return;
         }
 
-        Store currentShop = park.getStoreByName(shopName);
         String productName = chooseProduct(shopName);
-        Product product = currentShop.getProductByName(productName);
-
+        
         //TODO test if the logic is working
-
-        if (product == null) {
-            return;
-        }
-
-        if (product.getPrice() > currentUser.getBudget()) {
-            System.out.println("Sorry you don't have enough money to buy this product!");
-            return;
-        }
-       
-        currentShop.removeOneProduct(product);
-        currentUser.addBoughtProduct(product);
-        currentShop.addMoney(product.getPrice());
-        System.out.println("You successfully bought: " + product + " and you have " + currentUser.getBudget() + " money left!g");
+        park.goShopping(shopName, productName, currentUser);
     }
 
     private static String chooseShop() throws Exception {

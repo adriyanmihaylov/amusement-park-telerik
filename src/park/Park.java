@@ -195,6 +195,25 @@ public class Park {
         store.removeProduct(store.getProductByName(foodName));
     }
 
+    public void goShopping(String shopName, String productName, User currentUser) {
+        Store shop = this.getStoreByName(shopName);
+        Product product = shop.getProductByName(productName);
+
+        if (product == null) {
+            return;
+        }
+
+        if (product.getPrice() > currentUser.getBudget()) {
+            System.out.println("Sorry you don't have enough money to buy this product!");
+            return;
+        }
+
+        shop.removeOneProduct(product);
+        currentUser.addBoughtProduct(product);
+        shop.addMoney(product.getPrice());
+        System.out.printf("You successfully bought: %s and you have %.2f money left!", product, currentUser.getBudget());
+    }
+
     /**----------------------------------------ATTRACTIONS----------------------------------------------*/
 
     public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
