@@ -9,6 +9,7 @@ import park.products.Product;
 import park.stores.FoodStore;
 import park.stores.Store;
 import park.users.User;
+import park.users.UserType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,14 +41,8 @@ public class Park {
         this.name = name;
     }
 
-    public int getTicketsCounter() {
-        return this.ticketsCounter;
-    }
-
-    //TODO change function to void
-    public String setTicketsCounter() {
-        this.ticketsCounter++;
-        return "";
+    public String addTicketsCounter() {
+        return this.ticketsCounter++ + "";
     }
 
 
@@ -57,7 +52,6 @@ public class Park {
 
     /**---------------------------------USER functions-------------------------------------*/
 
-    //TODO change the getter functions of USER
     public int findUserIndex(String name,String ticketNumber) {
         return users.stream()
                 .filter(x -> x.getName().equals(name))
@@ -67,26 +61,11 @@ public class Park {
                 .orElse(-1);
     }
 
-    //TODO change getUserByIndex to private
-    public User getUserByIndex(int userIndex) {
-        return this.users.get(userIndex);
-    }
-
-    //TODO remove index
-    public void updateUser(int index,User currentUser) {
-        users.set(index,currentUser);
-    }
-
-    //TODO change this to Private
     public void addUsers(List<User> users) {
         this.users.addAll(users);
     }
 
-    private void removeUser(User user) {
-        this.users.remove(user);
-    }
-
-    public void userGoShopping(int userIndex, String productName) {
+    public void consumeProduct(int userIndex, String productName) {
         User currentUser = this.getUserByIndex(userIndex);
         Product product = currentUser.getProductByName(productName);
 
@@ -99,10 +78,34 @@ public class Park {
         currentUser.consumeProduct(product);
     }
 
+    public double getUserBudget(int userIndex) {
+        return getUserByIndex(userIndex).getBudget();
+    }
+
+    public double getUserTicketPrice(int userIndex) {
+        return getUserByIndex(userIndex).getTicketPrice();
+    }
+
+    public void addCredits(int userIndex, int numberOfTickets) {
+        User user = getUserByIndex(userIndex);
+        if (user.getBudget() < numberOfTickets * user.getTicketPrice()) {
+            System.out.println("Sorry you don't have enough money!");
+        } else {
+            user.addCredits(numberOfTickets);
+            System.out.printf("%s now has %d credits and budget of %.2f$\n", user.getName(), user.getUserTicketCredits(), user.getBudget());
+        }
+    }
+
+    private User getUserByIndex(int userIndex) {
+        return this.users.get(userIndex);
+    }
+
+    private void removeUser(User user) {
+        this.users.remove(user);
+    }
 
     /**----------------------------------------CINEMAS----------------------------------------------*/
 
-    //TODO change this to Private
     public void addCinemas(Set<String> cinemas) {
         Set<Cinema> cinemasToAdd = cinemas.stream()
                 .map(Cinema::new)
@@ -110,7 +113,6 @@ public class Park {
         this.cinemas.addAll(cinemasToAdd);
     }
 
-    //TODO change this to Private
     public void removeCinema(String cinemaName) {
         cinemas.removeIf(x -> x.getName().equals(cinemaName));
     }
@@ -161,17 +163,8 @@ public class Park {
     }
     /**----------------------------------------STORES----------------------------------------------*/
 
-    //TODO change addStores to Private
     public void addStores(List<Store> stores) {
         this.stores.addAll(stores);
-    }
-
-    //TODO change getStoreByName() to private
-    public Store getStoreByName(String storeName) {
-        return stores.stream()
-                .filter(st -> st.getName().equals(storeName))
-                .findFirst()
-                .get();
     }
 
     public void removeStore(String storeName) {
@@ -208,9 +201,11 @@ public class Park {
         store.removeProduct(store.getProductByName(foodName));
     }
 
-    public void goShopping(String shopName, String productName, User currentUser) {
+    //TODO add product quantity
+    public void goShopping(String shopName, String productName, int currentUserIndex) {
         Store shop = this.getStoreByName(shopName);
         Product product = shop.getProductByName(productName);
+        User currentUser = getUserByIndex(currentUserIndex);
 
         if (product == null) {
             return;
@@ -227,6 +222,13 @@ public class Park {
         System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
     }
 
+    private Store getStoreByName(String storeName) {
+        return stores.stream()
+                .filter(st -> st.getName().equals(storeName))
+                .findFirst()
+                .get();
+    }
+
     /**----------------------------------------ATTRACTIONS----------------------------------------------*/
 
     public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
@@ -237,7 +239,6 @@ public class Park {
         attractions.removeIf(x -> x.getName().equals(attractionName));
     }
 
-    //TODO change displayAttractions()
     public void displayAttractions() {
         if (attractions.size() == 0) {
             System.out.println("Sorry the park does not have attractions yet.\n");
@@ -245,7 +246,6 @@ public class Park {
         }
 
         attractions.forEach(System.out::println);
-        System.out.println();
     }
 
     /**-------------------------------Show Statistics functions- NOT FINISHED----------------------------------*/

@@ -23,9 +23,6 @@ public class Main {
         mainMenu();
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
     public static void mainMenu() throws Exception {
         String[] options = {"User menu", "Admin menu", "Exit"};
         printOptions(Arrays.asList(options));
@@ -51,9 +48,6 @@ public class Main {
         mainMenu();
     }
 
-    /**
-     * METHOD FINISHED
-     **/
     public static void userMenu() throws Exception {
         String[] options = {"Buy ticket", "Enter the park", "Exit"};
         printOptions(Arrays.asList(options));
@@ -63,7 +57,12 @@ public class Main {
                 buyTicketMenu();
                 break;
             case "2":
-                parkMenu(null, -1);
+                int userIndex = findUserInPark();
+                if(userIndex < 0) {
+                    System.out.println("There is no such user!");
+                } else {
+                    parkMenu(userIndex);
+                }
                 break;
             case "3":
                 return;
@@ -74,9 +73,6 @@ public class Main {
         userMenu();
     }
 
-    /**
-     * METHOD FINISHED
-     **/
     private static void adminMenu() throws Exception {
         String[] options = {"Stores", "Attractions", "Cinema", "Park Statistics", "Exit"};
         printOptions(Arrays.asList(options));
@@ -105,7 +101,6 @@ public class Main {
 
     /**------------------------------------ADMIN functions-----------------------------------------------------*/
 
-    /**ALL METHODS ARE FINISHED**/
     /**
      * ------------------------------STORES functions---------------------------------
      */
@@ -156,6 +151,7 @@ public class Main {
             return "";
         }
         options.add("Exit");
+        System.out.println("Please choose a store");
 
         printOptions(options);
 
@@ -191,7 +187,6 @@ public class Main {
         }
     }
 
-    //TODO move this to park - hide Store class
     public static List<Store> createStore(int numberOfStores) throws Exception {
         List<Store> stores = new ArrayList<>();
         int flag = 0;
@@ -248,53 +243,33 @@ public class Main {
         }
     }
 
-    /**-------------------------------------------------------------------------------*/
-
     /**
      * ------------------------------PRODUCTS functions-------------------------------
      */
 
-    private static String chooseProduct(String storeName) throws Exception {
-        System.out.println("Please choose a product: ");
-        List<String> options = park.getStoreAllProductsNames(storeName);
+    private static String chooseProduct(String storeName,int currentUserIndex) throws Exception {
+        List<String> options = new ArrayList<>();
+        if (!storeName.isEmpty()) {
+            options = park.getStoreAllProductsNames(storeName);
+        } else if(currentUserIndex >= 0) {
+            options = park.getUserAllProductsNames(currentUserIndex);
+        }
 
         if (options.size() == 0) {
-            System.out.println("There are no products in store " + storeName + "!");
+            System.out.println("There are no products!");
             return "";
         }
-        options.add("Exit");
 
+        options.add("Exit");
+        System.out.println("Please choose a product: ");
         printOptions(options);
 
         int command = readPositiveInteger();
         if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseProduct(storeName);
+            return chooseProduct(storeName, currentUserIndex);
         }
         return options.get(command - 1);
-    }
-
-    private static String chooseProduct(int currentUser) throws Exception {
-        List<String> options = park.getUserAllProductsNames(currentUser);
-
-        if (options.size() == 0) {
-            System.out.println("Sorry, you don't have any bought items");
-            return "";
-        }
-
-        options.add("Exit");
-
-        printOptions(options);
-
-        int command = readPositiveInteger();
-
-        if (command < 1 || options.size() < command) {
-            System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseProduct(currentUser);
-        }
-
-        return options.get(command - 1);
-
     }
 
     private static void addRemoveProductsMenu(String storeName) throws Exception {
@@ -327,13 +302,12 @@ public class Main {
     }
 
     private static void removeProductFromStore(String storeName) throws Exception {
-        String productName = chooseProduct(storeName);
+        String productName = chooseProduct(storeName,-1);
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
 
         park.removeProductsFromStore(storeName, productName);
-
     }
 
     private static HashMap<Product, Integer> createFoodProduct() throws Exception {
@@ -669,7 +643,7 @@ public class Main {
         int command = readPositiveInteger();
         if (command > options.size() || command < 1) {
             System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseProduct(cinemaName);
+            return chooseProduct(cinemaName,-1);
         }
         return options.get(command - 1);
     }
@@ -730,8 +704,6 @@ public class Main {
         }
     }
 
-    /**-------------------------------END OF CINEMA functions-------------------------------*/
-
     /**
      * -------------------------------PRINTING STATISTICS functions-------------------------
      */
@@ -781,15 +753,10 @@ public class Main {
         park.showStoreStatistics();
     }
 
-    /**---------------------------END OF PRINTING STATISTICS functions----------------------*/
-
     /**--------------------------------------END OF ADMIN functions-----------------------------------------*/
 
     /**---------------------------------------USER functions------------------------------------------------*/
 
-    /**
-     * METHOD FINISHED
-     **/
     public static void buyTicketMenu() throws Exception {
         String[] options = {"SingleTicket", "GroupTicket", "Exit"};
         printOptions(Arrays.asList(options));
@@ -797,12 +764,12 @@ public class Main {
 
         switch (readString()) {
             case "1":
-                users.addAll(createUser(1));
+                users.addAll(createUsers(1));
                 break;
             case "2":
                 int sizeOfGroup = readSizeOfGroup();
                 if (sizeOfGroup > 0) {
-                    users.addAll(createUser(sizeOfGroup));
+                    users.addAll(createUsers(sizeOfGroup));
                 }
                 break;
             case "3":  //exit
@@ -814,37 +781,35 @@ public class Main {
         park.addUsers(users);
     }
 
-    /**
-     * METHOD FINISHED
-     **/
     // TODO - ADD CONSUME PRODUCTS/LIST PRODUCTS
-    private static void parkMenu(User currentUser, int indexOfUser) throws Exception {
-        if (currentUser == null) {
-            indexOfUser = findUserInPark();
-            if (indexOfUser < 0) {
-                System.out.println("There is no such user!");
-                return;
-            } else {
-                currentUser = park.getUserByIndex(indexOfUser);
-            }
-        }
+    public static int findUserInPark() throws Exception {
+        System.out.print("Please enter user name: ");
+        String name = readName();
+        System.out.print("Please enter ticket number: ");
+        String ticketNumber = readString();
+        System.out.println();
+
+        return park.findUserIndex(name, ticketNumber);
+    }
+
+    private static void parkMenu(int indexOfUser) throws Exception {
         String[] options = {"Add credits", "Go shopping", "Consume a product", "Watch a movie", "Ride attractions", "Exit"};
         printOptions(Arrays.asList(options));
         String command = readString();
         switch (command) {
-            case "1": /**DONE*/
-                addCredits(indexOfUser, currentUser);
+            case "1":
+                addCredits(indexOfUser);
                 break;
             case "2":
-                goShopping(indexOfUser, currentUser);
+                goShopping(indexOfUser);
                 break;
             case "3":
-                consumeProduct(indexOfUser, currentUser);
+                consumeProduct(indexOfUser);
             case "4":
-                watchMovie(indexOfUser, currentUser);
+                watchMovie(indexOfUser);
                 break;
             case "5":
-                rideAttractions(indexOfUser, currentUser);
+                rideAttractions(indexOfUser);
                 break;
             case "6":
                 return;
@@ -852,75 +817,48 @@ public class Main {
                 System.out.println("Invalid choice!");
                 break;
         }
-        parkMenu(currentUser, indexOfUser);
+        parkMenu(indexOfUser);
     }
 
-    private static void consumeProduct(int indexOfUser, User currentUser) throws Exception{
-        System.out.println("Please choose a product: ");
-
-        String productName = chooseProduct(indexOfUser);
+    private static void consumeProduct(int userIndex) throws Exception{
+        String productName = chooseProduct("",userIndex);
 
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
 
-        park.userGoShopping(indexOfUser, productName);
+        park.consumeProduct(userIndex, productName);
     }
 
-    //TODO TEST addCredits with wrong input
-    private static void addCredits(int currentUserIndex, User currentUser) throws Exception {
-        System.out.println("1 ticket = 10 credits");
+    private static void addCredits(int userIndex) throws Exception {
+        System.out.printf("Your budget is %.2f$\n", park.getUserBudget(userIndex));
+        System.out.printf("Price for 1 ticket is %.2f$\n",park.getUserTicketPrice(userIndex));
+        System.out.println("1 ticket has 10 credits");
         System.out.println("Please enter the number of tickets:  ");
 
         int numberOfTickets = readPositiveInteger();
-        if (currentUser.getBudget() < numberOfTickets * currentUser.getTicketPrice()) {
-            System.out.println("Sorry you don't have enough money!");
-        } else {
-            currentUser.addCredits(numberOfTickets);
-            park.updateUser(currentUserIndex, currentUser);
-            System.out.printf("User %s now has %d credits and budget of %.2f$\n", currentUser.getName(), currentUser.getUserTicketCredits(), currentUser.getBudget());
-        }
+        park.addCredits(userIndex, numberOfTickets);
     }
 
     //TODO maybe change the products in the user to hashmap
-    private static void goShopping(int indexOfUser, User currentUser) throws Exception {
-        System.out.println("Please choose a shop: ");
-        String shopName = chooseShop();
-        if (shopName.equals("Exit") || shopName.isEmpty()) {
+    private static void goShopping(int userIndex) throws Exception {
+        String storeName = chooseStore();
+        if (storeName.equals("Exit") || storeName.isEmpty()) {
             return;
         }
 
-        String productName = chooseProduct(shopName);
+        String productName = chooseProduct(storeName,-1);
 
         //TODO test if the logic is working
-        park.goShopping(shopName, productName, currentUser);
-    }
-
-    private static String chooseShop() throws Exception {
-        List<String> options = park.getStoresNames();
-
-        if (options.size() == 0) {
-            System.out.println("Sorry there are no shops in the park!");
-            return "";
-        }
-        options.add("Exit");
-
-        printOptions(options);
-
-        int command = readPositiveInteger();
-        if (command > options.size() || command < 1) {
-            System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseShop();
-        }
-        return options.get(command - 1);
+        park.goShopping(storeName, productName, userIndex);
     }
 
     //TODO add functionality
-    private static void watchMovie(int indexOfUser, User currentUser) {
+    private static void watchMovie(int userIndex) {
     }
 
     //TODO add functionality
-    public static void rideAttractions(int indexOfUser, User currentUser) {
+    public static void rideAttractions(int userIndex) {
     }
 
     /**------------------------------------END OF USER functions----------------------------------------------*/
@@ -929,9 +867,6 @@ public class Main {
     /**CREATING USERS AND SELLING TICKETS TO THEM*/
     /**-----------------------------------------------------------------------------------------*/
 
-    /**
-     * METHOD FINISHED
-     **/
     public static int readSizeOfGroup() throws IOException {
         System.out.print("Enter number of members: ");
         int numberOfUsers = readPositiveInteger();
@@ -943,11 +878,8 @@ public class Main {
         return numberOfUsers;
     }
 
-    /**
-     * METHOD FINISHED
-     **/
     //TODO clear the console
-    public static List<User> createUser(int numberOfUsers) throws Exception {
+    public static List<User> createUsers(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
         UserType userTypeOfTicket = null;
 
@@ -990,10 +922,7 @@ public class Main {
     }
 
     //TODO think if methods marked with [!] can be Interfaces
-
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     public static String readName() throws Exception {
         String name = readString();
         try {
@@ -1006,9 +935,7 @@ public class Main {
         return name;
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     public static String validateName(String name) throws NameException {
         if (name.length() < 3 || name.length() > 35) {
             throw new NameException("The name has to be between 3 and 35 symbols!");
@@ -1019,9 +946,7 @@ public class Main {
         }
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     private static int readAge() throws IOException {
         String input = readString();
         int age;
@@ -1035,9 +960,7 @@ public class Main {
         return age;
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     private static int validateAge(String input) throws AgeException, PositiveIntegerException {
         int age;
         try {
@@ -1051,9 +974,7 @@ public class Main {
         return age;
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     private static double readMoney() throws IOException {
         String input = readString();
         double money;
@@ -1067,9 +988,7 @@ public class Main {
         return money;
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     private static double validateMoney(String input) throws MoneyException {
         double money;
         try {
@@ -1084,9 +1003,7 @@ public class Main {
         return money;
     }
 
-    /**
-     * METHOD FINISHED
-     **/
+    /** [!] METHOD FINISHED*/
     private static UserType readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(Arrays.asList(options));
@@ -1105,16 +1022,13 @@ public class Main {
         }
     }
 
-    //TODO create something better - change setTicketsCounter to void and make everything stream()
     public static List<User> buyTickets(List<User> users) {
-        users.forEach(user -> user.addTicket(park.getTicketsCounter() + park.setTicketsCounter()));
+        users.forEach(user -> user.addTicket(park.addTicketsCounter()));
         return users;
     }
-    /**-----------------------------------------------------------------------------------------*/
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+    /**-----------------------------------------------------------------------------------------*/
+    /** [!] METHOD FINISHED*/
     private static int readPositiveInteger() throws IOException {
         String input = readString();
         int number;
@@ -1128,9 +1042,7 @@ public class Main {
         return number;
     }
 
-    /**
-     * [!] METHOD FINISHED
-     **/
+     /** [!] METHOD FINISHED*/
     private static int validatePositiveInteger(String input) throws PositiveIntegerException {
         int number;
         try {
@@ -1145,28 +1057,13 @@ public class Main {
         return number;
     }
 
-    public static int findUserInPark() throws Exception {
-        System.out.print("Please enter user name: ");
-        String name = readName();
-        System.out.print("Please enter ticket number: ");
-        String ticketNumber = readString();
-        System.out.println();
 
-        return park.findUserIndex(name, ticketNumber);
-    }
-
-    /**
-     * METHOD FINISHED
-     **/
     private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String command = reader.readLine();
         return command;
     }
 
-    /**
-     * METHOD FINISHED
-     **/
     private static void printOptions(List<String> options) {
         IntStream.range(0, options.size())
                 .mapToObj(i -> (i + 1) + "." + options.get(i))

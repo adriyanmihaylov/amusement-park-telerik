@@ -20,6 +20,7 @@ public class User {
         this.name = name;
         this.age = age;
         this.budget = budget;
+        this.ticket = null;
         this.type = type;
         this.boughtProducts = new ArrayList<>();
     }
