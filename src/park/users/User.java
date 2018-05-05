@@ -12,16 +12,16 @@ public class User {
     private String name;
     private int age;
     private double budget;
-    private UserType type;
+    private UserTicketPrice userType;
     private Ticket ticket;
     private ArrayList<Product> boughtProducts;
 
-    public User(String name, int age, double budget, UserType type) {
+    public User(String name, int age, double budget, UserTicketPrice type) {
         this.name = name;
         this.age = age;
         this.budget = budget;
         this.ticket = null;
-        this.type = type;
+        this.userType = type;
         this.boughtProducts = new ArrayList<>();
     }
 
@@ -32,7 +32,9 @@ public class User {
     public int getAge() {
         return age;
     }
-
+    public UserTicketPrice getUserType() {
+        return this.userType;
+    }
     public double getBudget() {
         return budget;
     }
@@ -49,16 +51,8 @@ public class User {
         // UNDER 18 ,PENSIONER, DISABLED - price 15$
        // SMALLGROUP - price = 14$
         // BIGGROUP - price = 13$
-    public void addTicket(String ticketNumber) {
-        if (this.type == UserType.UNDER18 || this.type == UserType.PENSIONER || this.type == UserType.DISABLED) {
-            this.ticket = new Ticket(ticketNumber, 15);
-        } else if (this.type == UserType.ADULT) {
-            this.ticket = new Ticket(ticketNumber, 20);
-        } else if (this.type == UserType.SMALLGROUP) {
-            this.ticket = new Ticket(ticketNumber, 14);
-        } else {
-            this.ticket = new Ticket(ticketNumber, 13);
-        }
+    public void addTicket(String ticketNumber,double price) {
+        this.ticket = new Ticket(ticketNumber, price);
     }
 
     public Ticket getUserTicket() {

@@ -9,7 +9,7 @@ import park.products.Product;
 import park.stores.FoodStore;
 import park.stores.Store;
 import park.users.User;
-import park.users.UserType;
+import park.users.UserTicketPrice;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +21,7 @@ public class Park {
     private List<User> users;
     private List<Cinema> cinemas;
     private Set<Attraction> attractions;
+    private EnumMap<UserTicketPrice,Double> ticketsPrices;
     private int ticketsCounter;
 
     public Park(String name,String password) {
@@ -30,11 +31,25 @@ public class Park {
         this.users = new ArrayList<>();
         this.cinemas = new ArrayList<>();
         this.attractions = new HashSet<>();
+        this.ticketsPrices = new EnumMap<UserTicketPrice, Double>(UserTicketPrice.class);
         this.ticketsCounter = 1;
+       setTicketsPrice();
     }
     /**---------------------------------Getters and setters-------------------------------------*/
     public String getName() {
         return name;
+    }
+    private void setTicketsPrice() {
+        ticketsPrices.put(UserTicketPrice.UNDER18, (double) 15);
+        ticketsPrices.put(UserTicketPrice.PENSIONER, (double) 15);
+        ticketsPrices.put(UserTicketPrice.DISABLED, (double) 15);
+        ticketsPrices.put(UserTicketPrice.ADULT, (double) 20);
+        ticketsPrices.put(UserTicketPrice.SMALLGROUP, (double) 14);
+        ticketsPrices.put(UserTicketPrice.BIGGROUP, (double) 13);
+    }
+
+    public double getTicketsPrices(UserTicketPrice type) {
+        return this.ticketsPrices.get(type);
     }
 
     private void setName(String name) {

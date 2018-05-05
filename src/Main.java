@@ -7,7 +7,7 @@ import park.stores.CashDesk;
 import park.stores.FoodStore;
 import park.stores.SouvenirStore;
 import park.stores.Store;
-import park.users.UserType;
+import park.users.UserTicketPrice;
 import park.users.User;
 
 import java.io.BufferedReader;
@@ -881,12 +881,12 @@ public class Main {
     //TODO clear the console
     public static List<User> createUsers(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
-        UserType userTypeOfTicket = null;
+        UserTicketPrice userTicketType = null;
 
         if (numberOfUsers == 5) {
-            userTypeOfTicket = userTypeOfTicket.SMALLGROUP;
+            userTicketType = userTicketType.SMALLGROUP;
         } else if (numberOfUsers > 5) {
-            userTypeOfTicket = userTypeOfTicket.BIGGROUP;
+            userTicketType = userTicketType.BIGGROUP;
         }
         int maxAge = 1;
 
@@ -897,26 +897,25 @@ public class Main {
             int age = readAge();
             System.out.print("What's the budget of " + name + ": ");
             double budget = readMoney();
-
-            if (userTypeOfTicket == null) {
+            if(userTicketType != userTicketType.SMALLGROUP && userTicketType != userTicketType.BIGGROUP) {
                 if (age < 18) {
-                    userTypeOfTicket = userTypeOfTicket.UNDER18;
+                    userTicketType = userTicketType.UNDER18;
                 } else {
-                    userTypeOfTicket = readTicketType();
+                    userTicketType = readTicketType();
                 }
             }
 
             maxAge = Math.max(maxAge, age);
-            users.add(new User(name, age, budget, userTypeOfTicket));
+            users.add(new User(name, age, budget,userTicketType));
             System.out.println();
         }
         if (maxAge < 14) {
             System.out.println("You can not enter the park because there is no user older than 14 with you!");
             return new ArrayList<>();
         } else { // TODO clear the console here
-            users = buyTickets(users);
+            buyTickets(users);
             System.out.println("Successfully added");
-            users.forEach(user -> System.out.println(user.toString()));
+            users.forEach(k -> System.out.println(k.toString()));
             return users;
         }
     }
@@ -1004,17 +1003,17 @@ public class Main {
     }
 
     /** [!] METHOD FINISHED*/
-    private static UserType readTicketType() throws IOException {
+    private static UserTicketPrice readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(Arrays.asList(options));
         String command = readString();
         switch (command) {
             case "1":
-                return UserType.ADULT;
+                return UserTicketPrice.ADULT;
             case "2":
-                return UserType.PENSIONER;
+                return UserTicketPrice.PENSIONER;
             case "3":
-                return UserType.DISABLED;
+                return UserTicketPrice.DISABLED;
             default:
                 System.out.println("Not a valid choice!");
                 System.out.println("Please enter your choice again!");
@@ -1023,7 +1022,7 @@ public class Main {
     }
 
     public static List<User> buyTickets(List<User> users) {
-        users.forEach(user -> user.addTicket(park.addTicketsCounter()));
+        users.forEach((user -> user.addTicket(park.addTicketsCounter(), park.getTicketsPrices(user.getUserType()))));
         return users;
     }
 

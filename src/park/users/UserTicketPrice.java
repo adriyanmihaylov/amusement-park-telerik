@@ -1,6 +1,6 @@
 package park.users;
 
-public enum UserType {
+public enum UserTicketPrice {
     UNDER18,
     ADULT,
     PENSIONER,
