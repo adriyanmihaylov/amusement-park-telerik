@@ -86,6 +86,19 @@ public class Park {
         this.users.remove(user);
     }
 
+    public void userGoShopping(int userIndex, String productName) {
+        User currentUser = this.getUserByIndex(userIndex);
+        Product product = currentUser.getProductByName(productName);
+
+        if (product == null) {
+            System.out.println("Sorry the product was not found.");
+            return;
+        }
+
+        //TODO test if the logic is working
+        currentUser.consumeProduct(product);
+    }
+
 
     /**----------------------------------------CINEMAS----------------------------------------------*/
 
@@ -211,7 +224,7 @@ public class Park {
         shop.removeOneProduct(product);
         currentUser.addBoughtProduct(product);
         shop.addMoney(product.getPrice());
-        System.out.printf("You successfully bought: %s and you have %.2f money left!", product, currentUser.getBudget());
+        System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
     }
 
     /**----------------------------------------ATTRACTIONS----------------------------------------------*/
@@ -299,6 +312,12 @@ public class Park {
         Store store = getStoreByName(storeName);
 
         return store.getAllProductsNames();
+    }
+
+    public List<String> getUserAllProductsNames(int userIndex) {
+        User user = getUserByIndex(userIndex);
+
+        return user.getAllProductsNames();
     }
 
     public List<String> getAllCinemasNames() {

@@ -9,14 +9,18 @@ public class ProductToEat extends FoodProduct {
         super(name, price, expirationDate);
     }
 
+    private String consumeProductString() {
+        return String.format("Product %s with the price of: %.2f and expiration date: %s", this.getName(),  this.getPrice(), this.getExparationDate());
+    }
+
     @Override
     public void consume() {
-        System.out.printf("%s was eaten.\n", this);
+        System.out.printf("%s was eaten.\n", this.consumeProductString());
     }
 
     @Override
     public String toString() {
-        return String.format("%s: food", super.toString());
+        return String.format("%s\t food", super.toString());
     }
 
 }

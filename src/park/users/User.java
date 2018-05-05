@@ -1,9 +1,12 @@
 package park.users;
 
+import park.interfaces.IConsumable;
+import park.interfaces.IUsable;
 import park.products.Product;
 import park.products.Ticket;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private String name;
@@ -75,6 +78,43 @@ public class User {
         for (Product product : boughtProducts) {
             System.out.println(product);
         }
+    }
+
+    public List<String> getAllProductsNames() {
+        List<String> productNames = new ArrayList<>();
+
+        for (Product product : boughtProducts) {
+            productNames.add(product.getName());
+        }
+
+        return productNames;
+
+    }
+
+    public Product getProductByName(String productName) {
+        for (Product product : boughtProducts) {
+            if (product.getName().equals(productName)) {
+                return product;
+            }
+        }
+
+        return null;
+    }
+
+    public void consumeProduct(Product product) {
+        boughtProducts.remove(product);
+
+        if (product instanceof IConsumable) {
+            ((IConsumable) product).consume();
+            return;
+        }
+
+        if (product instanceof IUsable) {
+            ((IUsable) product).use();
+            return;
+        }
+
+
     }
 
     @Override
