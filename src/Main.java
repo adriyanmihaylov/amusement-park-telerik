@@ -866,9 +866,7 @@ public class Main {
 
     /**------------------------------------END OF USER functions----------------------------------------------*/
 
-
-    /**CREATING USERS AND SELLING TICKETS TO THEM*/
-    /**-----------------------------------------------------------------------------------------*/
+    /**-----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------*/
 
     public static int readSizeOfGroup() throws IOException {
         System.out.print("Enter number of members: ");
@@ -881,7 +879,6 @@ public class Main {
         return numberOfUsers;
     }
 
-    //TODO clear the console
     public static List<User> createUsers(int numberOfUsers) throws Exception {
         List<User> users = new ArrayList<>();
         UserTicketPrice userTicketType = null;
@@ -923,89 +920,6 @@ public class Main {
         }
     }
 
-    //TODO think if methods marked with [!] can be Interfaces
-    /** [!] METHOD FINISHED*/
-    public static String readName() throws Exception {
-        String name = readString();
-        try {
-            validateName(name);
-        } catch (NameException e) {
-            System.out.println(e);
-            System.out.print("Please enter valid name ");
-            return readName();
-        }
-        return name;
-    }
-
-    /** [!] METHOD FINISHED*/
-    public static String validateName(String name) throws NameException {
-        if (name.length() < 3 || name.length() > 35) {
-            throw new NameException("The name has to be between 3 and 35 symbols!");
-        } else if (!name.matches("[a-zA-Z]+")) {
-            throw new NameException("The name must contain only letters!");
-        } else {
-            return name;
-        }
-    }
-
-    /** [!] METHOD FINISHED*/
-    private static int readAge() throws IOException {
-        String input = readString();
-        int age;
-        try {
-            age = validateAge(input);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.print("Please enter a valid age: ");
-            return readAge();
-        }
-        return age;
-    }
-
-    /** [!] METHOD FINISHED*/
-    private static int validateAge(String input) throws AgeException, PositiveIntegerException {
-        int age;
-        try {
-            age = Integer.parseInt(input);
-        } catch (Exception e) {
-            throw new PositiveIntegerException("The entered is not a number!");
-        }
-        if (age < 1 || age > 114) {
-            throw new AgeException("Invalid age! Age has to be between 1 and 114");
-        }
-        return age;
-    }
-
-    /** [!] METHOD FINISHED*/
-    private static double readMoney() throws IOException {
-        String input = readString();
-        double money;
-        try {
-            money = validateMoney(input);
-        } catch (MoneyException e) {
-            System.out.println(e);
-            System.out.print("Please enter again: ");
-            return readMoney();
-        }
-        return money;
-    }
-
-    /** [!] METHOD FINISHED*/
-    private static double validateMoney(String input) throws MoneyException {
-        double money;
-        try {
-            money = Double.parseDouble(input);
-        } catch (NumberFormatException e) {
-            throw new MoneyException("The entered is not a number!");
-        }
-        if (money < 0) {
-            throw new MoneyException("Money can't be less than 0! ");
-        }
-
-        return money;
-    }
-
-    /** [!] METHOD FINISHED*/
     private static UserTicketPrice readTicketType() throws IOException {
         String[] options = {"Adult", "Pensioner", "Disabled"};
         printOptions(Arrays.asList(options));
@@ -1029,22 +943,99 @@ public class Main {
         return users;
     }
 
-    /**-----------------------------------------------------------------------------------------*/
-    /** [!] METHOD FINISHED*/
+    /**------------------------------------Exception methods -----------------------------------------------------*/
+    public static String readName() throws Exception {
+        String name = readString();
+        try {
+            validateName(name);
+        } catch (NameException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter valid name ");
+            return readName();
+        }
+        return name;
+    }
+
+    public static String validateName(String name) throws NameException {
+        if (name.length() < 3 || name.length() > 35) {
+            throw new NameException("The name has to be between 3 and 35 symbols!");
+        } else if (!name.matches("[a-zA-Z]+")) {
+            throw new NameException("The name must contain only letters!");
+        } else {
+            return name;
+        }
+    }
+
+    private static int readAge() throws IOException {
+        String input = readString();
+        int age;
+        try {
+            age = validateAge(input);
+        } catch (AgeException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter a valid age: ");
+            return readAge();
+        } catch (PositiveIntegerException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter a valid age: ");
+            return readAge();
+        }
+        return age;
+    }
+
+    private static int validateAge(String input) throws AgeException, PositiveIntegerException {
+        int age;
+        try {
+            age = Integer.parseInt(input);
+        } catch (Exception e) {
+            throw new PositiveIntegerException("The entered is not a number!");
+        }
+        if (age < 1 || age > 114) {
+            throw new AgeException("Invalid age! Age has to be between 1 and 114");
+        }
+        return age;
+    }
+
+    private static double readMoney() throws IOException {
+        String input = readString();
+        double money;
+        try {
+            money = validateMoney(input);
+        } catch (MoneyException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter again: ");
+            return readMoney();
+        }
+        return money;
+    }
+
+    private static double validateMoney(String input) throws MoneyException {
+        double money;
+        try {
+            money = Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            throw new MoneyException("The entered is not a number!");
+        }
+        if (money < 0) {
+            throw new MoneyException("Money can't be less than 0! ");
+        }
+
+        return money;
+    }
+
     private static int readPositiveInteger() throws IOException {
         String input = readString();
         int number;
         try {
             number = validatePositiveInteger(input);
         } catch (PositiveIntegerException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             System.out.print("Please enter a valid number: ");
             return readPositiveInteger();
         }
         return number;
     }
 
-     /** [!] METHOD FINISHED*/
     private static int validatePositiveInteger(String input) throws PositiveIntegerException {
         int number;
         try {
@@ -1058,7 +1049,7 @@ public class Main {
 
         return number;
     }
-
+    /**---------------------------------------------------------------------------------------------------------*/
 
     private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
