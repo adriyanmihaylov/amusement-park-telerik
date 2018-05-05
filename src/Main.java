@@ -758,21 +758,24 @@ public class Main {
     /**---------------------------------------USER functions------------------------------------------------*/
 
     public static void buyTicketMenu() throws Exception {
-        String[] options = {"SingleTicket", "GroupTicket", "Exit"};
+        String[] options = {"See ticket prices", "SingleTicket", "GroupTicket", "Exit"};
         printOptions(Arrays.asList(options));
         List<User> users = new ArrayList<>();
 
         switch (readString()) {
             case "1":
-                users.addAll(createUsers(1));
+                park.getAllTicketsPrices().forEach(System.out::println);
                 break;
             case "2":
+                users.addAll(createUsers(1));
+                break;
+            case "3":
                 int sizeOfGroup = readSizeOfGroup();
                 if (sizeOfGroup > 0) {
                     users.addAll(createUsers(sizeOfGroup));
                 }
                 break;
-            case "3":  //exit
+            case "4":  //exit
                 return;
             default:
                 System.out.println("Invalid choice!");

@@ -12,6 +12,7 @@ import park.users.User;
 import park.users.UserTicketPrice;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Park {
@@ -31,15 +32,15 @@ public class Park {
         this.users = new ArrayList<>();
         this.cinemas = new ArrayList<>();
         this.attractions = new HashSet<>();
-        this.ticketsPrices = new EnumMap<UserTicketPrice, Double>(UserTicketPrice.class);
+        setTicketsPrice();
         this.ticketsCounter = 1;
-       setTicketsPrice();
     }
     /**---------------------------------Getters and setters-------------------------------------*/
     public String getName() {
         return name;
     }
     private void setTicketsPrice() {
+        this.ticketsPrices = new EnumMap<>(UserTicketPrice.class);
         ticketsPrices.put(UserTicketPrice.UNDER18, (double) 15);
         ticketsPrices.put(UserTicketPrice.PENSIONER, (double) 15);
         ticketsPrices.put(UserTicketPrice.DISABLED, (double) 15);
@@ -363,5 +364,16 @@ public class Park {
         Cinema cinema = getCinemaByName(cinemaName);
 
         return cinema.getProductsNamesInCinema();
+    }
+
+    public List<String> getAllTicketsPrices() {
+        List<String> ticketPrices = new ArrayList<>();
+        ticketPrices.add(String.format("%-10s", "Ticket") + " | Price");
+
+        ticketPrices.addAll(this.ticketsPrices.entrySet().stream()
+                .map(ticket -> String.format("%1$-10s | %2$.2f$", ticket.getKey(), ticket.getValue()))
+                .collect(Collectors.toList()));
+
+        return ticketPrices;
     }
 }
