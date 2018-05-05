@@ -31,47 +31,33 @@ public class Park {
         this.attractions = new HashSet<>();
         this.ticketsCounter = 1;
     }
-
+    /**---------------------------------Getters and setters-------------------------------------*/
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
-    }
-
-
-
-    private List<Cinema> getCinemas() {
-        return cinemas;
-    }
-
-    public Set<Attraction> getAttractions() {
-        return attractions;
     }
 
     public int getTicketsCounter() {
         return this.ticketsCounter;
     }
 
+    //TODO change function to void
     public String setTicketsCounter() {
         this.ticketsCounter++;
         return "";
     }
 
-    public void printAllStores() {
-        stores.forEach(System.out::println);
+
+    public boolean checkPassword(String password) {
+        return this.password.equals(password);
     }
 
-    public int getStoreIndex(String name) {
-        return stores.stream()
-                .filter(x -> x.getName().equals(name))
-                .findFirst()
-                .map(x -> stores.indexOf(x))
-                .orElse(-1);
-    }
+    /**---------------------------------USER functions-------------------------------------*/
 
-
+    //TODO change the getter functions of USER
     public int findUserIndex(String name,String ticketNumber) {
         return users.stream()
                 .filter(x -> x.getName().equals(name))
@@ -81,36 +67,29 @@ public class Park {
                 .orElse(-1);
     }
 
+    //TODO change getUserByIndex to private
     public User getUserByIndex(int userIndex) {
         return this.users.get(userIndex);
     }
 
-    public void addStores(List<Store> stores) {
-        this.stores.addAll(stores);
+    //TODO remove index
+    public void updateUser(int index,User currentUser) {
+        users.set(index,currentUser);
     }
 
+    //TODO change this to Private
     public void addUsers(List<User> users) {
         this.users.addAll(users);
     }
 
-    public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
-        attractions.forEach((x,v) -> this.attractions.add(new Attraction(x, v)));
+    private void removeUser(User user) {
+        this.users.remove(user);
     }
 
-    public void removeAttraction(String attractionName) {
-        attractions.removeIf(x -> x.getName().equals(attractionName));
-    }
 
-    public void displayAttractions() {
-        if (attractions.size() == 0) {
-            System.out.println("Sorry the park does not have attractions yet.\n");
-            return;
-        }
+    /**----------------------------------------CINEMAS----------------------------------------------*/
 
-        attractions.forEach(System.out::println);
-        System.out.println();
-    }
-
+    //TODO change this to Private
     public void addCinemas(Set<String> cinemas) {
         Set<Cinema> cinemasToAdd = cinemas.stream()
                 .map(Cinema::new)
@@ -118,6 +97,7 @@ public class Park {
         this.cinemas.addAll(cinemasToAdd);
     }
 
+    //TODO change this to Private
     public void removeCinema(String cinemaName) {
         cinemas.removeIf(x -> x.getName().equals(cinemaName));
     }
@@ -143,13 +123,37 @@ public class Park {
         System.out.println();
     }
 
-    public Cinema getCinemaByName(String cinemaName) {
+    public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+        Product product = cinema.getCinemaStore().getProductByName(foodName);
+        if(product == null) {
+            System.out.println("There is no such product!");
+        } else {
+            this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
+            System.out.println("Product " + product.getName() + " successfully removed!");
+        }
+    }
+
+    public void showCinemaStoreProducts(String cinemaName) {
+        Cinema cinema = getCinemaByName(cinemaName);
+
+        cinema.getCinemaStore().showProductsInStock();
+    }
+
+    private Cinema getCinemaByName(String cinemaName) {
         return cinemas.stream()
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
                 .get();
     }
+    /**----------------------------------------STORES----------------------------------------------*/
 
+    //TODO change addStores to Private
+    public void addStores(List<Store> stores) {
+        this.stores.addAll(stores);
+    }
+
+    //TODO change getStoreByName() to private
     public Store getStoreByName(String storeName) {
         return stores.stream()
                 .filter(st -> st.getName().equals(storeName))
@@ -159,18 +163,6 @@ public class Park {
 
     public void removeStore(String storeName) {
         this.stores.remove(getStoreByName(storeName));
-    }
-
-    public  void removeUser(User user) {
-        this.users.remove(user);
-    }
-
-    public boolean checkPassword(String password) {
-        return this.password.equals(password);
-    }
-
-    public void updateUser(int index,User currentUser) {
-        users.set(index,currentUser);
     }
 
     public void addProductsToStore(String storeName, HashMap<Product,Integer> productsToAdd) {
@@ -193,12 +185,6 @@ public class Park {
         return "SouvenirStore";
     }
 
-    public void showStoreCinemaProducts(String cinemaName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-
-        cinema.getCinemaStore().showProductsInStock();
-    }
-
     public boolean isThereStore(String name) {
         return stores.stream()
                 .anyMatch(x -> x.getName().equals(name));
@@ -209,17 +195,28 @@ public class Park {
         store.removeProduct(store.getProductByName(foodName));
     }
 
-    public void removeProductsFromCinemaStore(String cinemaName,String foodName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        Product product = cinema.getCinemaStore().getProductByName(foodName);
-        if(product == null) {
-            System.out.println("There is no such product!");
-        } else {
-            this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
-            System.out.println("Product " + product.getName() + " successfully removed!");
-        }
+    /**----------------------------------------ATTRACTIONS----------------------------------------------*/
+
+    public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
+        attractions.forEach((x,v) -> this.attractions.add(new Attraction(x, v)));
     }
-    /**-------------------------------GetNames functions- NOT FINISHED----------------------------------*/
+
+    public void removeAttraction(String attractionName) {
+        attractions.removeIf(x -> x.getName().equals(attractionName));
+    }
+
+    //TODO change displayAttractions()
+    public void displayAttractions() {
+        if (attractions.size() == 0) {
+            System.out.println("Sorry the park does not have attractions yet.\n");
+            return;
+        }
+
+        attractions.forEach(System.out::println);
+        System.out.println();
+    }
+
+    /**-------------------------------Show Statistics functions- NOT FINISHED----------------------------------*/
     public void showUserStatistics() {
         if (users.size() == 0) {
             System.out.println("Sorry there are no users in the park yet.");

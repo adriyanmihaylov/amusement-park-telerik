@@ -399,6 +399,10 @@ public class Main {
 
     private static String chooseAttraction() throws IOException {
         List<String> options = park.getAttractionsNames();
+        if(options.size() == 0) {
+            System.out.println("There are no attractions in the park!");
+            return "";
+        }
         options.add("Exit");
 
         printOptions(options);
@@ -451,21 +455,15 @@ public class Main {
     }
 
     private static void removeAttraction() throws IOException {
-        if (park.getAttractions().size() == 0) {
-            System.out.println("Sorry the park does not have an attraction yet.\n\n");
-            return;
-        }
-
         System.out.println("Choose attraction from the list: ");
         String chosenOption = chooseAttraction();
-        if (chosenOption.equals("Exit")) {
+        if (chosenOption.equals("Exit") || chosenOption.isEmpty()) {
             return;
         }
 
         park.removeAttraction(chosenOption);
         System.out.println("Done!\n");
     }
-
 
     private static void showAttractions() {
         park.displayAttractions();
@@ -583,7 +581,7 @@ public class Main {
                 park.addProductsToCinemaStore(cinemaName, createFoodProduct());
                 break;
             case "5":
-                park.showStoreCinemaProducts(cinemaName);
+                park.showCinemaStoreProducts(cinemaName);
                 break;
             case "6":
                 removeProductFromCinemaStore(cinemaName);
