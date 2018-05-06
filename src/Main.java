@@ -1,4 +1,5 @@
 import exceptions.*;
+import park.InputDataCollection;
 import park.Park;
 import park.cinema.MovieGenre;
 import park.funzone.AttractionDangerLevel;
@@ -762,19 +763,18 @@ public class Main {
     public static void buyTicketMenu() throws Exception {
         String[] options = {"See ticket prices", "SingleTicket", "GroupTicket", "Exit"};
         printOptions(Arrays.asList(options));
-        List<User> users = new ArrayList<>();
 
         switch (readString()) {
             case "1":
                 park.getAllTicketsPrices().forEach(System.out::println);
                 break;
             case "2":
-                users.addAll(createUsers(1));
+                createUsers(1);
                 break;
             case "3":
                 int sizeOfGroup = readSizeOfGroup();
                 if (sizeOfGroup > 0) {
-                    users.addAll(createUsers(sizeOfGroup));
+                   createUsers(sizeOfGroup);
                 }
                 break;
             case "4":  //exit
@@ -783,7 +783,6 @@ public class Main {
                 System.out.println("Invalid choice!");
                 break;
         }
-        park.addUsers(users);
     }
 
     // TODO - ADD CONSUME PRODUCTS/LIST PRODUCTS
@@ -872,7 +871,7 @@ public class Main {
      * -----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------
      */
 
-    public static int readSizeOfGroup() throws IOException {
+    public static int readSizeOfGroup() {
         System.out.print("Enter number of members: ");
         int numberOfUsers = readPositiveInteger();
 
@@ -883,8 +882,8 @@ public class Main {
         return numberOfUsers;
     }
 
-    public static List<User> createUsers(int numberOfUsers) throws Exception {
-        List<User> users = new ArrayList<>();
+    public static void createUsers(int numberOfUsers) throws Exception {
+        Map<InputDataCollection,UserTicketPrice> newUsers = new HashMap<>();
         UserTicketPrice userTicketType = null;
 
         if (numberOfUsers == 5) {
@@ -892,6 +891,7 @@ public class Main {
         } else if (numberOfUsers > 5) {
             userTicketType = userTicketType.BIGGROUP;
         }
+
         int maxAge = 1;
 
         for (int i = 0; i < numberOfUsers; i++) {
@@ -901,6 +901,7 @@ public class Main {
             int age = readAge();
             System.out.print("What's the budget of " + name + ": ");
             double budget = readMoney();
+
             if (userTicketType != userTicketType.SMALLGROUP && userTicketType != userTicketType.BIGGROUP) {
                 if (age < 18) {
                     userTicketType = userTicketType.UNDER18;
@@ -910,17 +911,14 @@ public class Main {
             }
 
             maxAge = Math.max(maxAge, age);
-            users.add(new User(name, age, budget, userTicketType));
-            System.out.println();
+            newUsers.put(new InputDataCollection(name, age + "", budget + ""), userTicketType);
+            System.out.println("\n");
         }
+
         if (maxAge < 14) {
             System.out.println("You can not enter the park because there is no user older than 14 with you!");
-            return new ArrayList<>();
-        } else { // TODO clear the console here
-            buyTickets(users);
-            System.out.println("Successfully added");
-            users.forEach(k -> System.out.println(k.toString()));
-            return users;
+        } else {
+            park.createUsers(newUsers);
         }
     }
 
@@ -940,11 +938,6 @@ public class Main {
                 System.out.println("Please enter your choice again!");
                 return readTicketType();
         }
-    }
-
-    public static List<User> buyTickets(List<User> users) {
-        users.forEach((user -> user.addTicket(park.addTicketsCounter(), park.getTicketsPrices(user.getUserType()))));
-        return users;
     }
 
     /**

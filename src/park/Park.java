@@ -61,7 +61,7 @@ public class Park {
         this.name = name;
     }
 
-    public String addTicketsCounter() {
+    private String addTicketsCounter() {
         return this.ticketsCounter++ + "";
     }
 
@@ -73,6 +73,17 @@ public class Park {
     /**
      * ---------------------------------USER functions-------------------------------------
      */
+    public void createUsers(Map<InputDataCollection,UserTicketPrice> newUsers) {
+        List<User> users = new ArrayList<>();
+        newUsers.forEach((k,v) ->
+                users.add( new User(
+                        k.getFirst(),
+                        Integer.parseInt(k.getSecond()),
+                        Double.parseDouble(k.getThird()),
+                        v)));
+        buyTickets(users);
+        addUsers(users);
+    }
 
     public int findUserIndex(String name, String ticketNumber) {
         return users.stream()
@@ -81,10 +92,6 @@ public class Park {
                 .findFirst()
                 .map(x -> users.indexOf(x))
                 .orElse(-1);
-    }
-
-    public void addUsers(List<User> users) {
-        this.users.addAll(users);
     }
 
     public void consumeProduct(int userIndex, String productName) {
@@ -116,6 +123,16 @@ public class Park {
             user.addCredits(numberOfTickets);
             System.out.printf("%s now has %d credits and budget of %.2f$\n", user.getName(), user.getUserTicketCredits(), user.getBudget());
         }
+    }
+
+    private void buyTickets(List<User> users) {
+        users.forEach((user -> user.addTicket(addTicketsCounter(), getTicketsPrices(user.getUserType()))));
+    }
+
+    private void addUsers(List<User> users) {
+        this.users.addAll(users);
+        System.out.println("Successfully added!");
+        users.forEach(user -> System.out.println(user.toString()));
     }
 
     private User getUserByIndex(int userIndex) {
