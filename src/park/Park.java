@@ -14,7 +14,6 @@ import park.users.User;
 import park.users.UserTicketPrice;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Park {
@@ -26,6 +25,7 @@ public class Park {
     private Set<Attraction> attractions;
     private EnumMap<UserTicketPrice, Double> ticketsPrices;
     private int ticketsCounter;
+    private boolean isInAdminMode;
 
     public Park(String name, String password) {
         setName(name);
@@ -36,6 +36,7 @@ public class Park {
         this.attractions = new HashSet<>();
         setTicketsPrice();
         this.ticketsCounter = 1;
+        setIsInAdminMode();
     }
 
     /**
@@ -67,24 +68,33 @@ public class Park {
         return this.ticketsCounter++ + "";
     }
 
-
+    public void setIsInAdminMode() {
+        isInAdminMode = false;
+    }
     public boolean checkPassword(String password) {
-        return this.password.equals(password);
+        if (this.password.equals(password)) {
+            isInAdminMode = true;
+        }
+        return true;
     }
 
     /**
-     * ---------------------------------USER functions-------------------------------------
+     * ---------------------------------Creating users and other user functions-------------------------------------
      */
     public void createUsers(Map<InputDataCollection,UserTicketPrice> newUsers) {
-        List<User> users = new ArrayList<>();
-        newUsers.forEach((k,v) ->
-                users.add( new User(
-                        k.getFirst(),
-                        Integer.parseInt(k.getSecond()),
-                        Double.parseDouble(k.getThird()),
-                        v)));
-        buyTickets(users);
-        addUsers(users);
+        if(isInAdminMode) {
+            List<User> users = new ArrayList<>();
+            newUsers.forEach((k, v) ->
+                    users.add(new User(
+                            k.getFirst(),
+                            Integer.parseInt(k.getSecond()),
+                            Double.parseDouble(k.getThird()),
+                            v)));
+            buyTickets(users);
+            addUsers(users);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public int findUserIndex(String name, String ticketNumber) {
@@ -157,22 +167,34 @@ public class Park {
     }
 
     public void removeCinema(String cinemaName) {
-        cinemas.removeIf(x -> x.getName().equals(cinemaName));
+        if(isInAdminMode) {
+            cinemas.removeIf(x -> x.getName().equals(cinemaName));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void addMoviesToCinemas(String cinemaName, HashMap<String, MovieGenre> movies) {
-        Set<Movie> moviesToAdd = movies.entrySet()
-                .stream()
-                .map((x) -> new Movie(x.getKey(), x.getValue()))
-                .collect(Collectors.toSet());
+        if(isInAdminMode) {
+            Set<Movie> moviesToAdd = movies.entrySet()
+                    .stream()
+                    .map((x) -> new Movie(x.getKey(), x.getValue()))
+                    .collect(Collectors.toSet());
 
-        Cinema cinema = getCinemaByName(cinemaName);
-        cinema.addMovie(moviesToAdd);
+            Cinema cinema = getCinemaByName(cinemaName);
+            cinema.addMovie(moviesToAdd);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void removeMovieFromCinema(String cinemaName, String movieName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        cinema.removeMovie(movieName);
+        if (isInAdminMode) {
+            Cinema cinema = getCinemaByName(cinemaName);
+            cinema.removeMovie(movieName);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void displayMoviesInCinema(String cinemaName) {
@@ -182,13 +204,17 @@ public class Park {
     }
 
     public void removeProductsFromCinemaStore(String cinemaName, String foodName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        Product product = cinema.getCinemaStore().getProductByName(foodName);
-        if (product == null) {
-            System.out.println("There is no such product!");
+        if (isInAdminMode) {
+            Cinema cinema = getCinemaByName(cinemaName);
+            Product product = cinema.getCinemaStore().getProductByName(foodName);
+            if (product == null) {
+                System.out.println("There is no such product!");
+            } else {
+                this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
+                System.out.println("Product " + product.getName() + " successfully removed!");
+            }
         } else {
-            this.cinemas.get(this.cinemas.indexOf(cinema)).removeProduct(product);
-            System.out.println("Product " + product.getName() + " successfully removed!");
+            System.out.println("You are not an admin!");
         }
     }
 
@@ -208,31 +234,45 @@ public class Park {
     /**
      * ----------------------------------------STORES----------------------------------------------
      */
-    public void createStore(List<InputDataCollection> stores){
-       stores.stream().filter(store -> store.getThird().equals("Food"))
-                .forEach(store ->
-                addStore(new FoodStore(store.getFirst(),new CashDesk(Double.parseDouble(store.getSecond())))));
+    public void createStore(List<InputDataCollection> stores) {
+        if (isInAdminMode) {
+            stores.stream().filter(store -> store.getThird().equals("Food"))
+                    .forEach(store ->
+                            addStore(new FoodStore(store.getFirst(), new CashDesk(Double.parseDouble(store.getSecond())))));
 
-        stores.stream().filter(store -> store.getThird().equals("Souvenir"))
-                .forEach(store ->
-                        addStore(new SouvenirStore(store.getFirst(),new CashDesk(Double.parseDouble(store.getSecond())))));
-
-
+            stores.stream().filter(store -> store.getThird().equals("Souvenir"))
+                    .forEach(store ->
+                            addStore(new SouvenirStore(store.getFirst(), new CashDesk(Double.parseDouble(store.getSecond())))));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void removeStore(String storeName) {
-        this.stores.remove(getStoreByName(storeName));
+        if (isInAdminMode) {
+            this.stores.remove(getStoreByName(storeName));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void addProductsToStore(String storeName, HashMap<Product, Integer> productsToAdd) {
-        Store store = getStoreByName(storeName);
-        store.addProducts(productsToAdd);
+        if (isInAdminMode) {
+            Store store = getStoreByName(storeName);
+            store.addProducts(productsToAdd);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void addProductsToCinemaStore(String cinemaName, HashMap<Product, Integer> productsToAdd) {
-        Cinema cinema = getCinemaByName(cinemaName);
+        if (isInAdminMode) {
+            Cinema cinema = getCinemaByName(cinemaName);
 
-        cinema.updateCinemaStore(productsToAdd);
+            cinema.updateCinemaStore(productsToAdd);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public String getStoreType(String storeName) {
@@ -250,8 +290,12 @@ public class Park {
     }
 
     public void removeProductsFromStore(String storeName, String foodName) {
-        Store store = getStoreByName(storeName);
-        store.removeProduct(store.getProductByName(foodName));
+        if (isInAdminMode) {
+            Store store = getStoreByName(storeName);
+            store.removeProduct(store.getProductByName(foodName));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     //TODO add product quantity
@@ -276,7 +320,11 @@ public class Park {
     }
 
     private void addStore(Store newStore) {
-        this.stores.add(newStore);
+        if (isInAdminMode) {
+            this.stores.add(newStore);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     private Store getStoreByName(String storeName) {
@@ -292,11 +340,19 @@ public class Park {
      */
 
     public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
-        attractions.forEach((x, v) -> this.attractions.add(new Attraction(x, v)));
+        if (isInAdminMode) {
+            attractions.forEach((x, v) -> this.attractions.add(new Attraction(x, v)));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void removeAttraction(String attractionName) {
-        attractions.removeIf(x -> x.getName().equals(attractionName));
+        if (isInAdminMode) {
+            attractions.removeIf(x -> x.getName().equals(attractionName));
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void displayAttractions() {

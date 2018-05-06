@@ -92,6 +92,7 @@ public class Main {
                 parkStatistics();
                 break;
             case "5":
+                park.setIsInAdminMode();
                 return;
             default:
                 System.out.println("Invalid choice!");
