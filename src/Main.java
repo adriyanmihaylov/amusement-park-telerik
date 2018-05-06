@@ -27,7 +27,6 @@ public class Main {
     public static void mainMenu() throws Exception {
         String[] options = {"User menu", "Admin menu", "Exit"};
         printOptions(Arrays.asList(options));
-
         switch (readString()) {
             case "1":
                 userMenu();

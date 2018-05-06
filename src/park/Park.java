@@ -82,8 +82,6 @@ public class Park {
     /**
      * ---------------------------------Creating users and other user functions-------------------------------------
      */
-
-    //TODO FIX
     public void createUsers(Map<InputDataCollection, UserTicketPrice> newUsers) {
         List<User> users = new ArrayList<>();
         newUsers.forEach((k, v) ->
@@ -94,7 +92,6 @@ public class Park {
                         v)));
         buyTickets(users);
         addUsers(users);
-
     }
 
     public int findUserIndex(String name, String ticketNumber) {
@@ -157,7 +154,11 @@ public class Park {
     }
 
     private void removeUser(User user) {
-        this.users.remove(user);
+        if(isInAdminMode) {
+            this.users.remove(user);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     /**
@@ -165,10 +166,14 @@ public class Park {
      */
 
     public void addCinemas(Set<String> cinemas) {
-        Set<Cinema> cinemasToAdd = cinemas.stream()
-                .map(Cinema::new)
-                .collect(Collectors.toSet());
-        this.cinemas.addAll(cinemasToAdd);
+        if(isInAdminMode) {
+            Set<Cinema> cinemasToAdd = cinemas.stream()
+                    .map(Cinema::new)
+                    .collect(Collectors.toSet());
+            this.cinemas.addAll(cinemasToAdd);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void removeCinema(String cinemaName) {
