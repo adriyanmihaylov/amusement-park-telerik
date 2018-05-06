@@ -139,7 +139,9 @@ public class Main {
 
         if (storeName.equals("Exit") || storeName.isEmpty()) {
             return;
-        } else {
+        }
+
+        if(isTrueMenu()) {
             park.removeStore(storeName);
             System.out.println(storeName + " was successfully removed!");
         }
@@ -168,14 +170,7 @@ public class Main {
     private static void addStore() throws Exception {
         System.out.print("How many stores do you want to add: ");
         int numberOfStores = readPositiveInteger();
-        List<Store> stores = createStore(numberOfStores);
-
-        if (stores.size() > 0) {
-            park.addStores(stores);
-            System.out.println("Stores were successfully added!");
-        } else {
-            System.out.println("No stores were added!");
-        }
+        createStore(numberOfStores);
     }
 
     private static void printProductsInStore() throws Exception {
@@ -188,16 +183,16 @@ public class Main {
         }
     }
 
-    public static List<Store> createStore(int numberOfStores) throws Exception {
-        List<Store> stores = new ArrayList<>();
+    private static void createStore(int numberOfStores) throws Exception {
+        List<InputDataCollection> newStores = new ArrayList<>();
         int flag = 0;
 
         for (int i = 0; i < numberOfStores; i++) {
             System.out.print("Enter the name of store " + (i + 1) + ": ");
             String name = readName();
             if (!park.isThereStore(name)) {
-                for (Store store : stores) {
-                    if (store.getName().equals(name)) {
+                for (InputDataCollection store : newStores) {
+                    if (store.getFirst().equals(name)) {
                         System.out.println("There is such a store already!");
                         flag = 1;
                         break;
@@ -207,36 +202,32 @@ public class Main {
                     flag = 0;
                     continue;
                 }
-
                 System.out.print("What's the budget of store " + name + ": ");
                 Double budgetMoney = readMoney();
 
                 System.out.println("What kind of store is " + name + "");
-                int storeType = storeTypeMenu();
+                String storeType = storeTypeMenu();
 
-                switch (storeType) {
-                    case 1:
-                        stores.add(new FoodStore(name, new CashDesk(budgetMoney)));
-                        break;
-                    default:
-                        stores.add(new SouvenirStore(name, new CashDesk(budgetMoney)));
-                        break;
-                }
+                newStores.add(new InputDataCollection(name, budgetMoney + "", storeType));
             } else {
                 System.out.println("There is such a store already!");
             }
         }
-        return stores;
+        if(newStores.size() > 0) {
+            park.createStore(newStores);
+        } else {
+            System.out.println("No stores were added!");
+        }
     }
 
-    public static int storeTypeMenu() throws IOException {
+    public static String storeTypeMenu() throws IOException {
         String[] options = {"Food store", "Souvenir store"};
         printOptions(Arrays.asList(options));
         switch (readString()) {
             case "1":
-                return 1;
+                return "Food";
             case "2":
-                return 2;
+                return "Souvenir";
             default:
                 System.out.println("Invalid choice!");
                 System.out.println("Please try again!");
@@ -474,8 +465,10 @@ public class Main {
             return;
         }
 
-        park.removeAttraction(chosenOption);
-        System.out.println("Done!\n");
+        if(isTrueMenu()) {
+            park.removeAttraction(chosenOption);
+            System.out.println("Done!\n");
+        }
     }
 
     private static void showAttractions() {
@@ -1072,6 +1065,22 @@ public class Main {
     /**
      * ---------------------------------------------------------------------------------------------------------
      */
+    private static boolean isTrueMenu() {
+        System.out.println("Are you sure you want to do that?");
+        String[] options = {"Yes", "No"};
+        printOptions(Arrays.asList(options));
+
+        int command = readPositiveInteger();
+        switch (command) {
+            case 1:
+                return true;
+            case 2:
+                return false;
+            default:
+                System.out.println("Wrong input! Try again!");
+                return isTrueMenu();
+        }
+    }
 
     private static String readString() throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

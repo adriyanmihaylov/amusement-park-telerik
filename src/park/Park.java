@@ -6,7 +6,9 @@ import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.funzone.AttractionDangerLevel;
 import park.products.Product;
+import park.stores.CashDesk;
 import park.stores.FoodStore;
+import park.stores.SouvenirStore;
 import park.stores.Store;
 import park.users.User;
 import park.users.UserTicketPrice;
@@ -206,9 +208,16 @@ public class Park {
     /**
      * ----------------------------------------STORES----------------------------------------------
      */
+    public void createStore(List<InputDataCollection> stores){
+       stores.stream().filter(store -> store.getThird().equals("Food"))
+                .forEach(store ->
+                addStore(new FoodStore(store.getFirst(),new CashDesk(Double.parseDouble(store.getSecond())))));
 
-    public void addStores(List<Store> stores) {
-        this.stores.addAll(stores);
+        stores.stream().filter(store -> store.getThird().equals("Souvenir"))
+                .forEach(store ->
+                        addStore(new SouvenirStore(store.getFirst(),new CashDesk(Double.parseDouble(store.getSecond())))));
+
+
     }
 
     public void removeStore(String storeName) {
@@ -266,12 +275,17 @@ public class Park {
         System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
     }
 
+    private void addStore(Store newStore) {
+        this.stores.add(newStore);
+    }
+
     private Store getStoreByName(String storeName) {
         return stores.stream()
                 .filter(st -> st.getName().equals(storeName))
                 .findFirst()
                 .get();
     }
+
 
     /**
      * ----------------------------------------ATTRACTIONS----------------------------------------------
