@@ -142,7 +142,7 @@ public class Main {
             return;
         }
 
-        if(isTrueMenu()) {
+        if (isTrueMenu()) {
             park.removeStore(storeName);
             System.out.println(storeName + " was successfully removed!");
         }
@@ -214,7 +214,7 @@ public class Main {
                 System.out.println("There is such a store already!");
             }
         }
-        if(newStores.size() > 0) {
+        if (newStores.size() > 0) {
             park.createStore(newStores);
         } else {
             System.out.println("No stores were added!");
@@ -466,7 +466,7 @@ public class Main {
             return;
         }
 
-        if(isTrueMenu()) {
+        if (isTrueMenu()) {
             park.removeAttraction(chosenOption);
             System.out.println("Done!\n");
         }
@@ -768,7 +768,7 @@ public class Main {
             case "3":
                 int sizeOfGroup = readSizeOfGroup();
                 if (sizeOfGroup > 0) {
-                   createUsers(sizeOfGroup);
+                    createUsers(sizeOfGroup);
                 }
                 break;
             case "4":  //exit
@@ -851,8 +851,20 @@ public class Main {
         park.goShopping(storeName, productName, userIndex);
     }
 
-    //TODO add functionality
-    private static void watchMovie(int userIndex) {
+    //TODO test if the logic is working
+    private static void watchMovie(int userIndex) throws Exception {
+        String cinemaName = chooseCinema();
+        if (cinemaName.equals("Exit") || cinemaName.isEmpty()) {
+            return;
+        }
+
+        String movieName = chooseMovie(cinemaName);
+        if (movieName.equals("Exit") || cinemaName.isEmpty()) {
+            return;
+        }
+
+        park.watchMovie(userIndex, cinemaName, movieName);
+
     }
 
     //TODO add functionality
@@ -877,7 +889,7 @@ public class Main {
     }
 
     public static void createUsers(int numberOfUsers) throws Exception {
-        Map<InputDataCollection,UserTicketPrice> newUsers = new HashMap<>();
+        Map<InputDataCollection, UserTicketPrice> newUsers = new HashMap<>();
         UserTicketPrice userTicketType = null;
 
         if (numberOfUsers == 5) {
