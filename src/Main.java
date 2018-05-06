@@ -421,7 +421,7 @@ public class Main {
     }
 
     private static void addNewAttraction() throws Exception {
-        System.out.println("How many attraction do you want to add to the park ? ");
+        System.out.println("How many attractions do you want to add to the park?");
 
         int attractionsCount = readPositiveInteger();
 
