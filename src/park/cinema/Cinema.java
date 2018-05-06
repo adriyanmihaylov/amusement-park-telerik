@@ -78,6 +78,8 @@ public class Cinema {
         System.out.println(user.getName() + " is watching " + movie.getName());
     }
 
+    //TODO fix
+    //a 16 year old can watch a thriller but cant watch animation
     private boolean isMovieAllowed(User user, Movie movie) {
         int userAge = user.getAge();
         MovieGenre genre = movie.getGenre();

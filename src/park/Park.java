@@ -119,6 +119,11 @@ public class Park {
         currentUser.consumeProduct(product);
     }
 
+    public void showUserInfo(int userIndex) {
+        User currentUser = this.getUserByIndex(userIndex);
+        currentUser.showUserInfo();
+    }
+
     public double getUserBudget(int userIndex) {
         return getUserByIndex(userIndex).getBudget();
     }
@@ -237,7 +242,7 @@ public class Park {
         Movie currentMovie = currentCinema.getMovieByName(movieName);
 
         if (currentMovie == null) {
-            System.out.println("Something went wrong with the movie and it's name");
+            System.out.println("Something went wrong with the movie and it's name.");
             return;
         }
 
@@ -375,6 +380,28 @@ public class Park {
         }
 
         attractions.forEach(System.out::println);
+    }
+
+    public Attraction getAttractionByName(String attractionName) {
+        for (Attraction currentAttraction : attractions) {
+            if (currentAttraction.getName().equals(attractionName)) {
+                return currentAttraction;
+            }
+        }
+
+        return null;
+    }
+
+    public void rideAttraction(int userIndex, String attractionName) {
+        User currentUser = this.getUserByIndex(userIndex);
+        Attraction currentAttraction = this.getAttractionByName(attractionName);
+
+        if (currentAttraction == null) {
+            System.out.println("Something went wrong with the attraction and its name.");
+            return;
+        }
+
+        currentAttraction.visitAttraction(currentUser);
     }
 
     /**

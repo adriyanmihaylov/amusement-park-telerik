@@ -2,9 +2,9 @@ package park.products;
 
 public abstract class Product {
     private String name;
-   private double price;
+    private double price;
 
-    public Product (String name, double price) {
+    public Product(String name, double price) {
         this.name = name;
         this.price = price;
     }
@@ -26,6 +26,6 @@ public abstract class Product {
 
     @Override
     public String toString() {
-        return String.format("Product %s\tPrice %.2f\t", name, price);
+        return String.format("Product: %s\tprice: %.2f", name, price);
     }
 }

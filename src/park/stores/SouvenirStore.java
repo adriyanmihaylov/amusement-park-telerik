@@ -1,4 +1,5 @@
 package park.stores;
+
 import java.util.*;
 
 import park.interfaces.IUsable;
@@ -9,7 +10,7 @@ public class SouvenirStore extends Store implements IUsable {
         super(name, desk);
     }
 
-    public SouvenirStore(String name, CashDesk desk, HashMap<Product,Integer> souvenirs) {
+    public SouvenirStore(String name, CashDesk desk, HashMap<Product, Integer> souvenirs) {
         super(name, desk, souvenirs);
     }
     //TODO getProductsInStock
@@ -22,7 +23,7 @@ public class SouvenirStore extends Store implements IUsable {
 
     @Override
     public String toString() {
-        return String.format(super.getName() + "\t| sells souvenirs");
+        return String.format(super.toString() + "\t|\tSells: souvenirs");
     }
 
 }

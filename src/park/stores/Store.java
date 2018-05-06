@@ -1,4 +1,5 @@
 package park.stores;
+
 import park.products.FoodProduct;
 import park.products.Product;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class Store {
     private String name;
     private CashDesk desk;
-    protected HashMap<Product,Integer> productsInStock;
+    protected HashMap<Product, Integer> productsInStock;
 
     Store(String name, CashDesk desk) {
         setName(name);
@@ -19,8 +20,8 @@ public abstract class Store {
         productsInStock = new HashMap<>();
     }
 
-    Store(String name,CashDesk desk, HashMap<Product,Integer> productsToAdd) {
-        this(name,desk);
+    Store(String name, CashDesk desk, HashMap<Product, Integer> productsToAdd) {
+        this(name, desk);
         productsInStock.putAll(productsToAdd);
     }
 
@@ -28,7 +29,7 @@ public abstract class Store {
         this.name = name;
     }
 
-    public  String getName() {
+    public String getName() {
         return this.name;
     }
 
@@ -38,19 +39,20 @@ public abstract class Store {
         if (productsInStock.size() < 1) {
             System.out.println("There is no products in store " + this.name);
         } else {
-           productsInStock
-                   .forEach((product,quantity) ->
-                           System.out.println("Product: " + product.getName() + " Quantity: " + quantity));
+            productsInStock
+                    .forEach((product, quantity) ->
+                            System.out.println("Product: " + product.getName() + " Quantity: " + quantity));
         }
     }
 
     public void addProducts(HashMap<Product, Integer> productsToAdd) {
         this.productsInStock.putAll(productsToAdd);
     }
+
     public List<String> getAllProductsNames() {
         return this.productsInStock.entrySet()
                 .stream()
-                .map(product-> product.getKey().getName())
+                .map(product -> product.getKey().getName())
                 .collect(Collectors.toList());
 
     }
@@ -94,7 +96,7 @@ public abstract class Store {
     //TODO complete toString method
     @Override
     public String toString() {
-        return String.format("Store " + this.name + "Budget %.2f ",this.desk );
+        return String.format("Store: %s\t|\tBudget: %.2f", this.name, this.desk.getMoneyInDesk());
     }
 
 }

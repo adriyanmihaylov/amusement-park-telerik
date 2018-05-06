@@ -10,7 +10,7 @@ public class ProductToDrink extends FoodProduct {
     }
 
     private String consumeProductString() {
-        return String.format("Product %s with the price of: %.2f and expiration date: %s", this.getName(),  this.getPrice(), this.getExparationDate());
+        return String.format("Product %s with the price of: %.2f and expiration date: %s", this.getName(), this.getPrice(), this.getExparationDate());
     }
 
     @Override
@@ -20,7 +20,7 @@ public class ProductToDrink extends FoodProduct {
 
     @Override
     public String toString() {
-        return String.format("%s\t drink", super.toString());
+        return String.format("%s\ttype: drink", super.toString());
     }
 
 }

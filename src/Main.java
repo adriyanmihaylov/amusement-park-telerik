@@ -791,7 +791,7 @@ public class Main {
     }
 
     private static void parkMenu(int indexOfUser) throws Exception {
-        String[] options = {"Add credits", "Go shopping", "Consume a product", "Watch a movie", "Ride attractions", "Exit"};
+        String[] options = {"Add credits", "Go shopping", "Consume a product", "Watch a movie", "Ride attractions", "Show user info", "Exit"};
         printOptions(Arrays.asList(options));
         String command = readString();
         switch (command) {
@@ -803,6 +803,7 @@ public class Main {
                 break;
             case "3":
                 consumeProduct(indexOfUser);
+                break;
             case "4":
                 watchMovie(indexOfUser);
                 break;
@@ -810,11 +811,15 @@ public class Main {
                 rideAttractions(indexOfUser);
                 break;
             case "6":
+                showUserInfo(indexOfUser);
+                break;
+            case "7":
                 return;
             default:
                 System.out.println("Invalid choice!");
                 break;
         }
+
         parkMenu(indexOfUser);
     }
 
@@ -836,6 +841,10 @@ public class Main {
 
         int numberOfTickets = readPositiveInteger();
         park.addCredits(userIndex, numberOfTickets);
+    }
+
+    private static void showUserInfo(int userIndex) {
+        park.showUserInfo(userIndex);
     }
 
     //TODO maybe change the products in the user to hashmap
@@ -867,8 +876,14 @@ public class Main {
 
     }
 
-    //TODO add functionality
-    public static void rideAttractions(int userIndex) {
+    //TODO test if the logic is working
+    public static void rideAttractions(int userIndex) throws Exception {
+        String attractionName = chooseAttraction();
+        if (attractionName.equals("Exit") || attractionName.isEmpty()) {
+            return;
+        }
+
+        park.rideAttraction(userIndex, attractionName);
     }
 
     /**------------------------------------END OF USER functions----------------------------------------------*/

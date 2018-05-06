@@ -17,6 +17,6 @@ public abstract class FoodProduct extends Product implements IConsumable{
 
     @Override
     public String toString() {
-        return String.format(super.toString() + "Expiration date: " + expirationDate);
+        return String.format(super.toString() + "\texpiration date: " + expirationDate);
     }
 }

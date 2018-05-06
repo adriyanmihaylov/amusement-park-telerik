@@ -108,6 +108,22 @@ public class User {
 
     }
 
+    public void showUserInfo() {
+        System.out.printf("\n\n");
+        System.out.printf("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|\tcredits left: %d\t|\n", this.name, this.age, this.budget, this.ticket.getTicketNumber(), this.ticket.getTicketCredits());
+
+        if (boughtProducts.size() == 0) {
+            System.out.println("You don't have any bought products!");
+            return;
+        }
+
+        System.out.println("Products bought: ");
+        for (Product product : boughtProducts) {
+            System.out.println(product);
+        }
+        System.out.printf("\n\n");
+    }
+
     @Override
     public String toString() {
         return String.format("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|", this.name, this.age, this.budget, this.ticket.getTicketNumber());

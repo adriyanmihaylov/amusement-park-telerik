@@ -2,6 +2,7 @@ package park.stores;
 
 import park.interfaces.IConsumable;
 import park.products.*;
+
 import java.util.*;
 
 public class FoodStore extends Store implements IConsumable {
@@ -21,7 +22,7 @@ public class FoodStore extends Store implements IConsumable {
 
     @Override
     public String toString() {
-        return String.format(super.getName() + "\t| sells foods");
+        return String.format(super.toString() + "\t|\tSells: foods");
     }
 
 }
