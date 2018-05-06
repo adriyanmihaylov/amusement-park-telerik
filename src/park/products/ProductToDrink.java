@@ -20,7 +20,7 @@ public class ProductToDrink extends FoodProduct {
 
     @Override
     public String toString() {
-        return String.format("%s\ttype: drink", super.toString());
+        return String.format("%s\ttype: drink\t|", super.toString());
     }
 
 }

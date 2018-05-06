@@ -37,7 +37,7 @@ public abstract class Store {
     // TODO not finished
     public void showProductsInStock() {
         if (productsInStock.size() < 1) {
-            System.out.println("There is no products in store " + this.name);
+            System.out.println("There are no products in store " + this.name + "!");
         } else {
             productsInStock
                     .forEach((product, quantity) ->

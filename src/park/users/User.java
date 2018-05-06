@@ -57,6 +57,16 @@ public class User {
         this.ticket = new Ticket(ticketNumber, price);
     }
 
+    public boolean hasFoodProducts() {
+        for (Product currentProdcut : boughtProducts) {
+            if (currentProdcut instanceof IConsumable) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Ticket getUserTicket() {
         return ticket;
     }
@@ -109,19 +119,20 @@ public class User {
     }
 
     public void showUserInfo() {
-        System.out.printf("\n\n");
+        System.out.println("\n\t\t\t\t\t---------- USER INFO ----------\n");
         System.out.printf("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|\tcredits left: %d\t|\n", this.name, this.age, this.budget, this.ticket.getTicketNumber(), this.ticket.getTicketCredits());
+
+        System.out.println("\n\t\t\t\t\t---------- INVENTORY ----------\n");
 
         if (boughtProducts.size() == 0) {
             System.out.println("You don't have any bought products!");
-            return;
         }
 
-        System.out.println("Products bought: ");
         for (Product product : boughtProducts) {
             System.out.println(product);
         }
-        System.out.printf("\n\n");
+
+        System.out.println("\n\t\t\t\t-------------------------------\n");
     }
 
     @Override

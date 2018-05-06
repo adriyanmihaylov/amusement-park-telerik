@@ -1,5 +1,6 @@
 package park.funzone;
 
+import park.products.Ticket;
 import park.users.User;
 
 public class Attraction {
@@ -20,10 +21,21 @@ public class Attraction {
     }
 
     public void visitAttraction(User user) {
+
+        if (user.hasFoodProducts()) {
+            System.out.println("Sorry you can't ride the attraction before you consume the food products you have!");
+            return;
+        }
+
         boolean isAllowed = isAttractionAllowed(user.getAge(), dangerLevel);
         if (isAllowed) {
-            System.out.println(user.getName() + " has visited the " + name);
-            user.getUserTicket().use();
+            Ticket userTicket = user.getUserTicket();
+            if(userTicket.hasCredits()) {
+                userTicket.use();
+                System.out.println(user.getName() + " has visited the " + name);
+            } else {
+                System.out.println("Sorry you don't have enough credits!");
+            }
         } else {
             System.out.println("We are sorry, but " + name + " is considered dangerous.");
         }

@@ -74,8 +74,19 @@ public class Cinema {
             return;
         }
 
-        user.getUserTicket().use();
-        System.out.println(user.getName() + " is watching " + movie.getName());
+        if (user.hasFoodProducts()) {
+            System.out.println("Sorry you can't ride the attraction before you consume the food products you have!");
+            return;
+        }
+
+        Ticket userTicket = user.getUserTicket();
+
+        if (userTicket.hasCredits()) {
+            System.out.println(user.getName() + " is watching " + movie.getName());
+            userTicket.use();
+        } else {
+            System.out.println("Sorry you don't have enough credits!");
+        }
     }
 
     //TODO fix
