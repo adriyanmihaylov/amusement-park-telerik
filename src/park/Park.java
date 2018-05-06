@@ -71,6 +71,7 @@ public class Park {
     public void setIsInAdminMode() {
         isInAdminMode = false;
     }
+
     public boolean checkPassword(String password) {
         if (this.password.equals(password)) {
             isInAdminMode = true;
@@ -81,20 +82,16 @@ public class Park {
     /**
      * ---------------------------------Creating users and other user functions-------------------------------------
      */
-    public void createUsers(Map<InputDataCollection,UserTicketPrice> newUsers) {
-        if(isInAdminMode) {
-            List<User> users = new ArrayList<>();
-            newUsers.forEach((k, v) ->
-                    users.add(new User(
-                            k.getFirst(),
-                            Integer.parseInt(k.getSecond()),
-                            Double.parseDouble(k.getThird()),
-                            v)));
-            buyTickets(users);
-            addUsers(users);
-        } else {
-            System.out.println("You are not an admin!");
-        }
+    public void createUsers(Map<InputDataCollection, UserTicketPrice> newUsers) {
+        List<User> users = new ArrayList<>();
+        newUsers.forEach((k, v) ->
+                users.add(new User(
+                        k.getFirst(),
+                        Integer.parseInt(k.getSecond()),
+                        Double.parseDouble(k.getThird()),
+                        v)));
+        buyTickets(users);
+        addUsers(users);
     }
 
     public int findUserIndex(String name, String ticketNumber) {
@@ -152,7 +149,11 @@ public class Park {
     }
 
     private void removeUser(User user) {
-        this.users.remove(user);
+        if(isInAdminMode) {
+            this.users.remove(user);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     /**
@@ -160,10 +161,14 @@ public class Park {
      */
 
     public void addCinemas(Set<String> cinemas) {
-        Set<Cinema> cinemasToAdd = cinemas.stream()
-                .map(Cinema::new)
-                .collect(Collectors.toSet());
-        this.cinemas.addAll(cinemasToAdd);
+        if(isInAdminMode) {
+            Set<Cinema> cinemasToAdd = cinemas.stream()
+                    .map(Cinema::new)
+                    .collect(Collectors.toSet());
+            this.cinemas.addAll(cinemasToAdd);
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void removeCinema(String cinemaName) {
