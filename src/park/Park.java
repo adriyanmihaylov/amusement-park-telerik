@@ -1,4 +1,4 @@
-package  park;
+package park;
 
 import park.cinema.Cinema;
 import park.cinema.Movie;
@@ -172,7 +172,7 @@ public class Park {
     }
 
     public void removeCinema(String cinemaName) {
-        if(isInAdminMode) {
+        if (isInAdminMode) {
             cinemas.removeIf(x -> x.getName().equals(cinemaName));
         } else {
             System.out.println("You are not an admin!");
@@ -180,7 +180,7 @@ public class Park {
     }
 
     public void addMoviesToCinemas(String cinemaName, HashMap<String, MovieGenre> movies) {
-        if(isInAdminMode) {
+        if (isInAdminMode) {
             Set<Movie> moviesToAdd = movies.entrySet()
                     .stream()
                     .map((x) -> new Movie(x.getKey(), x.getValue()))
@@ -234,6 +234,19 @@ public class Park {
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
                 .get();
+    }
+
+    public void watchMovie(int userIndex, String cinemaName, String movieName) {
+        User currentUser = this.getUserByIndex(userIndex);
+        Cinema currentCinema = this.getCinemaByName(cinemaName);
+        Movie currentMovie = currentCinema.getMovieByName(movieName);
+
+        if (currentMovie == null) {
+            System.out.println("Something went wrong with the movie and it's name");
+            return;
+        }
+
+        currentCinema.watchMovie(currentUser, currentMovie);
     }
 
     /**

@@ -31,14 +31,15 @@ public class Cinema {
     }
 
     private void setCinemaStore() {
-        String name = "'" +this.name + " cinema store'";
-        cinemaStore = new FoodStore(name,new CashDesk(0));
+        String name = "'" + this.name + " cinema store'";
+        cinemaStore = new FoodStore(name, new CashDesk(0));
     }
+
     public FoodStore getCinemaStore() {
         return this.cinemaStore;
     }
 
-    public  void updateCinemaStore(HashMap<Product,Integer> foodsToAdd) {
+    public void updateCinemaStore(HashMap<Product, Integer> foodsToAdd) {
         this.cinemaStore.addProducts(foodsToAdd);
     }
 
@@ -69,12 +70,12 @@ public class Cinema {
     public void watchMovie(User user, Movie movie) {
         boolean notAllowed = isMovieAllowed(user, movie);
         if (notAllowed) {
-            System.out.printf("Sorry \"%s\" is not allowed for users at this age.", movie.getName());
+            System.out.printf("Sorry \"%s\" is not allowed for users at this age.\n", movie.getName());
             return;
         }
 
         user.getUserTicket().use();
-        System.out.println(user.getName() + "is watching " + movie.getName());
+        System.out.println(user.getName() + " is watching " + movie.getName());
     }
 
     private boolean isMovieAllowed(User user, Movie movie) {
@@ -86,7 +87,7 @@ public class Cinema {
     }
 
 
-    public void addProductsToStore(HashMap<Product,Integer> productsToAdd) {
+    public void addProductsToStore(HashMap<Product, Integer> productsToAdd) {
         this.cinemaStore.addProducts(productsToAdd);
     }
 
@@ -102,6 +103,18 @@ public class Cinema {
         return this.movies.stream()
                 .map(Movie::getName)
                 .collect(Collectors.toList());
+    }
+
+    public Movie getMovieByName(String movieName) {
+        Movie wantedMovie;
+
+        for (Movie currentMovie : movies) {
+            if (currentMovie.getName().equals(movieName)) {
+                return currentMovie;
+            }
+        }
+
+        return null;
     }
 
     public List<String> getProductsNamesInCinema() {
