@@ -1,6 +1,8 @@
 package park.stores;
 
-public class CashDesk {
+import park.interfaces.AddMoney;
+
+public class CashDesk implements AddMoney{
     private double moneyInDesk;
 
     public CashDesk(double money) {
@@ -15,7 +17,7 @@ public class CashDesk {
         this.moneyInDesk = moneyInDesk;
     }
 
-    public  void addMoneyToDesk(double money) {
+    public  void addMoney(double money) {
         this.moneyInDesk += money;
     }
 }

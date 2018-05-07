@@ -1,12 +1,13 @@
 package park.stores;
 
+import park.interfaces.AddMoney;
 import park.interfaces.Statistic;
 import park.products.Product;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Store implements Statistic {
+public abstract class Store implements Statistic, AddMoney {
     private String name;
     private CashDesk desk;
     protected HashMap<Product, Integer> productsInStock;
@@ -31,7 +32,6 @@ public abstract class Store implements Statistic {
     }
 
     // TODO test if it's working
-    // TODO not finished
     public void showProductsInStock() {
         if (productsInStock.size() < 1) {
             System.out.println("There are no products in store " + this.name + "!");
@@ -70,7 +70,7 @@ public abstract class Store implements Statistic {
     }
 
     public void addMoney(double productPrice) {
-        this.desk.addMoneyToDesk(productPrice);
+        this.desk.addMoney(productPrice);
     }
 
     public void removeProduct(Product productToRemove) {
