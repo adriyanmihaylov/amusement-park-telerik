@@ -18,6 +18,8 @@ public class CashDesk implements AddMoney{
     }
 
     public  void addMoney(double money) {
-        this.moneyInDesk += money;
+        if (money > 0) {
+            this.moneyInDesk += money;
+        }
     }
 }
