@@ -3,7 +3,7 @@ Amusment park is an open-source console based system made for amusement park own
 # Credits
 - Adriyan Mihaylov
 - Elizar Emanuilov
-- Krasimi Zahariev
+- Krasimir Zahariev
 
 # Functionality
 - ## Admin menu
