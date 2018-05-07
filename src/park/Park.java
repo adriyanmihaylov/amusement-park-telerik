@@ -24,10 +24,11 @@ public class Park implements PasswordAuthorization {
     private List<User> users;
     private List<Cinema> cinemas;
     private Set<Attraction> attractions;
-    private EnumMap<AttractionLevel,List<Integer>> attractionsDangerLevels;
+    private EnumMap<AttractionLevel, List<Integer>> attractionsDangerLevels;
     private EnumMap<UserTicketPrice, Double> ticketsPrices;
     private int ticketsCounter;
     private boolean isInAdminMode;
+    private boolean isInUserMode;
 
     public Park(String name, String password) {
         setName(name);
@@ -38,8 +39,9 @@ public class Park implements PasswordAuthorization {
         this.attractions = new HashSet<>();
         setTicketsPrice();
         this.ticketsCounter = 1;
-        setIsInAdminMode();
         setAttractionsDangerLevels();
+        setIsInAdminMode();
+        setInUserMode();
     }
 
     /**
@@ -59,8 +61,8 @@ public class Park implements PasswordAuthorization {
         ticketsPrices.put(UserTicketPrice.BIGGROUP, (double) 13);
     }
 
-    public double getTicketsPrices(UserTicketPrice type) {
-        return this.ticketsPrices.get(type);
+    public void setInUserMode() {
+        isInUserMode = false;
     }
 
     private void setName(String name) {
@@ -69,9 +71,9 @@ public class Park implements PasswordAuthorization {
 
     private void setAttractionsDangerLevels() {
         attractionsDangerLevels = new EnumMap<>(AttractionLevel.class);
-        attractionsDangerLevels.put(AttractionLevel.LOW,new ArrayList<>());
-        attractionsDangerLevels.put(AttractionLevel.MEDIUM,new ArrayList<>());
-        attractionsDangerLevels.put(AttractionLevel.HIGH,new ArrayList<>());
+        attractionsDangerLevels.put(AttractionLevel.LOW, new ArrayList<>());
+        attractionsDangerLevels.put(AttractionLevel.MEDIUM, new ArrayList<>());
+        attractionsDangerLevels.put(AttractionLevel.HIGH, new ArrayList<>());
 
         attractionsDangerLevels.get(AttractionLevel.LOW).add(1);
         attractionsDangerLevels.get(AttractionLevel.LOW).add(114);
@@ -87,6 +89,10 @@ public class Park implements PasswordAuthorization {
 
     public void setIsInAdminMode() {
         isInAdminMode = false;
+    }
+
+    private double getTicketsPrices(UserTicketPrice type) {
+        return this.ticketsPrices.get(type);
     }
 
 
@@ -106,25 +112,20 @@ public class Park implements PasswordAuthorization {
         addUsers(users);
     }
 
-    public int findUserIndex(String name, String ticketNumber) {
-        return users.stream()
-                .filter(x -> x.getName().equals(name))
-                .filter(x -> x.getTicketNumber(ticketNumber))
-                .findFirst()
-                .map(x -> users.indexOf(x))
-                .orElse(-1);
-    }
-
     public void consumeProduct(int userIndex, String productName) {
-        User currentUser = this.getUserByIndex(userIndex);
-        Product product = currentUser.getProductByName(productName);
+        if (isInUserMode) {
+            User currentUser = this.getUserByIndex(userIndex);
+            Product product = currentUser.getProductByName(productName);
 
-        if (product == null) {
-            System.out.println("Sorry the product was not found.");
-            return;
+            if (product == null) {
+                System.out.println("Sorry the product was not found.");
+                return;
+            }
+
+            currentUser.consumeProduct(product);
+        } else {
+            System.out.println("You are not a user!");
         }
-
-        currentUser.consumeProduct(product);
     }
 
     public void showUserInfo(int userIndex) {
@@ -141,12 +142,16 @@ public class Park implements PasswordAuthorization {
     }
 
     public void addCredits(int userIndex, int numberOfTickets) {
-        User user = getUserByIndex(userIndex);
-        if (user.getBudget() < numberOfTickets * user.getTicketPrice()) {
-            System.out.println("Sorry you don't have enough money!");
+        if (isInUserMode) {
+            User user = getUserByIndex(userIndex);
+            if (user.getBudget() < numberOfTickets * user.getTicketPrice()) {
+                System.out.println("Sorry you don't have enough money!");
+            } else {
+                user.addCredits(numberOfTickets);
+                System.out.printf("%s now has %d credits and budget of %.2f$\n", user.getName(), user.getUserTicketCredits(), user.getBudget());
+            }
         } else {
-            user.addCredits(numberOfTickets);
-            System.out.printf("%s now has %d credits and budget of %.2f$\n", user.getName(), user.getUserTicketCredits(), user.getBudget());
+            System.out.println("You are not a user!");
         }
     }
 
@@ -164,12 +169,21 @@ public class Park implements PasswordAuthorization {
         return this.users.get(userIndex);
     }
 
+    private int findUserIndex(String name, String ticketNumber) {
+        return users.stream()
+                .filter(x -> x.getName().equals(name))
+                .filter(x -> x.getTicketNumber(ticketNumber))
+                .findFirst()
+                .map(x -> users.indexOf(x))
+                .orElse(-1);
+    }
+
     /**
      * ----------------------------------------CINEMAS----------------------------------------------
      */
 
     public void addCinemas(Set<String> cinemas) {
-        if(isInAdminMode) {
+        if (isInAdminMode) {
             Set<Cinema> cinemasToAdd = cinemas.stream()
                     .map(Cinema::new)
                     .collect(Collectors.toSet());
@@ -216,6 +230,25 @@ public class Park implements PasswordAuthorization {
         System.out.println();
     }
 
+    public void userWatchMovie(int userIndex, String cinemaName, String movieName) {
+        if (isInUserMode) {
+            User user = this.getUserByIndex(userIndex);
+            Cinema cinema = this.getCinemaByName(cinemaName);
+            Movie movie = cinema.getMovieByName(movieName);
+
+            int movieAgeRestriction = cinema.getMovieAgeRestriction(movie);
+            if (movieAgeRestriction > user.getAge()) {
+                System.out.println("You are not allowed to watch " + movieName);
+                System.out.printf("This movie genre is %s\n", movie.getGenre());
+                System.out.printf("You must be at least %d years old to watch it!\n", movieAgeRestriction + 1);
+            } else {
+                user.watchMovie(movie);
+            }
+        } else {
+            System.out.println("You are not a user!");
+        }
+    }
+
     public void removeProductsFromCinemaStore(String cinemaName, String foodName) {
         if (isInAdminMode) {
             Cinema cinema = getCinemaByName(cinemaName);
@@ -242,21 +275,6 @@ public class Park implements PasswordAuthorization {
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
                 .orElse(null);
-    }
-
-    public void userWatchMovie(int userIndex, String cinemaName, String movieName) {
-        User user = this.getUserByIndex(userIndex);
-        Cinema cinema = this.getCinemaByName(cinemaName);
-        Movie movie = cinema.getMovieByName(movieName);
-
-        int movieAgeRestriction = cinema.getMovieAgeRestriction(movie);
-        if (movieAgeRestriction > user.getAge()) {
-            System.out.println("You are not allowed to watch " + movieName);
-            System.out.printf("This movie genre is %s\n", movie.getGenre());
-            System.out.printf("You must be at least %d years old to watch it!\n", movieAgeRestriction + 1);
-        } else {
-            user.watchMovie(movie);
-        }
     }
 
     /**
@@ -328,23 +346,27 @@ public class Park implements PasswordAuthorization {
 
     //TODO add product quantity
     public void userBuyProduct(String storeName, String productName, int userIndex) {
-        Store store = this.getStoreByName(storeName);
-        if(store == null) {
-            store = getCinemaByName(storeName).getCinemaStore();
+        if (isInUserMode) {
+            Store store = this.getStoreByName(storeName);
+            if (store == null) {
+                store = getCinemaByName(storeName).getCinemaStore();
+            }
+
+            Product product = store.getProductByName(productName);
+            User currentUser = getUserByIndex(userIndex);
+
+            if (product.getPrice() > currentUser.getBudget()) {
+                System.out.println("Sorry you don't have enough money to buy this product!");
+                return;
+            }
+
+            currentUser.buyProduct(product);
+            store.removeOneProduct(product);
+            store.addMoney(product.getPrice());
+            System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
+        } else {
+            System.out.println("You are not a user!");
         }
-
-        Product product = store.getProductByName(productName);
-        User currentUser = getUserByIndex(userIndex);
-
-        if (product.getPrice() > currentUser.getBudget()) {
-            System.out.println("Sorry you don't have enough money to buy this product!");
-            return;
-        }
-
-        currentUser.buyProduct(product);
-        store.removeOneProduct(product);
-        store.addMoney(product.getPrice());
-        System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
     }
 
     private void addStore(Store newStore) {
@@ -402,85 +424,107 @@ public class Park implements PasswordAuthorization {
     }
 
     public void userRideAttraction(int userIndex, String attractionName) {
-        User user = this.getUserByIndex(userIndex);
-        Attraction currentAttraction = this.getAttractionByName(attractionName);
+        if (isInUserMode) {
+            User user = this.getUserByIndex(userIndex);
+            Attraction currentAttraction = this.getAttractionByName(attractionName);
 
-        if (currentAttraction == null) {
-            System.out.println("Something went wrong with the attraction and it's name.");
-            return;
+            if (currentAttraction == null) {
+                System.out.println("Something went wrong with the attraction and it's name.");
+                return;
+            }
+
+            List<Integer> ageRestrictions = this.attractionsDangerLevels.get(currentAttraction.getDangerLevel());
+            int ageLowerLimit = ageRestrictions.get(0);
+            int ageUpperLimit = ageRestrictions.get(1);
+
+            if (user.getAge() < ageLowerLimit || user.getAge() > ageUpperLimit) {
+                System.out.println("Attraction " + attractionName + " is dangerous for you!");
+                System.out.println("It's allowed for users between " + ageLowerLimit + " and " + ageUpperLimit + " years old!");
+                return;
+            }
+
+            user.visitAttraction(currentAttraction);
+        } else {
+            System.out.println("You are not a user!");
         }
-
-        List<Integer> ageRestrictions = this.attractionsDangerLevels.get(currentAttraction.getDangerLevel());
-        int ageLowerLimit = ageRestrictions.get(0);
-        int ageUpperLimit = ageRestrictions.get(1);
-
-        if(user.getAge() < ageLowerLimit || user.getAge() > ageUpperLimit) {
-            System.out.println("Attraction " + attractionName + " is dangerous for you!");
-            System.out.println("It's allowed for users between " + ageLowerLimit + " and " + ageUpperLimit + " years old!");
-            return;
-        }
-
-        user.visitAttraction(currentAttraction);
     }
 
     /**
      * -------------------------------Show Statistics functions- NOT FINISHED----------------------------------
      */
     public void showUserStatistics() {
-        if (users.size() == 0) {
-            System.out.println("Sorry there are no users in the park yet.");
-            return;
-        }
+        if (isInAdminMode) {
+            if (users.size() == 0) {
+                System.out.println("Sorry there are no users in the park yet.");
+                return;
+            }
 
-        System.out.println("\n\t\t\t\t---------- USER STATISTICS ----------\n");
-        System.out.println("\t\t\t\t\t" + users.size() + " users in the park\n");
-        users.forEach(User::showStatistic);
-        System.out.println("\n\t\t\t\t-------------------------------------\n");
+            System.out.println("\n\t\t\t\t---------- USER STATISTICS ----------\n");
+            System.out.println("\t\t\t\t\t" + users.size() + " users in the park\n");
+            users.forEach(User::showStatistic);
+            System.out.println("\n\t\t\t\t-------------------------------------\n");
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void showAttractionStatistics() {
-        if (attractions.size() == 0) {
-            System.out.println("Sorry there are no attractions in the park yet.");
-            return;
-        }
+        if (isInAdminMode) {
+            if (attractions.size() == 0) {
+                System.out.println("Sorry there are no attractions in the park yet.");
+                return;
+            }
 
-        System.out.println("\n\t\t\t\t---------- ATTRACTION STATISTICS ----------\n");
-        attractions.forEach(Attraction::showStatistic);
-        System.out.println("\n\t\t\t\t-------------------------------------------\n");
+            System.out.println("\n\t\t\t\t---------- ATTRACTION STATISTICS ----------\n");
+            attractions.forEach(Attraction::showStatistic);
+            System.out.println("\n\t\t\t\t-------------------------------------------\n");
+        } else {
+            System.out.println("You are not an admin!");
+        }
     }
 
     public void showCinemaStatistics() {
-        if (cinemas.size() == 0) {
-            System.out.println("Sorry there are no cinemas in the park yet.");
-            return;
-        }
+        if (isInAdminMode) {
+            if (cinemas.size() == 0) {
+                System.out.println("Sorry there are no cinemas in the park yet.");
+                return;
+            }
 
-        System.out.println("\n\t\t\t\t---------- CINEMA STATISTICS ----------\n");
-        for (Cinema cinema : cinemas) {
-            System.out.printf("Cinema \"%s\"\n\n", cinema);
-            cinema.displayMovies();
-            System.out.println();
-            cinema.displayCinemaProducts();
+            System.out.println("\n\t\t\t\t---------- CINEMA STATISTICS ----------\n");
+            for (Cinema cinema : cinemas) {
+                System.out.printf("Cinema \"%s\"\n\n", cinema);
+                cinema.displayMovies();
+                System.out.println();
+                cinema.displayCinemaProducts();
+            }
+            System.out.println("\n\t\t\t\t---------------------------------------\n");
+        } else {
+            System.out.println("You are not an admin!");
         }
-        System.out.println("\n\t\t\t\t---------------------------------------\n");
     }
 
     public void showStoreStatistics() {
-        if (stores.size() == 0) {
-            System.out.println("Sorry there are no stores in the park yet.");
-            return;
-        }
+        if (isInAdminMode) {
+            if (stores.size() == 0) {
+                System.out.println("Sorry there are no stores in the park yet.");
+                return;
+            }
 
-        System.out.println("\n\t\t\t\t---------- STORE STATISTICS----------\n");
-        for (Store store : stores) {
-            store.showStatistic();
+            System.out.println("\n\t\t\t\t---------- STORE STATISTICS----------\n");
+            for (Store store : stores) {
+                store.showStatistic();
+            }
+            System.out.println("\n\t\t\t\t-------------------------------------\n");
+        } else {
+            System.out.println("You are not an admin!");
         }
-        System.out.println("\n\t\t\t\t-------------------------------------\n");
     }
 
     public void showStoreProducts(String storeName) {
-        Store store = getStoreByName(storeName);
-        store.showProductsInStock();
+        if (isInAdminMode || isInUserMode) {
+            Store store = getStoreByName(storeName);
+            store.showProductsInStock();
+        }
     }
 
     /**
@@ -489,48 +533,67 @@ public class Park implements PasswordAuthorization {
 
     public List<String> getStoreAllProductsNames(String storeName) {
         Store store = getStoreByName(storeName);
-        if(store == null) {
+        if (store == null) {
             return new ArrayList<>();
         }
         return store.getAllProductsNames();
     }
 
     public List<String> getUserAllProductsNames(int userIndex) {
-        User user = getUserByIndex(userIndex);
+        if (isInUserMode || isInAdminMode) {
+            User user = getUserByIndex(userIndex);
 
-        return user.getAllProductsNames();
+            return user.getAllProductsNames();
+        }
+
+        return new ArrayList<>();
     }
 
     public List<String> getAllCinemasNames() {
-        return this.cinemas.stream()
-                .map(Cinema::getName)
-                .collect(Collectors.toList());
+        if (isInUserMode || isInAdminMode) {
+            return this.cinemas.stream()
+                    .map(Cinema::getName)
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     public List<String> getMoviesFromCinema(String cinemaName) {
-        Cinema cinema = getCinemaByName(cinemaName);
+        if (isInAdminMode || isInUserMode) {
+            Cinema cinema = getCinemaByName(cinemaName);
 
-        return cinema.getAllMoviesNames();
+            return cinema.getAllMoviesNames();
+        }
+        return new ArrayList<>();
     }
 
     public List<String> getAttractionsNames() {
-        return this.attractions.stream()
-                .map(Attraction::getName)
-                .collect(Collectors.toList());
+        if (isInUserMode || isInAdminMode) {
+            return this.attractions.stream()
+                    .map(Attraction::getName)
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     public List<String> getStoresNames() {
-        return this.stores.stream()
-                .map(Store::getName)
-                .collect(Collectors.toList());
+        if (isInAdminMode || isInUserMode) {
+            return this.stores.stream()
+                    .map(Store::getName)
+                    .collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     public List<String> getProductsNamesInCinemaStore(String cinemaName) {
-        Cinema cinema = getCinemaByName(cinemaName);
-        if(cinema == null) {
-            return new ArrayList<>();
+        if (isInUserMode || isInAdminMode) {
+            Cinema cinema = getCinemaByName(cinemaName);
+            if (cinema == null) {
+                return new ArrayList<>();
+            }
+            return cinema.getProductsNamesInCinema();
         }
-        return cinema.getProductsNamesInCinema();
+        return new ArrayList<>();
     }
 
     public List<String> getAllTicketsPrices() {
@@ -542,6 +605,15 @@ public class Park implements PasswordAuthorization {
                 .collect(Collectors.toList()));
 
         return ticketPrices;
+    }
+
+    public int checkUserTicket(String userName, String ticketNumber) {
+        int userIndex = findUserIndex(userName, ticketNumber);
+        if (userIndex > -1) {
+            isInUserMode = true;
+            return userIndex;
+        }
+        return -1;
     }
 
     @Override

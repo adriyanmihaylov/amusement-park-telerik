@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class Main {
     private static Park park = new Park("Disneyland", "123456");
-    final static String DATE_FORMAT = "dd-MM-yyyy";
+    private final static String DATE_FORMAT = "dd-MM-yyyy";
 
     public static void main(String[] args) throws Exception {
         mainMenu();
@@ -62,6 +62,7 @@ public class Main {
                 } else {
                     parkMenu(userIndex);
                 }
+                park.setInUserMode();
                 break;
             case "3":
                 return;
@@ -132,8 +133,7 @@ public class Main {
         storesMenu();
     }
 
-    private static void removeStore() throws Exception {
-        System.out.println("Which store do you want to remove: ");
+    private static void removeStore() {
         String storeName = chooseStore();
 
         if (storeName.equals("Exit") || storeName.isEmpty()) {
@@ -146,7 +146,7 @@ public class Main {
         }
     }
 
-    private static String chooseStore() throws Exception {
+    private static String chooseStore() {
         List<String> options = park.getStoresNames();
         if (options.size() == 0) {
             System.out.println("There are no stores in the park!");
@@ -243,7 +243,7 @@ public class Main {
         if (!storeName.isEmpty()) {
             options = park.getStoreAllProductsNames(storeName);
 
-            if(options.size() == 0) {
+            if (options.size() == 0) {
                 options = park.getProductsNamesInCinemaStore(storeName);
             }
         } else if (currentUserIndex >= 0) {
@@ -460,7 +460,6 @@ public class Main {
     }
 
     private static void removeAttraction() throws IOException {
-        System.out.println("Choose attraction from the list: ");
         String chosenOption = chooseAttraction();
         if (chosenOption.equals("Exit") || chosenOption.isEmpty()) {
             return;
@@ -500,7 +499,7 @@ public class Main {
         cinemaMenu();
     }
 
-    private static String chooseCinema() throws Exception {
+    private static String chooseCinema() {
         List<String> options = park.getAllCinemasNames();
 
         if (options.size() == 0) {
@@ -520,7 +519,7 @@ public class Main {
         return options.get(command - 1);
     }
 
-    private static void addNewCinema() throws Exception {
+    private static void addNewCinema() {
         System.out.println("How many cinemas do you want to add to the park ?");
 
         Set<String> cinemas = new HashSet<>();
@@ -592,7 +591,7 @@ public class Main {
     }
 
     private static void removeProductFromCinemaStore(String cinemaName) throws Exception {
-        String productName = chooseProduct(cinemaName,-1);
+        String productName = chooseProduct(cinemaName, -1);
 
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
@@ -763,7 +762,6 @@ public class Main {
         }
     }
 
-    // TODO - ADD CONSUME PRODUCTS/LIST PRODUCTS
     public static int findUserInPark() throws Exception {
         System.out.print("Please enter user name: ");
         String name = readName();
@@ -771,25 +769,25 @@ public class Main {
         String ticketNumber = readString();
         System.out.println();
 
-        return park.findUserIndex(name, ticketNumber);
+        int index = park.checkUserTicket(name,ticketNumber);
+        return index;
     }
 
-    //TODO - add cinemaStore functionality
-    private static  void goOnCinema(int indexOfUser) throws Exception {
+    private static void goOnCinema(int indexOfUser) throws Exception {
         String cinemaName = chooseCinema();
         if (cinemaName.equals("Exit") || cinemaName.isEmpty()) {
             return;
         }
 
-        String[] options = {"Watch a movie","Buy something from the store", "Exit cinema"};
+        String[] options = {"Watch a movie", "Buy something from the store", "Exit cinema"};
         printOptions(Arrays.asList(options));
         int command = readPositiveInteger();
         switch (command) {
             case 1:
-                watchMovie(cinemaName,indexOfUser);
+                watchMovie(cinemaName, indexOfUser);
                 break;
             case 2:
-                goShoppingInCinemaStore(cinemaName,indexOfUser);
+                goShoppingInCinemaStore(cinemaName, indexOfUser);
                 //TODO buy something from cinema store
                 break;
             case 3:
@@ -817,7 +815,7 @@ public class Main {
                 consumeProduct(indexOfUser);
                 break;
             case "4":
-               goOnCinema(indexOfUser);
+                goOnCinema(indexOfUser);
                 break;
             case "5":
                 rideAttractions(indexOfUser);
@@ -868,7 +866,7 @@ public class Main {
 
         String productName = chooseProduct(storeName, -1);
 
-        if(productName.equals("Exit") || productName.isEmpty()) {
+        if (productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
 
@@ -876,15 +874,15 @@ public class Main {
     }
 
     private static void goShoppingInCinemaStore(String cinemaName, int indexOfUser) throws Exception {
-        String productName = chooseProduct(cinemaName,-1);
-        if(productName.equals("Exit") || productName.isEmpty()) {
+        String productName = chooseProduct(cinemaName, -1);
+        if (productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
 
-        park.userBuyProduct(cinemaName,productName,indexOfUser);
+        park.userBuyProduct(cinemaName, productName, indexOfUser);
     }
 
-    private static void watchMovie(String cinemaName,int userIndex) throws Exception {
+    private static void watchMovie(String cinemaName, int userIndex) throws Exception {
         String movieName = chooseMovie(cinemaName);
         if (movieName.equals("Exit") || cinemaName.isEmpty()) {
             return;
@@ -893,7 +891,6 @@ public class Main {
         park.userWatchMovie(userIndex, cinemaName, movieName);
     }
 
-    //TODO test if the logic is working
     public static void rideAttractions(int userIndex) throws Exception {
         String attractionName = chooseAttraction();
         if (attractionName.equals("Exit") || attractionName.isEmpty()) {
@@ -905,9 +902,7 @@ public class Main {
 
     /**------------------------------------END OF USER functions----------------------------------------------*/
 
-    /**
-     * -----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------
-     */
+    /**-----------------------------CREATING USERS AND SELLING TICKETS TO THEM-----------------------------------*/
 
     public static int readSizeOfGroup() {
         System.out.print("Enter number of members: ");
@@ -978,9 +973,7 @@ public class Main {
         }
     }
 
-    /**
-     * ------------------------------------Exception methods -----------------------------------------------------
-     */
+    /**------------------------------------Exception methods -----------------------------------------------------*/
     public static String readName() {
         String name;
         try {
@@ -1135,9 +1128,8 @@ public class Main {
             throw new DateException("Not a valid date!");
         }
     }
-    /**
-     * ---------------------------------------------------------------------------------------------------------
-     */
+
+     /** ----------------------------------------------Other methods-------------------------------------------------*/
     private static boolean isTrueMenu() {
         System.out.println("Are you sure you want to do that?");
         String[] options = {"Yes", "No"};
