@@ -1,9 +1,9 @@
 # Amusement Park
 Amusment park is an open-source console based system made for amusement park owners. It was developed as the first team project for Telerik Academy Alpha - Java track.
 # Credits
-- Adriyan Mihaylov
-- Elizar Emanuilov
-- Krasimir Zahariev
+- [Adriyan Mihaylov](https://github.com/adriyanmihaylov "Adriyan Mihaylov")
+- [Elizar Emanuilov](https://github.com/Echolz "Elizar Emanuilov")
+- [Krasimir Zahariev](https://github.com/KrasimirZahariev "Krasimir Zahariev")
 
 # Functionality
 - ## Admin menu
