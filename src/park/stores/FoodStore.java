@@ -5,7 +5,7 @@ import park.products.*;
 
 import java.util.*;
 
-public class FoodStore extends Store implements IConsumable {
+public class FoodStore extends Store {
 
     public FoodStore(String name, CashDesk desk) {
         super(name, desk);
@@ -15,10 +15,6 @@ public class FoodStore extends Store implements IConsumable {
         super(name, desk, products);
     }
 
-    @Override
-    public void consume() {
-
-    }
 
     @Override
     public String toString() {
