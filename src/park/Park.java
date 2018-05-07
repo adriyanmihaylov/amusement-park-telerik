@@ -556,7 +556,9 @@ public class Park implements PasswordAuthorization {
     public boolean checkPassword(String password) {
         if (this.password.equals(password)) {
             isInAdminMode = true;
+            return true;
         }
+        isInAdminMode = false;
         return false;
     }
 }
