@@ -342,6 +342,10 @@ public class Park {
     //TODO add product quantity
     public void userBuyProduct(String storeName, String productName, int userIndex) {
         Store store = this.getStoreByName(storeName);
+        if(store == null) {
+            store = getCinemaByName(storeName).getCinemaStore();
+        }
+
         Product product = store.getProductByName(productName);
         User currentUser = getUserByIndex(userIndex);
 
@@ -368,7 +372,7 @@ public class Park {
         return stores.stream()
                 .filter(st -> st.getName().equals(storeName))
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     /**
@@ -499,7 +503,9 @@ public class Park {
 
     public List<String> getStoreAllProductsNames(String storeName) {
         Store store = getStoreByName(storeName);
-
+        if(store == null) {
+            return new ArrayList<>();
+        }
         return store.getAllProductsNames();
     }
 

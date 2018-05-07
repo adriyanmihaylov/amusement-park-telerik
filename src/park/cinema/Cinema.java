@@ -33,7 +33,7 @@ public class Cinema {
     }
 
     private void setCinemaStore() {
-        String name = "'" + this.name + " cinema store'";
+        String name = this.name + " store";
         cinemaStore = new FoodStore(name, new CashDesk(0));
     }
 

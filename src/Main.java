@@ -238,6 +238,9 @@ public class Main {
         List<String> options = new ArrayList<>();
         if (!storeName.isEmpty()) {
             options = park.getStoreAllProductsNames(storeName);
+            if(options.size() == 0) {
+                options = park.getProductsNamesInCinemaStore(storeName);
+            }
         } else if (currentUserIndex >= 0) {
             options = park.getUserAllProductsNames(currentUserIndex);
         }
@@ -494,25 +497,6 @@ public class Main {
         cinemaMenu();
     }
 
-    private static String chooseProductInCinemaStore(String cinemaName) throws IOException {
-        List<String> options = park.getProductsNamesInCinemaStore(cinemaName);
-
-        if (options.size() == 0) {
-            System.out.println("There are no products in " + cinemaName + " store !");
-            return "";
-        }
-        options.add("Exit");
-
-        printOptions(options);
-
-        int command = readPositiveInteger();
-        if (command > options.size() || command < 1) {
-            System.out.println("Invalid choice! Choose one of the following: ");
-            return chooseProductInCinemaStore(cinemaName);
-        }
-        return options.get(command - 1);
-    }
-
     private static String chooseCinema() throws Exception {
         List<String> options = park.getAllCinemasNames();
 
@@ -604,7 +588,7 @@ public class Main {
     }
 
     private static void removeProductFromCinemaStore(String cinemaName) throws Exception {
-        String productName = chooseProductInCinemaStore(cinemaName);
+        String productName = chooseProduct(cinemaName,-1);
 
         if (productName.equals("Exit") || productName.isEmpty()) {
             return;
@@ -678,7 +662,7 @@ public class Main {
 
         switch (readString()) {
             case "1":
-                return MovieGenre.ACTION;
+                return MovieGenre.ANIMATION;
             case "2":
                 return MovieGenre.DRAMA;
             case "3":
@@ -788,14 +772,20 @@ public class Main {
 
     //TODO - add cinemaStore functionality
     private static  void goOnCinema(int indexOfUser) throws Exception {
+        String cinemaName = chooseCinema();
+        if (cinemaName.equals("Exit") || cinemaName.isEmpty()) {
+            return;
+        }
+
         String[] options = {"Watch a movie","Buy something from the store", "Exit cinema"};
         printOptions(Arrays.asList(options));
         int command = readPositiveInteger();
         switch (command) {
             case 1:
-                watchMovie(indexOfUser);
+                watchMovie(cinemaName,indexOfUser);
                 break;
             case 2:
+                goShoppingInCinemaStore(cinemaName,indexOfUser);
                 //TODO buy something from cinema store
                 break;
             case 3:
@@ -807,6 +797,7 @@ public class Main {
         }
         goOnCinema(indexOfUser);
     }
+
     private static void parkMenu(int indexOfUser) throws Exception {
         String[] options = {"Add credits", "Go shopping", "Consume a product", "Enter Cinema", "Ride attractions", "Show user info", "Exit"};
         printOptions(Arrays.asList(options));
@@ -880,13 +871,16 @@ public class Main {
         park.userBuyProduct(storeName, productName, userIndex);
     }
 
-    //TODO test if the logic is working
-    private static void watchMovie(int userIndex) throws Exception {
-        String cinemaName = chooseCinema();
-        if (cinemaName.equals("Exit") || cinemaName.isEmpty()) {
+    private static void goShoppingInCinemaStore(String cinemaName, int indexOfUser) throws Exception {
+        String productName = chooseProduct(cinemaName,-1);
+        if(productName.equals("Exit") || productName.isEmpty()) {
             return;
         }
 
+        park.userBuyProduct(cinemaName,productName,indexOfUser);
+    }
+
+    private static void watchMovie(String cinemaName,int userIndex) throws Exception {
         String movieName = chooseMovie(cinemaName);
         if (movieName.equals("Exit") || cinemaName.isEmpty()) {
             return;
