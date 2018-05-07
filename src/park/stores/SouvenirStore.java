@@ -11,7 +11,7 @@ public class SouvenirStore extends Store{
 
     @Override
     public void showStatistic() {
-        System.out.printf("Souvenir store %s\n\n", toString());
+        System.out.printf("\t\t\tSouvenir store %s\n\n", toString());
         showProductsInStock();
         System.out.println();
     }

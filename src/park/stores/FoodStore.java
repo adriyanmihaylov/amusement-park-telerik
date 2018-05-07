@@ -12,7 +12,7 @@ public class FoodStore extends Store {
 
     @Override
     public void showStatistic() {
-        System.out.printf("\t\tFood store %s\n\n", toString());
+        System.out.printf("\t\t\tFood store %s\n\n", toString());
         showProductsInStock();
         System.out.println();
     }

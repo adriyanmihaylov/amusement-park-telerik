@@ -21,7 +21,7 @@ public abstract class Product {
 
     @Override
     public String toString() {
-        return String.format("|\tProduct: %s\t|\tprice: %.2f\t|", name, price);
+        return String.format("|\tProduct: %10s\t|\tprice: %5.2f\t|", name, price);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class Attraction implements Statistic {
 
     @Override
     public String toString() {
-        return String.format("Attraction \"%15s\", Danger Level- %10s", name, dangerLevel);
+        return String.format("Attraction %-10s Danger Level %-10s", name, dangerLevel);
     }
 
     @Override

@@ -6,17 +6,17 @@ public class ProductToEat extends FoodProduct {
     }
 
     private String consumeProductString() {
-        return String.format("Product %s with the price of: %.2f and expiration date: %s", this.getName(), this.getPrice(), this.getExpirationDate());
+        return String.format("Product %s with the price of: %4.2f and expiration date: %8s", this.getName(), this.getPrice(), this.getExpirationDate());
     }
 
     @Override
     public void consume() {
-        System.out.printf("%s was eaten.\n", this.consumeProductString());
+        System.out.printf("%15s was eaten.\n", this.consumeProductString());
     }
 
     @Override
     public String toString() {
-        return String.format("%s\ttype: food\t|", super.toString());
+        return String.format("%20s\ttype: food\t|", super.toString());
     }
 
 }

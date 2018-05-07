@@ -16,6 +16,6 @@ public abstract class FoodProduct extends Product implements IConsumable {
 
     @Override
     public String toString() {
-        return String.format("%s\texpiration date: %s\t|", super.toString(), this.expirationDate);
+        return String.format("%25s\texpiration date: %10s\t|", super.toString(), this.expirationDate);
     }
 }

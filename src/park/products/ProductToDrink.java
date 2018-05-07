@@ -11,12 +11,12 @@ public class ProductToDrink extends FoodProduct {
 
     @Override
     public void consume() {
-        System.out.printf("%s was drank.\n", this.consumeProductString());
+        System.out.printf("%10s was drank.\n", this.consumeProductString());
     }
 
     @Override
     public String toString() {
-        return String.format("%s\ttype: drink\t|", super.toString());
+        return String.format("%20s\ttype: drink\t|", super.toString());
     }
 
 }
