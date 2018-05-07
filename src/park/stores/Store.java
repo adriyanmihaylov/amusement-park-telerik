@@ -5,12 +5,13 @@ import park.interfaces.Statistic;
 import park.products.Product;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public abstract class Store implements Statistic, AddMoney {
     private String name;
     private CashDesk desk;
-    protected HashMap<Product, Integer> productsInStock;
+    private HashMap<Product, Integer> productsInStock;
 
     Store(String name, CashDesk desk) {
         setName(name);
@@ -18,32 +19,34 @@ public abstract class Store implements Statistic, AddMoney {
         productsInStock = new HashMap<>();
     }
 
-    Store(String name, CashDesk desk, HashMap<Product, Integer> productsToAdd) {
-        this(name, desk);
-        productsInStock.putAll(productsToAdd);
+    public String getName() {
+        return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    // TODO test if it's working
     public void showProductsInStock() {
         if (productsInStock.size() < 1) {
             System.out.println("There are no products in store " + this.name + "!");
         } else {
             productsInStock
                     .forEach((product, quantity) ->
-                            System.out.println("Product: " + product.getName() + " Quantity: " + quantity));
+                            System.out.println(product.toString() + " Quantity: " + quantity));
         }
     }
 
     public void addProducts(HashMap<Product, Integer> productsToAdd) {
-        this.productsInStock.putAll(productsToAdd);
+        for (Map.Entry<Product, Integer> entry : productsToAdd.entrySet()) {
+            int quantity = entry.getValue();
+
+            if(productsInStock.containsKey(entry.getKey())) {
+                quantity += productsInStock.get(entry.getKey());
+                System.out.printf("Product \"%s\" has been updated! Quantity now is %d\n", entry.getKey().getName(),quantity);
+            }
+            productsInStock.put(entry.getKey(),quantity);
+        }
     }
 
     public List<String> getAllProductsNames() {
@@ -90,9 +93,8 @@ public abstract class Store implements Statistic, AddMoney {
         productsInStock.put(productToRemove, productQuantity);
     }
 
-    //TODO complete toString method
     @Override
     public String toString() {
-        return String.format("Store: %s\t|\tBudget: %.2f", this.name, this.desk.getMoneyInDesk());
+        return String.format("\nStore: %-10s|\tBudget: %-10.2f", this.name, this.desk.getMoneyInDesk());
     }
 }

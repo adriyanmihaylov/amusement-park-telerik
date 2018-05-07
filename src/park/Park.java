@@ -93,6 +93,7 @@ public class Park implements PasswordAuthorization {
     /**
      * ---------------------------------Creating users and other user functions-------------------------------------
      */
+
     public void createUsers(Map<InputDataCollection, UserTicketPrice> newUsers) {
         List<User> users = new ArrayList<>();
         newUsers.forEach((k, v) ->
@@ -123,7 +124,6 @@ public class Park implements PasswordAuthorization {
             return;
         }
 
-        //TODO test if the logic is working
         currentUser.consumeProduct(product);
     }
 
@@ -162,14 +162,6 @@ public class Park implements PasswordAuthorization {
 
     private User getUserByIndex(int userIndex) {
         return this.users.get(userIndex);
-    }
-
-    private void deleteUser(User user) {
-        if(isInAdminMode) {
-            this.users.remove(user);
-        } else {
-            System.out.println("You are not an admin!");
-        }
     }
 
     /**
@@ -558,6 +550,7 @@ public class Park implements PasswordAuthorization {
             isInAdminMode = true;
             return true;
         }
+
         isInAdminMode = false;
         return false;
     }
