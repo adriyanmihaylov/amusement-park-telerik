@@ -262,7 +262,7 @@ public class Park {
         Cinema cinema = this.getCinemaByName(cinemaName);
         Movie movie = cinema.getMovieByName(movieName);
 
-        int movieAgeRestriction = cinema.getMovieAgeRestiction(movie);
+        int movieAgeRestriction = cinema.getMovieAgeRestriction(movie);
         if (movieAgeRestriction > user.getAge()) {
             System.out.println("You are not allowed to watch " + movieName);
             System.out.printf("This movie genre is %s\n", movie.getGenre());

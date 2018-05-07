@@ -51,7 +51,7 @@ public class Cinema {
         moviesAgeRestrictions.put(MovieGenre.THRILLER, 17);
     }
 
-    public int getMovieAgeRestiction(Movie movie) {
+    public int getMovieAgeRestriction(Movie movie) {
         return moviesAgeRestrictions.get(movie.getGenre());
     }
 
