@@ -89,14 +89,35 @@ public class Cinema {
         }
     }
 
-    //TODO fix
-    //a 16 year old can watch a thriller but cant watch animation
+
     private boolean isMovieAllowed(User user, Movie movie) {
         int userAge = user.getAge();
         MovieGenre genre = movie.getGenre();
 
-        return (userAge >= 10 || genre == MovieGenre.ANIMATION) &&
-                (userAge >= 18 || genre != MovieGenre.THRILLER);
+        if (userAge < 4) {
+            return false;
+        }
+
+        switch (genre) {
+            case THRILLER:
+                if (userAge < 18) {
+                    return false;
+                }
+            case DRAMA:
+                if (userAge < 16) {
+                    return false;
+                }
+            case ACTION:
+                if (userAge < 14) {
+                    return false;
+                }
+            case COMEDY:
+                if (userAge < 9) {
+                    return false;
+                }
+            default:
+                return true;
+        }
     }
 
 
@@ -119,7 +140,6 @@ public class Cinema {
     }
 
     public Movie getMovieByName(String movieName) {
-        Movie wantedMovie;
 
         for (Movie currentMovie : movies) {
             if (currentMovie.getName().equals(movieName)) {
