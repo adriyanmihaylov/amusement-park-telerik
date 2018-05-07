@@ -26,4 +26,9 @@ public class SouvenirStore extends Store implements IUsable {
         return String.format(super.toString() + "\t|\tSells: souvenirs");
     }
 
+    @Override
+    public void showStatistic() {
+        System.out.printf("Souvenir store %10s\n",getName());
+        showProductsInStock();
+    }
 }

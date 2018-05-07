@@ -5,6 +5,7 @@ import park.cinema.Movie;
 import park.funzone.Attraction;
 import park.interfaces.IConsumable;
 import park.interfaces.IUsable;
+import park.interfaces.Statistic;
 import park.products.FoodProduct;
 import park.products.Product;
 import park.products.Ticket;
@@ -12,7 +13,7 @@ import park.products.Ticket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Statistic {
     private String name;
     private int age;
     private double budget;
@@ -163,5 +164,11 @@ public class User {
         } else {
             System.out.println("Sorry you don't have enough credits!");
         }
+    }
+
+    @Override
+    public void showStatistic() {
+        System.out.printf("%-15s | Age %-5d | Ticket #%-5s credits %-5d | Ticket type %-15s price %-5.2f$\n",getName(),getAge(),
+                ticket.getTicketNumber(),ticket.getTicketCredits(),userType, ticket.getTicketPrice());
     }
 }

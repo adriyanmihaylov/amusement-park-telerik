@@ -447,7 +447,7 @@ public class Park {
 
         System.out.println("\n\t\t\t\t---------- USER STATISTICS ----------\n");
         System.out.println("\t\t\t\t\t" + users.size() + " users in the park\n");
-        users.forEach(System.out::println);
+        users.forEach(User::showStatistic);
         System.out.println("\n\t\t\t\t-------------------------------------\n");
     }
 
@@ -458,7 +458,7 @@ public class Park {
         }
 
         System.out.println("\n\t\t\t\t---------- ATTRACTION STATISTICS ----------\n");
-        attractions.forEach(System.out::println);
+        attractions.forEach(Attraction::showStatistic);
         System.out.println("\n\t\t\t\t-------------------------------------------\n");
     }
 
@@ -486,8 +486,7 @@ public class Park {
 
         System.out.println("\n\t\t\t\t---------- STORE STATISTICS----------\n");
         for (Store store : stores) {
-            System.out.println(store + "\n");
-            store.showProductsInStock();
+            store.showStatistic();
         }
         System.out.println("\n\t\t\t\t-------------------------------------\n");
     }

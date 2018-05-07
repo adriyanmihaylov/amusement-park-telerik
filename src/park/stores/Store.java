@@ -1,15 +1,12 @@
 package park.stores;
 
-import park.products.FoodProduct;
+import park.interfaces.Statistic;
 import park.products.Product;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public abstract class Store {
+public abstract class Store implements Statistic {
     private String name;
     private CashDesk desk;
     protected HashMap<Product, Integer> productsInStock;
@@ -98,5 +95,4 @@ public abstract class Store {
     public String toString() {
         return String.format("Store: %s\t|\tBudget: %.2f", this.name, this.desk.getMoneyInDesk());
     }
-
 }

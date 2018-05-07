@@ -25,4 +25,10 @@ public class FoodStore extends Store implements IConsumable {
         return String.format(super.toString() + "\t|\tSells: foods");
     }
 
+    @Override
+    public void showStatistic() {
+        System.out.printf("\t\tFood store %10s\n", getName().toUpperCase());
+        showProductsInStock();
+        System.out.println();
+    }
 }

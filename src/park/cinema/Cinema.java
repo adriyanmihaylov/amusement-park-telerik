@@ -61,10 +61,6 @@ public class Cinema {
         System.out.println("Done!\n");
     }
 
-    public Set<Movie> getMovies() {
-        return movies;
-    }
-
     public void displayMovies() {
         if (movies.size() == 0) {
             System.out.println("Sorry, there are no movies in the cinema.");
@@ -76,16 +72,8 @@ public class Cinema {
         System.out.println();
     }
 
-    public void addProductsToStore(HashMap<Product, Integer> productsToAdd) {
-        this.cinemaStore.addProducts(productsToAdd);
-    }
-
     public void removeProduct(Product product) {
         this.cinemaStore.removeProduct(product);
-    }
-
-    private boolean isFoodContained(Map<Product, Integer> productsInStock, Product product) {
-        return productsInStock.containsKey(product);
     }
 
     public List<String> getAllMoviesNames() {

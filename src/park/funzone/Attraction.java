@@ -1,6 +1,8 @@
 package park.funzone;
 
-public class Attraction {
+import park.interfaces.Statistic;
+
+public class Attraction implements Statistic {
     private String name;
     private AttractionLevel dangerLevel;
 
@@ -19,6 +21,11 @@ public class Attraction {
 
     @Override
     public String toString() {
-        return String.format("Attraction \"%s\", Danger Level- %s", name, dangerLevel);
+        return String.format("Attraction \"%15s\", Danger Level- %10s", name, dangerLevel);
+    }
+
+    @Override
+    public void showStatistic() {
+        System.out.println(toString());
     }
 }
