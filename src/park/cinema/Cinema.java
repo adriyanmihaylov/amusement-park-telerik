@@ -12,6 +12,7 @@ public class Cinema {
     private String name;
     private CashDesk desk;
     private Set<Movie> movies;
+    private EnumMap<MovieGenre,Integer> moviesAgeRestrictions;
     private FoodStore cinemaStore;
 
 
@@ -19,6 +20,7 @@ public class Cinema {
         this.name = name;
         this.desk = new CashDesk(500);
         this.movies = new HashSet<>();
+        setMoviesAgeRestrictions();
         setCinemaStore();
     }
 
@@ -37,6 +39,20 @@ public class Cinema {
 
     public FoodStore getCinemaStore() {
         return this.cinemaStore;
+    }
+
+    private void setMoviesAgeRestrictions() {
+        moviesAgeRestrictions = new EnumMap<>(MovieGenre.class);
+        moviesAgeRestrictions.put(MovieGenre.COMEDY, 0);
+        moviesAgeRestrictions.put(MovieGenre.ANIMATION, 0);
+        moviesAgeRestrictions.put(MovieGenre.MUSICAL, 0);
+        moviesAgeRestrictions.put(MovieGenre.ACTION, 13);
+        moviesAgeRestrictions.put(MovieGenre.DRAMA, 15);
+        moviesAgeRestrictions.put(MovieGenre.THRILLER, 17);
+    }
+
+    public int getMovieAgeRestiction(Movie movie) {
+        return moviesAgeRestrictions.get(movie.getGenre());
     }
 
     public void updateCinemaStore(HashMap<Product, Integer> foodsToAdd) {
@@ -62,64 +78,10 @@ public class Cinema {
             return;
         }
 
-        System.out.println("Movies you can watch:");
-        movies.forEach(x -> System.out.print(x + " "));
+        System.out.printf("Movies in cinema %-15s\n",this.getName());
+        movies.forEach(x -> System.out.println(x + " "));
         System.out.println();
     }
-
-    public void watchMovie(User user, Movie movie) {
-        boolean isAllowed = isMovieAllowed(user, movie);
-        if (!isAllowed) {
-            System.out.printf("Sorry \"%s\" is not allowed for users at this age.\n", movie.getName());
-            return;
-        }
-
-        if (user.hasFoodProducts()) {
-            System.out.println("Sorry you can't ride the attraction before you consume the food products you have!");
-            return;
-        }
-
-        Ticket userTicket = user.getUserTicket();
-
-        if (userTicket.hasCredits()) {
-            System.out.println(user.getName() + " is watching " + movie.getName());
-            userTicket.use();
-        } else {
-            System.out.println("Sorry you don't have enough credits!");
-        }
-    }
-
-
-    private boolean isMovieAllowed(User user, Movie movie) {
-        int userAge = user.getAge();
-        MovieGenre genre = movie.getGenre();
-
-        if (userAge < 4) {
-            return false;
-        }
-
-        switch (genre) {
-            case THRILLER:
-                if (userAge < 18) {
-                    return false;
-                }
-            case DRAMA:
-                if (userAge < 16) {
-                    return false;
-                }
-            case ACTION:
-                if (userAge < 14) {
-                    return false;
-                }
-            case COMEDY:
-                if (userAge < 9) {
-                    return false;
-                }
-            default:
-                return true;
-        }
-    }
-
 
     public void addProductsToStore(HashMap<Product, Integer> productsToAdd) {
         this.cinemaStore.addProducts(productsToAdd);

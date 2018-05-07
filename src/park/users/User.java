@@ -1,5 +1,7 @@
 package park.users;
 
+import park.cinema.Cinema;
+import park.cinema.Movie;
 import park.funzone.Attraction;
 import park.interfaces.IConsumable;
 import park.interfaces.IUsable;
@@ -156,5 +158,14 @@ public class User {
     @Override
     public String toString() {
         return String.format("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|", this.name, this.age, this.budget, this.ticket.getTicketNumber());
+    }
+
+    public void watchMovie(Movie currentMovie) {
+        if (this.ticket.hasCredits()) {
+            System.out.println(getName() + " is watching " + currentMovie.getName());
+            ticket.use();
+        } else {
+            System.out.println("Sorry you don't have enough credits!");
+        }
     }
 }

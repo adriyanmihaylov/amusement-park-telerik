@@ -614,8 +614,10 @@ public class Main {
     }
 
     private static void deleteCinema(String name) {
-        park.removeCinema(name);
-        System.out.println("Done !\n");
+        if (isTrueMenu()) {
+            park.removeCinema(name);
+            System.out.println("Done !\n");
+        }
     }
 
     private static String chooseMovie(String cinemaName) throws Exception {
@@ -784,8 +786,29 @@ public class Main {
         return park.findUserIndex(name, ticketNumber);
     }
 
+    //TODO - add cinemaStore functionality
+    private static  void goOnCinema(int indexOfUser) throws Exception {
+        String[] options = {"Watch a movie","Buy something from the store", "Exit cinema"};
+        printOptions(Arrays.asList(options));
+        int command = readPositiveInteger();
+        switch (command) {
+            case 1:
+                watchMovie(indexOfUser);
+                break;
+            case 2:
+                //TODO buy something from cinema store
+                break;
+            case 3:
+                return;
+            default:
+                System.out.println("Invalid command");
+                System.out.println("Please choose an option from the list!");
+                break;
+        }
+        goOnCinema(indexOfUser);
+    }
     private static void parkMenu(int indexOfUser) throws Exception {
-        String[] options = {"Add credits", "Go shopping", "Consume a product", "Watch a movie", "Ride attractions", "Show user info", "Exit"};
+        String[] options = {"Add credits", "Go shopping", "Consume a product", "Enter Cinema", "Ride attractions", "Show user info", "Exit"};
         printOptions(Arrays.asList(options));
         String command = readString();
         switch (command) {
@@ -799,7 +822,7 @@ public class Main {
                 consumeProduct(indexOfUser);
                 break;
             case "4":
-                watchMovie(indexOfUser);
+               goOnCinema(indexOfUser);
                 break;
             case "5":
                 rideAttractions(indexOfUser);

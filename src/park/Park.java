@@ -258,16 +258,18 @@ public class Park {
     }
 
     public void userWatchMovie(int userIndex, String cinemaName, String movieName) {
-        User currentUser = this.getUserByIndex(userIndex);
-        Cinema currentCinema = this.getCinemaByName(cinemaName);
-        Movie currentMovie = currentCinema.getMovieByName(movieName);
+        User user = this.getUserByIndex(userIndex);
+        Cinema cinema = this.getCinemaByName(cinemaName);
+        Movie movie = cinema.getMovieByName(movieName);
 
-        if (currentMovie == null) {
-            System.out.println("Something went wrong with the movie and it's name.");
-            return;
+        int movieAgeRestriction = cinema.getMovieAgeRestiction(movie);
+        if (movieAgeRestriction > user.getAge()) {
+            System.out.println("You are not allowed to watch " + movieName);
+            System.out.printf("This movie genre is %s\n", movie.getGenre());
+            System.out.printf("You must be at least %d years old to watch it!\n", movieAgeRestriction + 1);
+        } else {
+            user.watchMovie(movie);
         }
-
-        currentCinema.watchMovie(currentUser, currentMovie);
     }
 
     /**
