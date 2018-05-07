@@ -4,7 +4,7 @@ import park.cinema.Cinema;
 import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
-import park.funzone.AttractionDangerLevel;
+import park.funzone.AttractionLevel;
 import park.products.Product;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
@@ -23,6 +23,7 @@ public class Park {
     private List<User> users;
     private List<Cinema> cinemas;
     private Set<Attraction> attractions;
+    private EnumMap<AttractionLevel,List<Integer>> attractionsDangerLevels;
     private EnumMap<UserTicketPrice, Double> ticketsPrices;
     private int ticketsCounter;
     private boolean isInAdminMode;
@@ -37,6 +38,7 @@ public class Park {
         setTicketsPrice();
         this.ticketsCounter = 1;
         setIsInAdminMode();
+        setAttractionsDangerLevels();
     }
 
     /**
@@ -62,6 +64,20 @@ public class Park {
 
     private void setName(String name) {
         this.name = name;
+    }
+
+    private void setAttractionsDangerLevels() {
+        attractionsDangerLevels = new EnumMap<>(AttractionLevel.class);
+        attractionsDangerLevels.put(AttractionLevel.LOW,new ArrayList<>());
+        attractionsDangerLevels.put(AttractionLevel.MEDIUM,new ArrayList<>());
+        attractionsDangerLevels.put(AttractionLevel.HIGH,new ArrayList<>());
+
+        attractionsDangerLevels.get(AttractionLevel.LOW).add(1);
+        attractionsDangerLevels.get(AttractionLevel.LOW).add(114);
+        attractionsDangerLevels.get(AttractionLevel.MEDIUM).add(10);
+        attractionsDangerLevels.get(AttractionLevel.MEDIUM).add(80);
+        attractionsDangerLevels.get(AttractionLevel.HIGH).add(18);
+        attractionsDangerLevels.get(AttractionLevel.HIGH).add(65);
     }
 
     private String addTicketsCounter() {
@@ -153,7 +169,7 @@ public class Park {
         return this.users.get(userIndex);
     }
 
-    private void removeUser(User user) {
+    private void deleteUser(User user) {
         if(isInAdminMode) {
             this.users.remove(user);
         } else {
@@ -241,7 +257,7 @@ public class Park {
                 .get();
     }
 
-    public void watchMovie(int userIndex, String cinemaName, String movieName) {
+    public void userWatchMovie(int userIndex, String cinemaName, String movieName) {
         User currentUser = this.getUserByIndex(userIndex);
         Cinema currentCinema = this.getCinemaByName(cinemaName);
         Movie currentMovie = currentCinema.getMovieByName(movieName);
@@ -322,23 +338,19 @@ public class Park {
     }
 
     //TODO add product quantity
-    public void goShopping(String shopName, String productName, int currentUserIndex) {
-        Store shop = this.getStoreByName(shopName);
-        Product product = shop.getProductByName(productName);
-        User currentUser = getUserByIndex(currentUserIndex);
-
-        if (product == null) {
-            return;
-        }
+    public void userBuyProduct(String storeName, String productName, int userIndex) {
+        Store store = this.getStoreByName(storeName);
+        Product product = store.getProductByName(productName);
+        User currentUser = getUserByIndex(userIndex);
 
         if (product.getPrice() > currentUser.getBudget()) {
             System.out.println("Sorry you don't have enough money to buy this product!");
             return;
         }
 
-        shop.removeOneProduct(product);
-        currentUser.addBoughtProduct(product);
-        shop.addMoney(product.getPrice());
+        currentUser.buyProduct(product);
+        store.removeOneProduct(product);
+        store.addMoney(product.getPrice());
         System.out.printf("You successfully bought: %s and you have %.2f money left!\n", product, currentUser.getBudget());
     }
 
@@ -357,12 +369,11 @@ public class Park {
                 .get();
     }
 
-
     /**
      * ----------------------------------------ATTRACTIONS----------------------------------------------
      */
 
-    public void addAttractions(HashMap<String, AttractionDangerLevel> attractions) {
+    public void addAttractions(HashMap<String, AttractionLevel> attractions) {
         if (isInAdminMode) {
             attractions.forEach((x, v) -> this.attractions.add(new Attraction(x, v)));
         } else {
@@ -397,16 +408,26 @@ public class Park {
         return null;
     }
 
-    public void rideAttraction(int userIndex, String attractionName) {
-        User currentUser = this.getUserByIndex(userIndex);
+    public void userRideAttraction(int userIndex, String attractionName) {
+        User user = this.getUserByIndex(userIndex);
         Attraction currentAttraction = this.getAttractionByName(attractionName);
 
         if (currentAttraction == null) {
-            System.out.println("Something went wrong with the attraction and its name.");
+            System.out.println("Something went wrong with the attraction and it's name.");
             return;
         }
 
-        currentAttraction.visitAttraction(currentUser);
+        List<Integer> ageRestrictions = this.attractionsDangerLevels.get(currentAttraction.getDangerLevel());
+        int ageLowerLimit = ageRestrictions.get(0);
+        int ageUpperLimit = ageRestrictions.get(1);
+
+        if(user.getAge() < ageLowerLimit || user.getAge() > ageUpperLimit) {
+            System.out.println("Attraction " + attractionName + " is dangerous for you!");
+            System.out.println("It's allowed for users between " + ageLowerLimit + " and " + ageUpperLimit + " years old!");
+            return;
+        }
+
+        user.visitAttraction(currentAttraction);
     }
 
     /**

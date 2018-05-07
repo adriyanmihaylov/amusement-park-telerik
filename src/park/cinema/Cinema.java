@@ -68,8 +68,8 @@ public class Cinema {
     }
 
     public void watchMovie(User user, Movie movie) {
-        boolean notAllowed = isMovieAllowed(user, movie);
-        if (notAllowed) {
+        boolean isAllowed = isMovieAllowed(user, movie);
+        if (!isAllowed) {
             System.out.printf("Sorry \"%s\" is not allowed for users at this age.\n", movie.getName());
             return;
         }

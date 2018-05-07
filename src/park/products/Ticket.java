@@ -34,5 +34,4 @@ public class Ticket extends Product implements IUsable {
     public void use() {
         this.ticketCredits -= 1;
     }
-
 }

@@ -2,14 +2,9 @@ import exceptions.*;
 import park.InputDataCollection;
 import park.Park;
 import park.cinema.MovieGenre;
-import park.funzone.AttractionDangerLevel;
+import park.funzone.AttractionLevel;
 import park.products.*;
-import park.stores.CashDesk;
-import park.stores.FoodStore;
-import park.stores.SouvenirStore;
-import park.stores.Store;
 import park.users.UserTicketPrice;
-import park.users.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -425,9 +420,9 @@ public class Main {
 
         int attractionsCount = readPositiveInteger();
 
-        HashMap<String, AttractionDangerLevel> attractions = new HashMap<>();
+        HashMap<String, AttractionLevel> attractions = new HashMap<>();
         String attractionName;
-        AttractionDangerLevel dangerLevel;
+        AttractionLevel dangerLevel;
         for (int i = 0; i < attractionsCount; i++) {
             System.out.printf("Please enter attraction name #%d: ", i + 1);
             attractionName = readName();
@@ -440,18 +435,18 @@ public class Main {
         System.out.println("Done!\n");
     }
 
-    private static AttractionDangerLevel chooseDangerLevel() throws IOException {
+    private static AttractionLevel chooseDangerLevel() throws IOException {
         String[] options = {"Low", "Medium", "High"};
         printOptions(Arrays.asList(options));
 
         String command = readString();
         switch (command) {
             case "1":
-                return AttractionDangerLevel.LOW;
+                return AttractionLevel.LOW;
             case "2":
-                return AttractionDangerLevel.MEDIUM;
+                return AttractionLevel.MEDIUM;
             case "3":
-                return AttractionDangerLevel.HIGH;
+                return AttractionLevel.HIGH;
             default:
                 System.out.println("Invalid choice! Please choose one of the following: ");
                 return chooseDangerLevel();
@@ -846,7 +841,7 @@ public class Main {
         park.showUserInfo(userIndex);
     }
 
-    //TODO maybe change the products in the user to hashmap
+    //TODO change the products in the user to hashmap
     private static void goShopping(int userIndex) throws Exception {
         String storeName = chooseStore();
         if (storeName.equals("Exit") || storeName.isEmpty()) {
@@ -855,8 +850,11 @@ public class Main {
 
         String productName = chooseProduct(storeName, -1);
 
-        //TODO test if the logic is working
-        park.goShopping(storeName, productName, userIndex);
+        if(productName.equals("Exit") || productName.isEmpty()) {
+            return;
+        }
+
+        park.userBuyProduct(storeName, productName, userIndex);
     }
 
     //TODO test if the logic is working
@@ -871,8 +869,7 @@ public class Main {
             return;
         }
 
-        park.watchMovie(userIndex, cinemaName, movieName);
-
+        park.userWatchMovie(userIndex, cinemaName, movieName);
     }
 
     //TODO test if the logic is working
@@ -882,7 +879,7 @@ public class Main {
             return;
         }
 
-        park.rideAttraction(userIndex, attractionName);
+        park.userRideAttraction(userIndex, attractionName);
     }
 
     /**------------------------------------END OF USER functions----------------------------------------------*/

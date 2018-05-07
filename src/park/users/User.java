@@ -1,7 +1,9 @@
 package park.users;
 
+import park.funzone.Attraction;
 import park.interfaces.IConsumable;
 import park.interfaces.IUsable;
+import park.products.FoodProduct;
 import park.products.Product;
 import park.products.Ticket;
 
@@ -67,6 +69,21 @@ public class User {
         return false;
     }
 
+    public void visitAttraction(Attraction attraction) {
+        if (this.hasFoodProducts()) {
+            System.out.println("You can't bring food products on any attraction! You have to consume them!");
+            return;
+        }
+
+        if (this.ticket.hasCredits()) {
+            ticket.use();
+            System.out.println(getName() + " has visited attraction " + attraction.getName());
+            System.out.println("Remaining credits: " + ticket.getTicketCredits());
+        } else {
+            System.out.println("Sorry you don't have enough credits!");
+        }
+    }
+
     public Ticket getUserTicket() {
         return ticket;
     }
@@ -76,7 +93,7 @@ public class User {
         this.budget -= numberOfTickets * this.getTicketPrice();
     }
 
-    public void addBoughtProduct(Product product) {
+    public void buyProduct(Product product) {
         this.boughtProducts.add(product);
         this.budget -= product.getPrice();
     }
@@ -120,7 +137,8 @@ public class User {
 
     public void showUserInfo() {
         System.out.println("\n\t\t\t\t\t---------- USER INFO ----------\n");
-        System.out.printf("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|\tcredits left: %d\t|\n", this.name, this.age, this.budget, this.ticket.getTicketNumber(), this.ticket.getTicketCredits());
+        System.out.printf("|\tUser %s\t|\t%d years old\t|\tbudget %.2f$\t|\tTicket \"%s\"\t|\tcredits left: %d\t|\n",
+                this.name, this.age, this.budget, this.ticket.getTicketNumber(), this.ticket.getTicketCredits());
 
         System.out.println("\n\t\t\t\t\t---------- INVENTORY ----------\n");
 
