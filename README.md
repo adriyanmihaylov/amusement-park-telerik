@@ -48,3 +48,27 @@ Amusment park is an open-source console based system made for amusement park own
 		- Going to a cinema
 		- Riding attractions
 		- Listing user info
+# Class Diagrams
+- ## Cinema package
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/cinema.png?raw=true)
+
+- ## Funzone package
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/funzone.png?raw=true)
+
+- ## Products package
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/products.png?raw=true)
+
+- ## Stores package
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/stores.png?raw=true)
+
+- ## Users package
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/users.png?raw=true)
+
+- ## Park class
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/park.png?raw=true)
+
+- ## Main class
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/main.png?raw=true)
+
+- ## All classes
+![alt text](https://github.com/Echolz/amusement-park-telerik/blob/master/diagrams/all-classes.png?raw=true)
