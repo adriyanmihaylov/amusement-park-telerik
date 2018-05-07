@@ -62,13 +62,9 @@ public class User {
     }
 
     public boolean hasFoodProducts() {
-        for (Product currentProdcut : boughtProducts) {
-            if (currentProdcut instanceof IConsumable) {
-                return true;
-            }
-        }
-
-        return false;
+        boolean hasFood = boughtProducts.stream().anyMatch(product -> product instanceof IConsumable);
+        System.out.println("Has food = " + hasFood);
+        return hasFood;
     }
 
     public void visitAttraction(Attraction attraction) {

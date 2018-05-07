@@ -254,7 +254,7 @@ public class Park {
         return cinemas.stream()
                 .filter(x -> x.getName().equals(cinemaName))
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 
     public void userWatchMovie(int userIndex, String cinemaName, String movieName) {
@@ -541,7 +541,9 @@ public class Park {
 
     public List<String> getProductsNamesInCinemaStore(String cinemaName) {
         Cinema cinema = getCinemaByName(cinemaName);
-
+        if(cinema == null) {
+            return new ArrayList<>();
+        }
         return cinema.getProductsNamesInCinema();
     }
 

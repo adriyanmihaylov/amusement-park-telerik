@@ -10,15 +10,12 @@ import java.util.stream.Collectors;
 
 public class Cinema {
     private String name;
-    private CashDesk desk;
     private Set<Movie> movies;
     private EnumMap<MovieGenre,Integer> moviesAgeRestrictions;
     private FoodStore cinemaStore;
 
-
     public Cinema(String name) {
         this.name = name;
-        this.desk = new CashDesk(500);
         this.movies = new HashSet<>();
         setMoviesAgeRestrictions();
         setCinemaStore();
@@ -26,10 +23,6 @@ public class Cinema {
 
     public String getName() {
         return name;
-    }
-
-    public CashDesk getDesk() {
-        return desk;
     }
 
     private void setCinemaStore() {

@@ -238,6 +238,7 @@ public class Main {
         List<String> options = new ArrayList<>();
         if (!storeName.isEmpty()) {
             options = park.getStoreAllProductsNames(storeName);
+
             if(options.size() == 0) {
                 options = park.getProductsNamesInCinemaStore(storeName);
             }
@@ -506,6 +507,7 @@ public class Main {
         }
         options.add("Exit");
 
+        System.out.println("Please choose a cinema");
         printOptions(options);
 
         int command = readPositiveInteger();
