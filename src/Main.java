@@ -9,11 +9,15 @@ import park.users.UserTicketPrice;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.IntStream;
 
 public class Main {
     private static Park park = new Park("Disneyland", "123456");
+    final static String DATE_FORMAT = "dd-MM-yyyy";
 
     public static void main(String[] args) throws Exception {
         mainMenu();
@@ -311,14 +315,12 @@ public class Main {
         for (int i = 0; i < numberOfProducts; i++) {
             System.out.printf("Product #%d name: ", i + 1);
             String productName = readName();
-            //TODO - see if this product exist and stop if exist
 
             System.out.printf("Enter price of product %s: ", productName);
             double productPrice = readMoney();
 
-            //TODO throws exception
-            System.out.print("Please enter expiration date: ");
-            expirationDate = readString();
+            System.out.print("Please enter expiration date in format " + DATE_FORMAT + " :");
+            expirationDate = readDate();
 
             System.out.print("Please enter product quantity: ");
             int productQuantity = readPositiveInteger();
@@ -1105,6 +1107,34 @@ public class Main {
         return number;
     }
 
+    private static String readDate() {
+        String date;
+        try {
+            date = readString();
+            validateDate(date);
+        } catch (DateException e) {
+            System.out.println(e.getMessage());
+            System.out.print("Please enter valid date ");
+            System.out.println("in " + DATE_FORMAT);
+            return readDate();
+        } catch (IOException e) {
+            System.out.println("Something went wrong when reading date!");
+            return readDate();
+        }
+        return date;
+    }
+
+    public static String validateDate(String date) throws DateException {
+        DateFormat df;
+        try {
+            df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(date);
+            return date;
+        } catch (ParseException e) {
+            throw new DateException("Not a valid date!");
+        }
+    }
     /**
      * ---------------------------------------------------------------------------------------------------------
      */
