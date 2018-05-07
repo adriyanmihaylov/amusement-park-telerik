@@ -5,6 +5,7 @@ import park.cinema.Movie;
 import park.cinema.MovieGenre;
 import park.funzone.Attraction;
 import park.funzone.AttractionLevel;
+import park.interfaces.PasswordAuthorization;
 import park.products.Product;
 import park.stores.CashDesk;
 import park.stores.FoodStore;
@@ -16,7 +17,7 @@ import park.users.UserTicketPrice;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Park {
+public class Park implements PasswordAuthorization {
     private String name;
     protected String password;
     private List<Store> stores;
@@ -88,12 +89,6 @@ public class Park {
         isInAdminMode = false;
     }
 
-    public boolean checkPassword(String password) {
-        if (this.password.equals(password)) {
-            isInAdminMode = true;
-        }
-        return true;
-    }
 
     /**
      * ---------------------------------Creating users and other user functions-------------------------------------
@@ -555,5 +550,13 @@ public class Park {
                 .collect(Collectors.toList()));
 
         return ticketPrices;
+    }
+
+    @Override
+    public boolean checkPassword(String password) {
+        if (this.password.equals(password)) {
+            isInAdminMode = true;
+        }
+        return false;
     }
 }
